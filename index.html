@@ -30,7 +30,12 @@
 
 	<script src="./static/js/vue.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.9.3/vue-resource.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script>
+        axios.get('http://localhost:63342/weekly/index.html?_ijt=dk4vfq3bpr44v7tq0efds4pi03')
+            .then(function (response) {
+                console.log(response);
+            })
 		var vue = new Vue({
 			el: '#app',
 			data: {
