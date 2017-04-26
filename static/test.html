@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--引入样式-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <!--<link rel="stylesheet" href="css/element.css ">-->
+</head>
+<body>
+<div id="app">
+    <el-button @click="consol">按钮</el-button>
+    <el-dialog v-model="visible" title="Hello world">
+        <p>欢迎使用 Element</p>
+    </el-dialog>
+    <el-row :gutter="10">
+        <el-col :span="6">
+            <div class="grid-content bg-purple">a</div>
+        </el-col>
+        <el-col :span="6">
+            <div class="grid-content bg-purple-light">b</div>
+        </el-col>
+        <el-col :span="6">
+            <div class="grid-content bg-purple">c</div>
+        </el-col>
+        <el-col :span="6">
+            <div class="grid-content bg-purple-light">d</div>
+        </el-col>
+
+    </el-row>
+</div>
+</body>
+<!-- 先引入 Vue -->
+<script src="js/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="js/element.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+            return {visible: false}
+        },
+        methods: {
+            consol: function () {
+                console.log('dfdf');
+                this.visible = true;
+            }
+        }
+    })
+</script>
+</html>

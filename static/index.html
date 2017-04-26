@@ -7,6 +7,10 @@
     <script src="js/axios.min.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <link rel="stylesheet" href="js/bootstrap.min.css">
+    <!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <style>
         [v-cloak] {
             display: none;
@@ -39,7 +43,6 @@
             text-decoration: line-through;
         }
     </style>
-
 </head>
 <body>
 
@@ -55,7 +58,6 @@
             <input type="text" class="form-control" id="work_title" placeholder="work_title"
                    v-model="new_work.work_title">
         </div>
-
         <button @click="addWork" class="js-add btn btn-default" type="button">添加工作内容!</button>
     </form>
 
@@ -85,6 +87,7 @@
         <hr/>
         <em>llf Copyright 2017-4-21</em>
     </div>
+    <div></div>
 </div>
 </div>
 <script>

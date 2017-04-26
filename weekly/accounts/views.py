@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.shortcuts import render
 from django.views import View
 from utils.tools import my_response
@@ -6,7 +7,20 @@ from utils.tools import my_response
 # Create your views here.
 class LoginHandler(View):
     def post(self, request):
-        return my_response(code=0, msg="hah")
+        data = request.POST
+        username = data.get("username")
+        password = data.get("password")
+
+        if not username or not password:
+            return my_response(code=1, msg=u"密码账号不能为空！")
+        print(username + "***" + password)
+        content = ''
+        if username == 'admin' and password == 'admin':
+            response = my_response(code=0, msg="登录成功！", content=content)
+            response.set_cookie('username', {'username': 100, 'sdf': 23434, 'hha': 3434}, 3600)
+            return response
+
+        return my_response(code=0, msg="密码错误", content="")
 
     @staticmethod
     def _encrypt_password(password):

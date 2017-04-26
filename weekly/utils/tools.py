@@ -1,9 +1,13 @@
 # coding=utf-8
 # 返回出口函数
 import json
+import logging
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
-
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8")
+Logger = logging.getLogger("normal")
 
 def my_response(code, msg, content="", status_code=200, content_type="text/json"):
     if code != 0:
@@ -15,12 +19,12 @@ def my_response(code, msg, content="", status_code=200, content_type="text/json"
     return response
 
 
-def querySet_to_json(querySet, fieldList):
+def queryset_to_json(queryset, query_field):
     job_output_list = []
-    for query in querySet:
+    for query in queryset:
         query = model_to_dict(query)
         job_dict = {}
-        for field in fieldList:
+        for field in query_field:
             job_dict[field] = query.get(field, '')
         job_output_list.append(job_dict)
     data = json.dumps(job_output_list)

@@ -3,16 +3,17 @@ import json
 
 from django.shortcuts import HttpResponse
 from django.views.generic import View
-from utils.tools import my_response, querySet_to_json
+from utils.tools import my_response, queryset_to_json
 from .models import JobContent
 
 
 # Create your views here.
 class GetWorks(View):
+
     def get(self, request):
-        job_querySet = JobContent.objects.all()
-        fieldList = ["id", "work_title", "hided"]
-        content = querySet_to_json(job_querySet, fieldList)
+        job_queryset = JobContent.objects.all()
+        query_field = ["id", "work_title", "hided"]
+        content = queryset_to_json(job_queryset, query_field)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -25,7 +26,7 @@ class InsertWork(View):
         work_title = data.get("work_title")
         inset_job = JobContent(id=id, work_title=work_title)
         inset_job.save()
-        content={"id":inset_job.id}
+        content = {"id": inset_job.id}
         # return HttpResponse(json.dumps(content))
         response = my_response(code=0, msg=u"success", content=content)
         return response
