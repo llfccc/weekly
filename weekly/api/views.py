@@ -24,9 +24,11 @@ class InsertWork(View):
         print(data)
         id = data.get("id")
         work_title = data.get("work_title")
-        inset_job = JobContent(id=id, work_title=work_title)
-        inset_job.save()
-        content = {"id": inset_job.id}
+        content="bad"
+        if id and work_title:
+            inset_job = JobContent(id=id, work_title=work_title)
+            inset_job.save()
+            content = {"id": inset_job.id}
         # return HttpResponse(json.dumps(content))
         response = my_response(code=0, msg=u"success", content=content)
         return response

@@ -19,7 +19,7 @@ const router = new VueRouter({
 });
 
 // 跑起来吧
-new Vue({
+var vueApp=new Vue({
   router,
   el: '#app',
   render: (h) => h(App)
