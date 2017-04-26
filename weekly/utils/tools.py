@@ -14,7 +14,7 @@ def my_response(code, msg, content="", status_code=200, content_type="text/json"
         Logger.info("request handler error, return data is:: {}".format(msg))
     data = json.dumps({"code": code, "msg": msg, "content": content})
     response = HttpResponse(data, status=status_code, content_type=content_type)
-    response["Access-Control-Allow-Origin"] = "http://127.0.0.1,localhost"  # 如果要所有访问则属性设置为*，但不合适
+    response["Access-Control-Allow-Origin"] = "*,http://localhost:8080,http://127.0.0.1:8080,http://localhost,http://127.0.0.1"  # 如果要所有访问则属性设置为*，但不合适
     response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Origin, x-requested-with, content-type"
     return response
 

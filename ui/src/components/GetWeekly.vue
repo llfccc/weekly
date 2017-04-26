@@ -2,18 +2,18 @@
 <div id="app" v-cloak class="container">
     <h1>工作日记</h1>
 
-    <form class="form-inline">
-        <div class="form-group">
-            <label for="work_id">Name</label>
-            <input type="text" class="form-control" id="work_id" placeholder="work_id" v-model="new_work.id">
-        </div>
-        <div class="form-group">
-            <label for="work_title">Email</label>
-            <input type="text" class="form-control" id="work_title" placeholder="work_title"
-                   v-model="new_work.work_title">
-        </div>
-        <button @click="addWork" class="js-add btn btn-default" type="button">添加工作内容!</button>
-    </form>
+    <!--<form class="form-inline">-->
+        <!--<div class="form-group">-->
+            <!--<label for="work_id">Name</label>-->
+            <!--<input type="text" class="form-control" id="work_id" placeholder="work_id" v-model="new_work.id">-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<label for="work_title">Email</label>-->
+            <!--<input type="text" class="form-control" id="work_title" placeholder="work_title"-->
+                   <!--v-model="new_work.work_title">-->
+        <!--</div>-->
+        <!--<button @click="addWork" class="js-add btn btn-default" type="button">添加工作内容!</button>-->
+    <!--</form>-->
 
     <!--<table class="table table-bordered">-->
         <!--<thead>-->
@@ -46,13 +46,13 @@
 
   </template>
 
-<!--<script>-->
-  <!--import axios from 'axios';-->
-<!--//    getUrl = 'http://127.0.0.1/api/get_works/';-->
-    <!--axios.get('http://127.0.0.1/api/get_works/')-->
-        <!--.then(function (response) {-->
-            <!--app.jobs = JSON.parse(response.data.content);   //eval(response.data.content);-->
-        <!--});-->
+<script>
+  import axios from 'axios';
+    getUrl = 'http://127.0.0.1/api/get_works/';
+    axios.get(getUrl)
+        .then(function (response) {
+            app.jobs = JSON.parse(response.data.content);   //eval(response.data.content);
+        });
 
     <!--var app = new Vue({-->
         <!--el: '#app',-->

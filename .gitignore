@@ -9,9 +9,12 @@ __pycache__/
 # Distribution / packaging
 .idea
 .Python
+ui/dist/
+ui/build/
+
 env/
 build/
-ui/node_modules
+ui/node_modules/
 develop-eggs/
 dist/
 downloads/

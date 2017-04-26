@@ -42,3 +42,6 @@ class HideWork(View):
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Origin, x-requested-with, content-type"
         return response
+
+def Test(response):
+    return HttpResponse("ok")

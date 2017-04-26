@@ -1,22 +1,14 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import Test from '@/components/Test'
-import GetWeekly from '@/components/GetWeekly'
-
-Vue.use(Router)
-
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    },
-    {
-      path: '/GetWeekly',
-      name: 'GetWeekly',
-      component: GetWeekly
-    }
-  ]
-})
+// 引用模板
+import index from '../page/index.vue'
+import content from '../page/content.vue'
+// 配置路由
+export default [
+  {
+    path: '/',
+    component: index
+  },
+  {
+    path: '/content',
+    component: content
+  },
+]
