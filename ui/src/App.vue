@@ -19,9 +19,9 @@
     <main>
       <!-- 左侧导航 -->
       <div class="main-left">
-        <el-menu default-active="/GetWeekly" class="el-menu-vertical-demo" :router="true">
-          <el-menu-item index="/GetWeekly" :class="{'isActive': active}">活动发布</el-menu-item>
-          <el-menu-item index="/activeManage" :class="{'isActive': !active}">活动管理</el-menu-item>
+        <el-menu default-active="/" class="el-menu-vertical-demo" :router="true">
+          <el-menu-item index="/" :class="{'isActive': active}">添加工作项目</el-menu-item>
+          <el-menu-item index="/activeManage" :class="{'isActive': !active}">数据管理</el-menu-item>
         </el-menu>
       </div>
 
