@@ -8,10 +8,7 @@ import routes  from './router/index'
 import api from './config/api'
 import axios from 'axios'
 Vue.prototype.$http = axios;
-
-Vue.prototype.$api = api
-
-
+// Vue.prototype.$api = api
 Vue.use(VueRouter)
 
 const router = new VueRouter({

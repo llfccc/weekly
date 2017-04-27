@@ -1,6 +1,6 @@
 // 引用模板
 import index from '../page/index.vue'
-import content from '../page/content.vue'
+import login from '../page/login.vue'
 // 配置路由
 export default [
   {
@@ -8,7 +8,7 @@ export default [
     component: index
   },
   {
-    path: '/content',
-    component: content
+    path: '/login',
+    component: login
   },
 ]
