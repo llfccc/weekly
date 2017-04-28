@@ -17,10 +17,10 @@ class LoginHandler(View):
         content = ''
         if username == 'admin' and password == 'admin':
             response = my_response(code=0, msg="登录成功！", content=content)
-            response.set_cookie('username', {'username': 100, 'sdf': 23434, 'hha': 3434}, 3600)
+            response.set_cookie('username', {'username': "admin", 'sdf': 23434, 'hha': 3434}, 3600)
             return response
 
-        return my_response(code=0, msg="密码错误", content="")
+        return my_response(code=1, msg="密码错误", content="")
 
     @staticmethod
     def _encrypt_password(password):

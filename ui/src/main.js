@@ -1,49 +1,15 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './App'
-import VueRouter from 'vue-router'
-import routes  from './router/index'
-
-import api from './config/api'
-import axios from 'axios'
-Vue.prototype.$http = axios;
-// Vue.prototype.$api = api
-Vue.use(VueRouter)
-
-const router = new VueRouter({
-  routes
-});
-
-// 跑起来吧
-var vueApp=new Vue({
-  router,
-  el: '#app',
-  render: (h) => h(App)
-});
-//
-// Vue.config.productionTip = false
-//
-// import GetWeekly from '@/components/GetWeekly'
-
-// const routes = [
-//     // { path: '/index', component: index },
-//     { path: '/GetWeekly', component: GetWeekly },
-// ]
-//
-// const router = new VueRouter({
-//   routes
-// })
-// const app = new Vue({
-//     router,
-//     render: h => h(App)
-// }).$mount('#app')
-
-//
-// /* eslint-disable no-new */
-// new Vue({
-//   el: '#app',
-//   router,
-//   template: '<App/>',
-//   components: { App }
-// })
+import Vue from 'vue';
+import App from './App';
+import router from './router';
+import axios from 'axios';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-default/index.css';    // 默认主题
+// import '../static/css/theme-green/index.css';       // 浅绿色主题
+import "babel-polyfill";
+import './mock/index.js';
+Vue.use(ElementUI);
+Vue.prototype.$axios = axios;
+new Vue({
+    router,
+    render: h => h(App)
+}).$mount('#app');
