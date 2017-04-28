@@ -11,10 +11,10 @@ __pycache__/
 .Python
 ui/dist/
 ui/build/
-
+ui/node_modules/
+ui/screenshots
 env/
 build/
-ui/node_modules/
 develop-eggs/
 dist/
 downloads/

@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div class="logo">周记管理系统</div>
+        <div class="logo">工作记录系统</div>
         <div class="user-info">
             <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
