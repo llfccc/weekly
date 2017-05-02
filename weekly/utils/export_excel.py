@@ -8,7 +8,7 @@ Logger = logging.getLogger("normal")
 
 
 class ReportExcel(object):
-    def __init__(self):
+    def __init__(self,output,in_memory=True):
         self.workbook = xlsxwriter.Workbook('hello.xlsx')  # 建立文件
         self.worksheet = self.workbook.add_worksheet()  # 建立sheet， 可以work.add_worksheet('employee')来指定sheet名，但中文名会报UnicodeDecodeErro的错误
         self.merge_format_title = self.workbook.add_format({

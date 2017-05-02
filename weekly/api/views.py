@@ -1,12 +1,14 @@
 # coding:utf-8
 import os
-from django.http import  HttpResponse ,FileResponse,Http404
+from django.http import HttpResponse, FileResponse, Http404
 
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.export_excel import  ReportExcel
+from utils.export_excel import ReportExcel
 from .models import JobContent
 from django.db.models import Q
+
+
 # import weekly.settings.PROJECT_ROOT as PROJECT_ROOT
 
 
@@ -59,7 +61,7 @@ def Test(response):
 class GetExcel(View):
     def get(self, request):
         data = request.POST
-        print(data)
+
         start_time = data.get("start_time")
         end_time = data.get("end_time")
         if not start_time:
@@ -70,12 +72,32 @@ class GetExcel(View):
         query_field = ["work_title", "complete_status"]
         data_dict = queryset_to_dict(data, query_field)
 
-        excel_instance = ReportExcel()
-        excel_instance.write_excel(data_dict)
+        import StringIO
+        output = StringIO.StringIO()
+        #
+        # excel_instance = ReportExcel(output)
+        # excel_instance.write_excel(data_dict)
+        # output.seek(0)
+        import xlsxwriter
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
 
-        PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        output_filename = PROJECT_ROOT + r'\hello.xlsx'
-        response = FileResponse(open(output_filename, 'rb'))
+        # Write some test data.
+        worksheet.write(0, 0, 'Hello, world!')
+
+        # Close the workbook before streaming the data.
+        workbook.close()
+
+        # Rewind the buffer.
+        output.seek(0)
+        # from django.http.response import StreamingHttpResponse
+        # response = StreamingHttpResponse((output.read()),content_type="text/csv;charset=utf-8")
+        # response['Content-Disposition'
+        # ] = 'attachment;filename="example.xlsx"'
+        # return response
+        # PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        # output_filename = PROJECT_ROOT + r'\hello.xlsx'
+        response = FileResponse(output.read())
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format('hello.xlsx')
         return response
