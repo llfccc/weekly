@@ -15,14 +15,14 @@
         </el-form-item>
       </el-form>
     </el-col>
-  
+
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" label-width="80px">  
+      <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="工作内容">
           <el-input type="textarea" class="form-control" id="work_title" placeholder="工作内容" v-model="form.work_title">工作内容
           </el-input>
         </el-form-item>
-  
+
         <el-form-item label="工作时间">
           <el-col :span="11" class="block">
             <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
@@ -32,10 +32,10 @@
           <el-col :span="11" class="block">
             <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
-          </el-col>  
+          </el-col>
         </el-form-item>
         <el-form-item label="项目进度">
-  
+
           <el-col :span="8">
             <el-input type="text" class="form-control" id="job_manager" placeholder="工作负责人" v-model="form.job_manager">
               工作负责人
@@ -44,7 +44,7 @@
           <el-col :span="8">
             <el-input type="text" class="form-control" id="work_auditor" placeholder="工作审核人" v-model="form.work_auditor">工作审核人
             </el-input>
-  
+
           </el-col>
           <el-col :span="8">
             <el-input type="text" class="form-control" id="complete_status" placeholder="进度" v-model="form.complete_status">进度
@@ -56,7 +56,7 @@
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button type="primary" @click.native="addWork" :loading="addLoading">提交</el-button>
       </div>
-  
+
     </el-dialog>
     <el-table :data="work_lists" border style="width: 100%">
       <el-table-column prop="work_title" label="工作内容" sortable>
@@ -67,7 +67,7 @@
       </el-table-column>
       <el-table-column prop="complete_status" label="进度" width='120' sortable>
       </el-table-column>
-  
+
       <el-table-column label="操作" width="180">
         <template scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -77,12 +77,12 @@
     </el-table>
   <!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-       <el-form ref="form" :model="form" label-width="80px">  
+       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="工作内容">
           <el-input type="textarea" class="form-control" id="work_title" placeholder="工作内容" v-model="form.work_title">工作内容
           </el-input>
         </el-form-item>
-  
+
         <el-form-item label="工作时间">
           <el-col :span="11" class="block">
             <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
@@ -92,10 +92,10 @@
           <el-col :span="11" class="block">
             <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
-          </el-col>  
+          </el-col>
         </el-form-item>
-        <el-form-item label="项目进度">
-  
+        <el-form-item label="项目情况：">
+
           <el-col :span="8">
             <el-input type="text" class="form-control" id="job_manager" placeholder="工作负责人" v-model="form.job_manager">
               工作负责人
@@ -104,7 +104,7 @@
           <el-col :span="8">
             <el-input type="text" class="form-control" id="work_auditor" placeholder="工作审核人" v-model="form.work_auditor">工作审核人
             </el-input>
-  
+
           </el-col>
           <el-col :span="8">
             <el-input type="text" class="form-control" id="complete_status" placeholder="进度" v-model="form.complete_status">进度
@@ -143,7 +143,7 @@
 			</div>
 		</el-dialog>
 
-   
+
     <!--编辑界面-->
     <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
   			<el-form :model="editForm" label-width="80px"  ref="editForm">
@@ -289,7 +289,6 @@ export default {
         addr: ''
       };
     },
-
   },
 }
 </script>

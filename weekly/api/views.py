@@ -3,7 +3,8 @@ import os
 from django.http import  HttpResponse ,FileResponse,Http404
 
 from django.views.generic import View
-from utils.tools import my_response, queryset_to_dict, dict_to_json, ReportExcel
+from utils.tools import my_response, queryset_to_dict, dict_to_json
+from utils.export_excel import  ReportExcel
 from .models import JobContent
 from django.db.models import Q
 # import weekly.settings.PROJECT_ROOT as PROJECT_ROOT

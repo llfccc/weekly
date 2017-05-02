@@ -12,7 +12,7 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
-                <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
+                <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名admin 密码lanzhong1</p>
             </el-form>
         </div>
     </div>
@@ -38,15 +38,22 @@
         },
         methods: {
             submitForm(formName) {
-                    this.$axios.get('/works/get_works/').then((res) => {
-                    console.log(res);
-
-                })
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',self.ruleForm.username);
-                        self.$router.push('/readme');
+
+                       let postdata = 'username=' + self.ruleForm.username + '&password=' + self.ruleForm.password;
+                        console.log(postdata);
+                    this.$axios.post('/accounts/login/',postdata).then((res) => {
+                        if (res.data.code=='0'){
+                            var sid=res.data.content;
+                        localStorage.setItem('sid',sid);
+                            self.$router.push('/submitWork');
+                        }else {
+                        console.log('密码或者用户名错误');
+                        return false;
+                    }
+                })
                     } else {
                         console.log('error submit!!');
                         return false;
