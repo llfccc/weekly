@@ -7,8 +7,8 @@ from utils.tools import my_response, queryset_to_dict, dict_to_json
 from utils.export_excel import ReportExcel
 from .models import JobContent
 from django.db.models import Q
-
-
+import StringIO
+import xlsxwriter
 # import weekly.settings.PROJECT_ROOT as PROJECT_ROOT
 
 
@@ -72,23 +72,10 @@ class GetExcel(View):
         query_field = ["work_title", "complete_status"]
         data_dict = queryset_to_dict(data, query_field)
 
-        import StringIO
+
         output = StringIO.StringIO()
-        #
-        # excel_instance = ReportExcel(output)
-        # excel_instance.write_excel(data_dict)
-        # output.seek(0)
-        import xlsxwriter
-        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-        worksheet = workbook.add_worksheet()
-
-        # Write some test data.
-        worksheet.write(0, 0, 'Hello, world!')
-
-        # Close the workbook before streaming the data.
-        workbook.close()
-
-        # Rewind the buffer.
+        excel_instance = ReportExcel(output)
+        excel_instance.write_excel(data_dict)
         output.seek(0)
         # from django.http.response import StreamingHttpResponse
         # response = StreamingHttpResponse((output.read()),content_type="text/csv;charset=utf-8")
@@ -99,5 +86,5 @@ class GetExcel(View):
         # output_filename = PROJECT_ROOT + r'\hello.xlsx'
         response = FileResponse(output.read())
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="{0}"'.format('hello.xlsx')
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format('output.xlsx')
         return response

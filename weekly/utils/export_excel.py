@@ -2,14 +2,16 @@
 import sys
 import xlsxwriter
 import logging
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 Logger = logging.getLogger("normal")
 
 
 class ReportExcel(object):
-    def __init__(self,output,in_memory=True):
-        self.workbook = xlsxwriter.Workbook('hello.xlsx')  # 建立文件
+    def __init__(self, output):
+        self.output = output
+        self.workbook = xlsxwriter.Workbook(output, {'in_memory': True})  # 建立文件
         self.worksheet = self.workbook.add_worksheet()  # 建立sheet， 可以work.add_worksheet('employee')来指定sheet名，但中文名会报UnicodeDecodeErro的错误
         self.merge_format_title = self.workbook.add_format({
             'bold': True,
@@ -62,4 +64,4 @@ class ReportExcel(object):
                 col += 1
             row += 1
         self.workbook.close()
-        return
+        return self.output
