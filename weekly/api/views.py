@@ -9,6 +9,8 @@ from .models import JobContent
 from django.db.models import Q
 import StringIO
 import xlsxwriter
+
+
 # import weekly.settings.PROJECT_ROOT as PROJECT_ROOT
 
 
@@ -16,9 +18,12 @@ import xlsxwriter
 class GetWorks(View):
     def get(self, request):
         job_queryset = JobContent.objects.all()
-        query_field = ["id", "work_title", "start_time", "end_time", "hided", "complete_status"]
+        query_field = ["id", "work_title", "start_time", "end_time", "hided", "job_manager", "work_auditor",
+                       "complete_status","remark"]
         data_list = queryset_to_dict(job_queryset, query_field)
+
         content = dict_to_json(data_list)
+
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -31,10 +36,14 @@ class InsertWork(View):
         start_time = data.get("start_time")
         end_time = data.get("end_time")
         complete_status = data.get("complete_status")
+        job_manager = data.get("complete_status")
+        work_auditor = data.get("complete_status")
+        remark = data.get("remark")
         content = "bad"
         if work_title:
             inset_job = JobContent(work_title=work_title, start_time=start_time, end_time=end_time,
-                                   complete_status=complete_status)
+                                   complete_status=complete_status, job_manager=job_manager, work_auditor=work_auditor,
+                                   remark=remark)
             inset_job.save()
             content = {"id": inset_job.id}
         # return HttpResponse(json.dumps(content))
@@ -72,18 +81,11 @@ class GetExcel(View):
         query_field = ["work_title", "complete_status"]
         data_dict = queryset_to_dict(data, query_field)
 
-
         output = StringIO.StringIO()
         excel_instance = ReportExcel(output)
         excel_instance.write_excel(data_dict)
         output.seek(0)
-        # from django.http.response import StreamingHttpResponse
-        # response = StreamingHttpResponse((output.read()),content_type="text/csv;charset=utf-8")
-        # response['Content-Disposition'
-        # ] = 'attachment;filename="example.xlsx"'
-        # return response
-        # PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        # output_filename = PROJECT_ROOT + r'\hello.xlsx'
+
         response = FileResponse(output.read())
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format('output.xlsx')
