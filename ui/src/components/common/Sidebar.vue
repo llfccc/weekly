@@ -7,7 +7,7 @@
             <el-submenu index="2">
                 <template slot="title"><i class="el-icon-menu"></i>表格</template>
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
-                <el-menu-item index="basetable">基础表格</el-menu-item>
+                <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
                 <el-menu-item index="vuetable">Vue表格组件</el-menu-item>
             </el-submenu>
             <el-submenu index="3">

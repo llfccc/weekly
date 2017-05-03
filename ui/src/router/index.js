@@ -18,13 +18,14 @@ export default new Router({
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
                 {
-                    path: '/basetable',
-                    component: resolve => require(['../components/page/BaseTable.vue'], resolve)
+                    path: '/downloadExcel',
+                    component: resolve => require(['../components/page/DownloadExcel.vue'], resolve)
                 },
                                 {
                     path: '/submitWork',
                     component: resolve => require(['../components/page/submitWork.vue'], resolve)
                 },
+
                 {
                     path: '/vuetable',
                     component: resolve => require(['../components/page/VueTable.vue'], resolve)     // vue-datasource组件
