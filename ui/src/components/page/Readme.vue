@@ -12,6 +12,8 @@
                 <h2>前言</h2>
                 <p>基于vue.js,使用vue-cli脚手架快速生成项目目录，引用Element UI组件库，找了个模板修改而成</p>
                 <h2>功能</h2>
+                通过在页面上登记工作内容，保存到数据库；同时可以导出excel下载
+                <br>
                 <el-checkbox disabled checked>Element UI</el-checkbox>
                 <br>
                 <el-checkbox disabled checked>登录/注销</el-checkbox>

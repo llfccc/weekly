@@ -6,7 +6,7 @@ from django.db import models
 
 # Create your models here.
 class JobContent(models.Model):
-    operator= models.CharField(max_length=10,default='admin')
+    operator = models.CharField(max_length=10, default='nobody', verbose_name="填写人")
     work_title = models.CharField(max_length=1024)
     hided = models.BooleanField(default=0, verbose_name='是否隐藏')
 

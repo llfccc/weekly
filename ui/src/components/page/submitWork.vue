@@ -94,21 +94,21 @@
         </el-table>
         <!--编辑界面-->
         <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-            <el-form ref="form" :model="form" label-width="80px">
+            <el-form ref="form" :model="editForm" label-width="80px">
                 <el-form-item label="工作内容">
                     <el-input type="textarea" class="form-control" id="work_title" placeholder="工作内容"
-                              v-model="form.work_title">工作内容
+                              v-model="editForm.work_title">工作内容
                     </el-input>
                 </el-form-item>
 
                 <el-form-item label="工作时间">
                     <el-col :span="11" class="block">
-                        <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
+                        <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
                         </el-date-picker>
                     </el-col>
                     <el-col class="line" :span="2">-</el-col>
                     <el-col :span="11" class="block">
-                        <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
+                        <el-date-picker v-model="editForm.end_time" type="datetime" placeholder="选择日期时间">
                         </el-date-picker>
                     </el-col>
                 </el-form-item>
@@ -116,24 +116,24 @@
 
                     <el-col :span="8">
                         <el-input type="text" class="form-control" id="job_manager" placeholder="工作负责人"
-                                  v-model="form.job_manager">
+                                  v-model="editForm.job_manager">
                             工作负责人
                         </el-input>
                     </el-col>
                     <el-col :span="8">
                         <el-input type="text" class="form-control" id="work_auditor" placeholder="工作审核人"
-                                  v-model="form.work_auditor">工作审核人
+                                  v-model="editForm.work_auditor">工作审核人
                         </el-input>
 
                     </el-col>
                     <el-col :span="8">
                         <el-input type="text" class="form-control" id="complete_status" placeholder="进度"
-                                  v-model="form.complete_status">进度
+                                  v-model="editForm.complete_status">进度
                         </el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer"    >
                 <el-button @click.native="addFormVisible = false">取消</el-button>
                 <el-button type="primary" @click.native="addWork" :loading="addLoading">提交修改</el-button>
             </div>
@@ -152,6 +152,15 @@
                 },
                 work_lists: [],
                 form: {
+                    work_title: '',
+                    start_time: '',
+                    end_time: '',
+                    complete_status: '',
+                    job_manager: '',
+                    work_auditor: '',
+                    remark: '',
+                },
+                editForm: {
                     work_title: '',
                     start_time: '',
                     end_time: '',
@@ -196,14 +205,14 @@
                 }
 
                 if (v.form.start_time) {
-                    var start_time = convertDatetime(v.form.start_time);
+                    v.form.start_time = convertDatetime(v.form.start_time);
                 } else {
-                    var start_time = ''
+                    v.form.start_time = ''
                 }
                 if (v.form.end_time) {
-                    var end_time = convertDatetime(v.form.end_time);
+                    v.form.end_time = convertDatetime(v.form.end_time);
                 } else {
-                    var end_time = ''
+                    v.form.end_time = ''
                 }
 
 //后期改用此种方法合成json
@@ -216,10 +225,11 @@
 //                        return ret
 //                    }
 //                    console.log(transToJson(v.form));
-                    let str = 'start_time=' + start_time + '&end_time=' + end_time + '&work_title=' + v.form.work_title + '&complete_status=' + v.form.complete_status + '&job_manager=' + v.form.job_manager + '&work_auditor=' + v.form.work_auditor+'&remark=' + v.form.remark;
+                    let str = 'start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&work_title=' + v.form.work_title + '&complete_status=' + v.form.complete_status + '&job_manager=' + v.form.job_manager + '&work_auditor=' + v.form.work_auditor+'&remark=' + v.form.remark;
                     this.$axios.post('/works/insert_work/', str).then(function (response) {
                         console.log(response.data.content);
                         v.work_lists.push(v.form);
+                        console.log(v.form);
                         v.$message({
                             message: '恭喜你，新增成功',
                             type: 'success'
@@ -246,7 +256,7 @@
             },
             handleEdit: function (index, row) {
                 this.editFormVisible = true;
-                this.form = Object.assign({}, row);
+                this.editForm = Object.assign({}, row);
             },
             handleAdd: function () {
                 this.addFormVisible = true;

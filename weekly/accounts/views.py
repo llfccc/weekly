@@ -5,10 +5,12 @@ from utils.tools import my_response, get_random
 from forms import UserForm
 from models import User
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
 
 
 # Create your views here.
 class LoginHandler(View):
+    cookie_timeout = 2 * 3600
     def post(self, request):
         uf = UserForm(request.POST)
         if uf.is_valid():
@@ -18,13 +20,11 @@ class LoginHandler(View):
             # 获取的表单数据与数据库进行比较
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
-                # 比较成功，跳转index
-                # response = HttpResponseRedirect('/online/index/')
-                # 将username写入浏览器cookie,失效时间为3600
                 sid = get_random()
-                content=sid
+                content={"username":username}
                 response = my_response(code=0, msg="登录成功！", content=content)
-                login(request, user)
+                #login(request, user)
+                cache.set(sid, content, timeout=self.cookie_timeout)
                 response.set_cookie("sid", sid) #, max_age=self.cookie_timeout)
                 return response
             else:
@@ -47,13 +47,7 @@ class LoginHandler(View):
 
         return my_response(code=1, msg="密码错误", content="")
 
-    @staticmethod
-    def _encrypt_password(password):
-        nb = bytes(password).encode("utf-8")
-        sh = hashlib.sha1()
-        sh.update(nb)
-        crr = sh.digest()
-        return base64.b64encode(crr)
+
 
 
 class RegisterHandler(View):

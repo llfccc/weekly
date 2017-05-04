@@ -8,7 +8,7 @@ from utils.export_excel import ReportExcel
 from .models import JobContent
 from django.db.models import Q
 import StringIO
-import xlsxwriter
+from django.core.cache import cache
 
 
 # import weekly.settings.PROJECT_ROOT as PROJECT_ROOT
@@ -17,21 +17,24 @@ import xlsxwriter
 # Create your views here.
 class GetWorks(View):
     def get(self, request):
-        job_queryset = JobContent.objects.all()
+        sid = request.COOKIES.get("sid")
+        username = cache.get(sid).get("username")
+        print(username)
+        job_queryset = JobContent.objects.filter(operator=username).all()
         query_field = ["id", "work_title", "start_time", "end_time", "hided", "job_manager", "work_auditor",
-                       "complete_status","remark"]
+                       "complete_status", "remark"]
         data_list = queryset_to_dict(job_queryset, query_field)
-
         content = dict_to_json(data_list)
-
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
 
 class InsertWork(View):
     def post(self, request):
+        sid = request.COOKIES.get("sid")
+        username = cache.get(sid).get("username")
+
         data = request.POST
-        print(data)
         work_title = data.get("work_title")
         start_time = data.get("start_time")
         end_time = data.get("end_time")
@@ -39,11 +42,11 @@ class InsertWork(View):
         job_manager = data.get("complete_status")
         work_auditor = data.get("complete_status")
         remark = data.get("remark")
-        content = "bad"
+        content = {"id": 0}
         if work_title:
             inset_job = JobContent(work_title=work_title, start_time=start_time, end_time=end_time,
                                    complete_status=complete_status, job_manager=job_manager, work_auditor=work_auditor,
-                                   remark=remark)
+                                   remark=remark, operator=username)
             inset_job.save()
             content = {"id": inset_job.id}
         # return HttpResponse(json.dumps(content))
@@ -69,6 +72,9 @@ def Test(response):
 
 class GetExcel(View):
     def get(self, request):
+        sid = request.COOKIES.get("sid")
+        username = cache.get(sid).get("username")
+
         data = request.POST
 
         start_time = data.get("start_time")
@@ -77,7 +83,8 @@ class GetExcel(View):
             start_time = '2017-4-26'
         if not end_time:
             end_time = '2017-4-30'
-        data = JobContent.objects.filter(Q(start_time__gte=start_time) | Q(end_time__lte=end_time)).all()
+        data = JobContent.objects.filter(Q(start_time__gte=start_time) | Q(end_time__lte=end_time)).filter(
+            operator=username).all()
         query_field = ["work_title", "complete_status"]
         data_dict = queryset_to_dict(data, query_field)
 
