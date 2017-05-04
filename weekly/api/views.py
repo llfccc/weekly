@@ -39,8 +39,8 @@ class InsertWork(View):
         start_time = data.get("start_time")
         end_time = data.get("end_time")
         complete_status = data.get("complete_status")
-        job_manager = data.get("complete_status")
-        work_auditor = data.get("complete_status")
+        job_manager = data.get("job_manager")
+        work_auditor = data.get("work_auditor")
         remark = data.get("remark")
         content = {"id": 0}
         if work_title:

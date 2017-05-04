@@ -89,5 +89,5 @@ def index(req):
 def logout(req):
     response = HttpResponse('logout !!')
     # 清理cookie里保存username
-    response.delete_cookie('username')
+    response.delete_cookie('sid')
     return response
