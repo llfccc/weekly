@@ -8,7 +8,7 @@
                 <template slot="title"><i class="el-icon-menu"></i>表格</template>
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
                 <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
-                <!--<el-menu-item index="vuetable">Vue表格组件</el-menu-item>-->
+
             </el-submenu>
             <!--<el-submenu index="3">-->
                 <!--<template slot="title"><i class="el-icon-date"></i>表单</template>-->
@@ -18,7 +18,9 @@
                 <!--<el-menu-item index="upload">文件上传</el-menu-item>-->
             <!--</el-submenu>-->
             <el-submenu index="4">
-                <template slot="title"><i class="el-icon-star-on"></i>图表</template>
+                <template slot="title"><i class="el-icon-star-on"></i>概览</template>
+                                <el-menu-item index="weeklySumup">周报总览</el-menu-item>
+                   <el-menu-item index="weeklyGraph">总表汇总图</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>

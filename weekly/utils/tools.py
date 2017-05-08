@@ -39,14 +39,14 @@ def my_response(code, msg, content="", status_code=200, content_type="text/json"
 
 
 def queryset_to_dict(queryset, query_field):
-    job_output_list = []
+    output_list = []
     for query in queryset:
         query = model_to_dict(query)
         job_dict = {}
         for field in query_field:
             job_dict[field] = query.get(field, '')
-        job_output_list.append(job_dict)
-    return job_output_list
+        output_list.append(job_dict)
+    return output_list
 
 
 def dict_to_json(data_list):
