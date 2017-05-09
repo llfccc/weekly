@@ -21,6 +21,7 @@ def fetch_data(sql):
     with connection.cursor() as cursor:
         cursor.execute(sql)
         col_names = [desc[0] for desc in cursor.description]
+
         sql_result = cursor.fetchall()
         results=[]
 
@@ -34,14 +35,14 @@ def fetch_data(sql):
 
 class GetWorks(View):
     def get(self, request):
-        query_field = ["id", "project", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
-                "event_type", "remark"]
+        
         param = "*"
-        plain_sql = "SELECT {0} FROM api_devevent as dev join api_devproject as pro on dev.project_id = pro.id \
-            join api_deveventtype on dev.event_type_id = api_deveventtype.id ;".format(param)
+        plain_sql = "SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.project_id = pro.id \
+            left join api_deveventtype on dev.event_type_id = api_deveventtype.id ;".format(param)
         row = fetch_data(plain_sql)
+
         query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
-               "event_name", "remark"]
+               "event_name", "dev_event_remark"]
 
         data_dict = dict_to_json(row)
         content = data_dict
@@ -52,7 +53,7 @@ class GetWorks(View):
 class GetProjects(View):
     def get(self, request):   
         data = DevProject.objects.all()
-        query_field = ["id","creater_id","status","remark","project_name", "create_time"]
+        query_field = ["id","creater_id","status","dev_project_remark","project_name", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -61,7 +62,7 @@ class GetProjects(View):
 class GetEventTypes(View):
     def get(self, request):   
         data = DevEventType.objects.all()
-        query_field = ["id","creator_id","event_type_name","remark", "create_time"]
+        query_field = ["id","creator_id","event_type_name","dev_event_type_remark", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -72,14 +73,13 @@ class InsertWork(View):
         # sid = request.COOKIES.get("sid")
         # username = cache.get(sid).get("username")
         data = request.POST
-        print(data)
-        insert_field=["description","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","remark","project","event_type"]
+        insert_field=["description","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
         result={}
         for t in insert_field:
             result[t]=data.get(t)
-        print(result)
-        result['project']=DevProject.objects.get(pk=result['project'])
-        result['event_type']=DevEventType.objects.get(pk=result['event_type'])
+
+        # result['project']=DevProject.objects.get(pk=result['project'])
+        # result['event_type']=DevEventType.objects.get(pk=result['event_type'])
         result['owner_id']=1
         content = {"id": 0}
         if result:
@@ -87,9 +87,9 @@ class InsertWork(View):
             try:
                 inset_job.save()
                 content = {"id": inset_job.id}
-                response = my_response(code=0, msg=u"error", content=content)
+                response = my_response(code=0, msg=u"success", content=content)                
             except:
-                response = my_response(code=1, msg=u"success", content=content)
+                response = my_response(code=1, msg=u"error", content=content)
 
         return response
 

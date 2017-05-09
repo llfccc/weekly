@@ -20,11 +20,11 @@
             <el-form ref="form" :model="form" label-width="90px">
                 <el-form-item label="项目名称">
     
-                    <el-select v-model="form.project" clearable filterable placeholder="项目名">
+                    <el-select v-model="form.project_id" clearable filterable placeholder="项目名">
                         <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
                         </el-option>
                     </el-select>
-                    <el-select v-model="form.event_type" clearable filterable placeholder="类型">
+                    <el-select v-model="form.event_type_id" clearable filterable placeholder="类型">
                         <el-option v-for="item in event_type_list" :key="item.id" :label="item.event_type_name" :value="item.id">
                         </el-option>
                     </el-select>
@@ -63,7 +63,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="其他：">
-                    <el-input type="textarea" class="form-control" id="remark" placeholder="备注" v-model="form.remark">
+                    <el-input type="textarea" class="form-control" id="dev_event_remark" placeholder="备注" v-model="form.dev_event_remark">
                         备注
                     </el-input>
                 </el-form-item>
@@ -93,7 +93,7 @@
     
             <el-table-column prop="fin_percentage" label="完成百分比" width='170' sortable>
             </el-table-column>
-            <el-table-column prop="remark" label="备注" width="150">
+            <el-table-column prop="dev_event_remark" label="备注" width="150">
             </el-table-column>
     
             <el-table-column label="操作" width="180" fixed="right">
@@ -167,9 +167,9 @@ export default {
                 fin_percentage: '',
                 up_reporter_id: '',
                 down_reporter_ids: '',
-                remark: '',
-                project: '',
-                event_type: '',
+                dev_event_remark: '',
+                project_id: '',
+                event_type_id: '',
             },
             editForm: {
                 description: '',
@@ -178,7 +178,7 @@ export default {
                 fin_percentage: '',
                 up_reporter_ids: '',
                 down_reporter_ids: '',
-                remark: '',
+                dev_event_remark: '',
             },
             addFormVisible: false,//新增界面是否显示
             addLoading: false,
@@ -206,6 +206,7 @@ export default {
             this.$axios.get('/works/get_works/')
                 .then(function (response) {
                     v.work_list = eval(response.data.content);
+
                 }
                 );
         },
@@ -214,7 +215,7 @@ export default {
             this.$axios.get('/works/get_projects/')
                 .then(function (response) {
                     v.project_list = eval(response.data.content);
-                    console.log(response.data.content)
+
                 }
                 );
         },
@@ -223,7 +224,7 @@ export default {
             this.$axios.get('/works/get_event_types/')
                 .then(function (response) {
                     v.event_type_list = eval(response.data.content);
-                    console.log(response.data.content)
+
                 }
                 );
         },
@@ -256,11 +257,12 @@ export default {
             //                        return ret
             //                    }
             //                    console.log(transToJson(v.form));
-            let str = 'start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&remark=' + v.form.remark + '&project=' + v.form.project + '&event_type=' + v.form.event_type;
+            let str = 'start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&project_id=' + v.form.project_id + '&event_type_id=' + v.form.event_type_id;
             this.$axios.post('/works/insert_work/', str).then(function (response) {
-                console.log(response.data.content);
-                if (response.data.msg == 1) {
-                    v.work_list.push(v.form);
+ 
+                if (response.data.code == 0) {
+                    // v.work_list.push(v.form);
+                            v.get_data()
                     v.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'

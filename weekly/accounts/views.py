@@ -43,17 +43,18 @@ class RegisterHandler(View):
                 # chinese_name = data['chinese_name']
                 # group_name = data['group_name']
                 password = data['password']
-                password2 = data['password2']
+                password2 = data['password']
+                print(username)
                 if not User.objects.all().filter(username=username):
-                    if form.pwd_validate(password, password2):
+
                         user = User.objects.create_user(username, '', password)
                         user.save()
                         # login_validate(request, username, password)
-                        return render_to_response('welcome.html', {'user': username})
+                        return my_response(code=0, msg="注册成功", content="")
                 else:
 
-                    return my_response(code=1, msg="密码错误", content="")
-
+                    return my_response(code=1, msg="用户已存在", content="")
+# 如果痛苦加深那么你就要进行5月与医生的第一次约会
 
 class LogoutHandler(View):
     def get(self, request):

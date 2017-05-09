@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Django settings for weekly project.
 
@@ -128,3 +129,5 @@ CACHES = {
         }
     }
 }
+#自定义user，Substituting a custom User model
+AUTH_USER_MODEL = 'accounts.User'
