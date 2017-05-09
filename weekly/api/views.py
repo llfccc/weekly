@@ -90,7 +90,6 @@ class InsertWork(View):
                 response = my_response(code=0, msg=u"success", content=content)                
             except:
                 response = my_response(code=1, msg=u"error", content=content)
-
         return response
 
 

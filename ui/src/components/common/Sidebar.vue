@@ -2,23 +2,17 @@
     <div class="sidebar">
         <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
             <el-menu-item index="readme">
-                <i class="el-icon-setting"></i>自述
+                <i class="el-icon-setting"></i>说明
             </el-menu-item>
             <el-submenu index="2">
-                <template slot="title"><i class="el-icon-menu"></i>表格</template>
+                <template slot="title"><i class="el-icon-menu"></i>周报</template>
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
                 <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
 
             </el-submenu>
-            <!--<el-submenu index="3">-->
-                <!--<template slot="title"><i class="el-icon-date"></i>表单</template>-->
-                <!--<el-menu-item index="baseform">基本表单</el-menu-item>-->
-                <!--<el-menu-item index="vueeditor">编辑器</el-menu-item>-->
-                <!--<el-menu-item index="markdown">markdown</el-menu-item>-->
-                <!--<el-menu-item index="upload">文件上传</el-menu-item>-->
-            <!--</el-submenu>-->
+ 
             <el-submenu index="4">
-                <template slot="title"><i class="el-icon-star-on"></i>概览</template>
+                <template slot="title"><i class="el-icon-star-on"></i>报表</template>
                                 <el-menu-item index="weeklySumup">周报总览</el-menu-item>
                    <el-menu-item index="weeklyGraph">总表汇总图</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->

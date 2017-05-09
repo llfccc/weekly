@@ -6,7 +6,7 @@ from forms import UserForm, RegisterForm
 from models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
-
+from utils.tools import my_response, queryset_to_dict, dict_to_json
 
 # Create your views here.
 class LoginHandler(View):
@@ -36,24 +36,24 @@ class LoginHandler(View):
 
 class RegisterHandler(View):
     def post(self, request):
-            form = RegisterForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                username = data['username']
-                # chinese_name = data['chinese_name']
-                # group_name = data['group_name']
-                password = data['password']
-                password2 = data['password']
-                print(username)
-                if not User.objects.all().filter(username=username):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            username = data['username']
+            # chinese_name = data['chinese_name']
+            # group_name = data['group_name']
+            password = data['password']
+            password2 = data['password']
+            print(username)
+            if not User.objects.all().filter(username=username):
+                    user = User.objects.create_user(username, '', password)
+                    user.save()
+                    # login_validate(request, username, password)
+                    return my_response(code=0, msg="注册成功", content="")
+            else:
 
-                        user = User.objects.create_user(username, '', password)
-                        user.save()
-                        # login_validate(request, username, password)
-                        return my_response(code=0, msg="注册成功", content="")
-                else:
-
-                    return my_response(code=1, msg="用户已存在", content="")
+                return my_response(code=1, msg="用户已存在", content="")
+        return my_response(code=1, msg="用户已存在", content="")
 # 如果痛苦加深那么你就要进行5月与医生的第一次约会
 
 class LogoutHandler(View):
@@ -92,3 +92,13 @@ def logout(req):
     # 清理cookie里保存username
     response.delete_cookie('sid')
     return response
+
+
+class GetUsername(View):
+    def get(self, request):   
+        data = User.objects.all()
+        query_field = ["id","username","chinese_name","department_id", "position_id"]
+        data_dict = queryset_to_dict(data, query_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response

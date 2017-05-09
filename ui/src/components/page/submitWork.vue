@@ -8,8 +8,8 @@
                     <el-input v-model="filters.name" placeholder="姓名"></el-input>
                 </el-form-item>
                 <!--<el-form-item>
-                                      <el-button type="primary" v-on:click="getUsers">查询</el-button>
-                                  </el-form-item>-->
+                                          <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                                      </el-form-item>-->
                 <el-form-item>
                     <el-button type="primary" @click="handleAdd">新增</el-button>
                 </el-form-item>
@@ -21,7 +21,7 @@
                 <el-form-item label="项目名称">
     
                     <el-select v-model="form.project_id" clearable filterable placeholder="项目名">
-                        <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
+                        <el-option v-for="item in project_list" :key="item.project_id" :label="item.project_name" :value="item.id">
                         </el-option>
                     </el-select>
                     <el-select v-model="form.event_type_id" clearable filterable placeholder="类型">
@@ -48,14 +48,23 @@
                 </el-form-item>
                 <el-form-item label="其他：">
                     <el-col :span="8">
-                        <el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="form.up_reporter_id">
-                            上游汇报人
-                        </el-input>
+                                            <el-select v-model="form.up_reporter_id" clearable filterable placeholder="上游汇报人">
+                        <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                        </el-option>
+                    </el-select>
+
+                        <!--<el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="form.up_reporter_id">
+                                上游汇报人
+                            </el-input>-->
+    
                     </el-col>
                     <el-col :span="8">
-                        <el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="form.down_reporter_ids">下游汇报人
-                        </el-input>
-    
+                        <!--<el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="form.down_reporter_ids">下游汇报人
+                        </el-input>-->
+                                              <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
+                        <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                        </el-option>
+                    </el-select>
                     </el-col>
                     <el-col :span="8">
                         <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="form.fin_percentage">进度
@@ -160,6 +169,7 @@ export default {
             work_list: [],
             project_list: [],
             event_type_list: [],
+            user_list:[],
             form: {
                 description: '',
                 start_time: '',
@@ -168,7 +178,8 @@ export default {
                 up_reporter_id: '',
                 down_reporter_ids: '',
                 dev_event_remark: '',
-                project_id: '',
+                project_id: '3',
+                project_name:'',
                 event_type_id: '',
             },
             editForm: {
@@ -199,8 +210,18 @@ export default {
         this.get_data()
         this.get_projects()
         this.get_event_types()
+        this.get_users()
     },
     methods: {
+        get_users:function(params){
+            var v = this;
+            this.$axios.get('/accounts/get_username/')
+                .then(function (response) {
+                    v.user_list = eval(response.data.content);
+
+                }
+                );
+        },
         get_data: function (params) {
             var v = this;
             this.$axios.get('/works/get_works/')
@@ -259,15 +280,15 @@ export default {
             //                    console.log(transToJson(v.form));
             let str = 'start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&project_id=' + v.form.project_id + '&event_type_id=' + v.form.event_type_id;
             this.$axios.post('/works/insert_work/', str).then(function (response) {
- 
+
                 if (response.data.code == 0) {
                     // v.work_list.push(v.form);
-                            v.get_data()
+                    v.get_data()
                     v.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'
                     });
-                }else{
+                } else {
                     v.$message({
                         message: '插入失败',
                         type: 'error'

@@ -140,12 +140,3 @@ class SaleEvent(models.Model):
     def __unicode__(self):
         return u"{}".format(self.visit_date)
 
-class Department(models.Model):
-    department_name = models.CharField(max_length=100, verbose_name='活动类型名称')
-    department_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='备注')
-    create_time = models.DateTimeField(auto_now_add=True)
-
-    creator =  models.ForeignKey(User, verbose_name='创建人') 
-    def __unicode__(self):
-        return u"{}".format(self.active_type_name)
