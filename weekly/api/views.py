@@ -120,7 +120,8 @@ class GetSaleEvents(View):
         
         param = "*"
         plain_sql = "SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
-            left join api_salecustomer as customer on sale.sale_customer_id = customer.id ;".format(param)
+            left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
+            left join api_salephase as phase on sale.sale_phase_id = phase.id ;".format(param)
         row = fetch_data(plain_sql)
         # query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
         #        "event_name", "dev_event_remark"]

@@ -87,7 +87,7 @@
 
             <el-table-column prop="short_name" label="客户简称" width="150" fixed sortable>
             </el-table-column>
-                        <el-table-column prop="phase_name" label="拜访阶段" width="150" fixed sortable>
+            <el-table-column prop="phase_name" label="拜访阶段" width="150" fixed sortable>
             </el-table-column>
             <el-table-column prop="cus_con_post" label="客户职位" width="150" sortable>
             </el-table-column>
