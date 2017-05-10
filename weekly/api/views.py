@@ -6,7 +6,7 @@ from django.http import HttpResponse, FileResponse, Http404
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from utils.export_excel import ReportExcel
-from .models import DevEvent,DevProject,DevEventType
+from .models import DevEvent,DevProject,DevEventType,SaleCustomer,SalePhase,SaleTarget,SaleEvent,SaleActiveType
 from django.db.models import Q
 import StringIO
 from django.core.cache import cache
@@ -108,6 +108,44 @@ class HideWork(View):
 class Test(View):
     def get(self, request):
         return HttpResponse("ok")
+
+
+
+
+class GetSaleEvents(View):
+    ''''
+    查询拜访记录
+    '''
+    def get(self, request):
+        
+        param = "*"
+        plain_sql = "SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
+            left join api_salecustomer as customer on sale.sale_customer_id = customer.id ;".format(param)
+        row = fetch_data(plain_sql)
+        # query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
+        #        "event_name", "dev_event_remark"]
+        content = dict_to_json(row)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+
+class GetCustomers(View):
+    def get(self, request):   
+        data = SaleCustomer.objects.all()
+        query_field = ["id","full_name","contact_post","contact_name","contact_mdn", "contact_tel_num","sale_customer_remark","create_time"]
+        data_dict = queryset_to_dict(data, query_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+class GetSaleActiveTypes(View):
+    def get(self, request):   
+        data = SaleActiveType.objects.all()
+        query_field = ["id","active_type_name","sale_active_type_remark", "create_time"]
+        data_dict = queryset_to_dict(data, query_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
 
 
 class GetExcel(View):

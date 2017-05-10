@@ -10,11 +10,24 @@
                 <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
 
             </el-submenu>
+                        <el-submenu index="3">
+                <template slot="title"><i class="el-icon-menu"></i>销售拜访</template>
+                <el-menu-item index="submitVisit">添加拜访</el-menu-item>
+                <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
+
+            </el-submenu>
  
             <el-submenu index="4">
                 <template slot="title"><i class="el-icon-star-on"></i>报表</template>
                                 <el-menu-item index="weeklySumup">周报总览</el-menu-item>
                    <el-menu-item index="weeklyGraph">总表汇总图</el-menu-item>
+                <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
+                <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
+            </el-submenu>
+                        <el-submenu index="5">
+                <template slot="title"><i class="el-icon-star-on"></i>文件下载</template>
+                                <el-menu-item index="rulesDownload">制度下载</el-menu-item>
+                   <el-menu-item index="notice">通知</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>

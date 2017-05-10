@@ -28,7 +28,10 @@ export default new Router({
                     path: '/submitWork',
                     component: resolve => require(['../components/page/submitWork.vue'], resolve)
                 },
-
+                {
+                    path: '/submitVisit',
+                    component: resolve => require(['../components/page/submitVisit.vue'], resolve)
+                },
                 {
                     path: '/vuetable',
                     component: resolve => require(['../components/page/VueTable.vue'], resolve) // vue-datasource组件

@@ -5,15 +5,18 @@ from django.db import models
 from accounts.models import User
 
 # Create your models here.
+
+
 class DevProject(models.Model):
     project_name = models.CharField(max_length=100, verbose_name='项目名称')
-    
+
     status = models.CharField(max_length=64, verbose_name='项目状态：00，关闭；01，启动')
     dev_project_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='备注')
+                                          blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
-    creator =  models.ForeignKey(User, verbose_name='创建人') 
+    creator = models.ForeignKey(User, verbose_name='创建人')
+
     def __unicode__(self):
         return u"{}".format(self.project_name)
 
@@ -21,10 +24,10 @@ class DevProject(models.Model):
 class DevEventType(models.Model):
     event_type_name = models.CharField(max_length=100, verbose_name='事件类型名称')
     dev_event_type_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='备注')
+                                             blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
-    # creator =  models.ForeignKey(User, verbose_name='创建人') 
+    # creator =  models.ForeignKey(User, verbose_name='创建人')
     def __unicode__(self):
         return u"{}".format(self.event_type_name)
 
@@ -37,12 +40,13 @@ class DevEvent(models.Model):
     fin_percentage = models.IntegerField(default=0, verbose_name='完成百分比')
     up_reporter_id = models.CharField(max_length=64, verbose_name='上游汇报人')
     down_reporter_ids = models.CharField(max_length=64, verbose_name='下游汇报人')
-    dev_event_remark = models.TextField(null=True, blank=True, verbose_name="备注")
+    dev_event_remark = models.TextField(
+        null=True, blank=True, verbose_name="备注")
     create_time = models.DateTimeField(auto_now_add=True)
 
-    owner_id =  models.IntegerField(default=None,verbose_name='事件所属人')
+    owner_id = models.IntegerField(null=True, verbose_name='事件所属人')
     project_id = models.IntegerField(null=True, verbose_name='所属项目')
-    event_type_id = models.IntegerField(null=True,verbose_name='事件类型')
+    event_type_id = models.IntegerField(null=True, verbose_name='事件类型')
 
     def __unicode__(self):
         return u"{}".format(self.description)
@@ -65,8 +69,7 @@ class WeekSummary(models.Model):
 class SaleActiveType(models.Model):
     active_type_name = models.CharField(max_length=100, verbose_name='活动类型名称')
     sale_active_type_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='备注')
-    creator = models.ForeignKey(User, verbose_name='事件所属人')
+                                               blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -82,7 +85,7 @@ class SaleCustomer(models.Model):
     contact_tel_num = models.CharField(
         max_length=100, verbose_name='主要联系人电话号码')
     sale_customer_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='客户备注')
+                                            blank=True, verbose_name='客户备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -96,7 +99,7 @@ class SalePhase(models.Model):
         null=True, blank=True, max_length=500, verbose_name='阶段描述')
     phase_count = models.IntegerField(verbose_name='最大拜访次数')
     sale_phase_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='备注')
+                                         blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
     # creator =models.ForeignKey(User, verbose_name='创建人')
@@ -111,11 +114,11 @@ class SaleTarget(models.Model):
     target = models.CharField(max_length=500, verbose_name='目标，json存储')
     phase_count = models.IntegerField(verbose_name='最大拜访次数')
     sale_target_remark = models.CharField(max_length=64, null=True,
-                              blank=True, verbose_name='销售目标备注')
+                                          blank=True, verbose_name='销售目标备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
-    # creator =  models.ForeignKey(User, verbose_name='创建人') 
-    owner = models.ForeignKey(User, verbose_name='目标所属人')
+    # creator =  models.ForeignKey(User, verbose_name='创建人')
+    sale_target_owner_id = models.IntegerField(verbose_name='目标所属人')
 
     def __unicode__(self):
         return u"{}".format(self.owner)
@@ -125,18 +128,19 @@ class SaleEvent(models.Model):
     cus_con_post = models.CharField(max_length=500, verbose_name='客户职位')
     visit_date = models.DateTimeField(verbose_name='拜访时间')
     # end_time = models.DateTimeField(verbose_name='结束时间')
-    cus_con_mdn = models.CharField(max_length=64, default=None, verbose_name='手机号码')
+    cus_con_mdn = models.CharField(
+        max_length=64, default=None, verbose_name='手机号码')
     cus_con_tel_num = models.CharField(max_length=64, verbose_name='客户联系方式')
     cus_con_wechart = models.CharField(max_length=64, verbose_name='客户的微信号')
     communicate_record = models.CharField(max_length=500, verbose_name='沟通成果')
-    sale_event_remark = models.TextField(null=True, blank=True, verbose_name="备注")
+    sale_event_remark = models.TextField(
+        null=True, blank=True, verbose_name="备注")
     create_time = models.DateTimeField(auto_now_add=True)
 
-    owner = models.ForeignKey(User, verbose_name='拜访人')
-    active_type = models.ForeignKey(SaleActiveType, verbose_name='拜访类型')
-    sale_customer = models.ForeignKey(SaleCustomer, verbose_name='客户ID')
-    sale_phase = models.ForeignKey(SalePhase, verbose_name='拜访阶段')
+    sale_event_owner_id = models.IntegerField(null=True, verbose_name='拜访人')
+    active_type_id = models.IntegerField(null=True, verbose_name='拜访类型')
+    sale_customer_id = models.IntegerField(null=True, verbose_name='客户ID')
+    sale_phase_id = models.IntegerField(null=True, verbose_name='拜访阶段')
 
     def __unicode__(self):
         return u"{}".format(self.visit_date)
-

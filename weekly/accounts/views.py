@@ -54,7 +54,7 @@ class RegisterHandler(View):
 
                 return my_response(code=1, msg="用户已存在", content="")
         return my_response(code=1, msg="用户已存在", content="")
-# 如果痛苦加深那么你就要进行5月与医生的第一次约会
+
 
 class LogoutHandler(View):
     def get(self, request):
