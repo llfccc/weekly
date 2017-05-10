@@ -73,7 +73,8 @@ class InsertWork(View):
         # sid = request.COOKIES.get("sid")
         # username = cache.get(sid).get("username")
         data = request.POST
-        insert_field=["description","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
+        print(data)
+        insert_field=["description","event_date","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
         result={}
         for t in insert_field:
             result[t]=data.get(t)
@@ -81,15 +82,17 @@ class InsertWork(View):
         # result['project']=DevProject.objects.get(pk=result['project'])
         # result['event_type']=DevEventType.objects.get(pk=result['event_type'])
         result['owner_id']=1
+        result['start_time']='12:00:00'
+        result['end_time']='13:00:10'
         content = {"id": 0}
         if result:
             inset_job = DevEvent(**result)
-            try:
-                inset_job.save()
-                content = {"id": inset_job.id}
-                response = my_response(code=0, msg=u"success", content=content)                
-            except:
-                response = my_response(code=1, msg=u"error", content=content)
+            # try:
+            inset_job.save()
+            content = {"id": inset_job.id}
+            response = my_response(code=0, msg=u"success", content=content)                
+            # except:
+            #     response = my_response(code=1, msg=u"error", content=content)
         return response
 
 

@@ -8,8 +8,8 @@
                     <el-input v-model="filters.name" placeholder="姓名"></el-input>
                 </el-form-item>
                 <!--<el-form-item>
-                                          <el-button type="primary" v-on:click="getUsers">查询</el-button>
-                                      </el-form-item>-->
+                                                                  <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                                                              </el-form-item>-->
                 <el-form-item>
                     <el-button type="primary" @click="handleAdd">新增</el-button>
                 </el-form-item>
@@ -36,35 +36,43 @@
                 </el-form-item>
     
                 <el-form-item label="工作时间">
-                    <el-col :span="11" class="block">
-                        <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
+                    <div class="block">
+                        <span class="demonstration"></span>
+                        <el-date-picker v-model="form.event_date" align="right" type="date" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
                         </el-date-picker>
-                    </el-col>
-                    <el-col class="line" :span="2">-</el-col>
-                    <el-col :span="11" class="block">
-                        <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
-                        </el-date-picker>
-                    </el-col>
+                        <el-time-picker is-range v-model="form.event_time" placeholder="选择时间范围" @change="timeChange">
+                        </el-time-picker>
+                    </div>
+    
+                    <!--<el-col :span="11" class="block">
+                                            <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
+                                            </el-date-picker>
+                                        </el-col>
+                                        <el-col class="line" :span="2">-</el-col>
+                                        <el-col :span="11" class="block">
+                                            <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
+                                            </el-date-picker>
+                                        </el-col>-->
                 </el-form-item>
                 <el-form-item label="其他：">
                     <el-col :span="8">
-                                            <el-select v-model="form.up_reporter_id" clearable filterable placeholder="上游汇报人">
-                        <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-                        </el-option>
-                    </el-select>
-
+                        <el-select v-model="form.up_reporter_id" clearable filterable placeholder="上游汇报人">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            </el-option>
+                        </el-select>
+    
                         <!--<el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="form.up_reporter_id">
-                                上游汇报人
-                            </el-input>-->
+                                                        上游汇报人
+                                                    </el-input>-->
     
                     </el-col>
                     <el-col :span="8">
                         <!--<el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="form.down_reporter_ids">下游汇报人
-                        </el-input>-->
-                                              <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
-                        <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-                        </el-option>
-                    </el-select>
+                                                </el-input>-->
+                        <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            </el-option>
+                        </el-select>
                     </el-col>
                     <el-col :span="8">
                         <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="form.fin_percentage">进度
@@ -84,6 +92,8 @@
     
         </el-dialog>
         <el-table :data="work_list" border style="width: 100%">
+            <el-table-column prop="event_date" label="事件日期" width="150" sortable>
+            </el-table-column>
             <el-table-column prop="project_name" label="项目名称" width="150" fixed sortable>
             </el-table-column>
             <el-table-column prop="event_type_name" label="类型" width="150" sortable>
@@ -121,6 +131,7 @@
                 </el-form-item>
     
                 <el-form-item label="工作时间">
+    
                     <el-col :span="11" class="block">
                         <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
                         </el-date-picker>
@@ -169,17 +180,22 @@ export default {
             work_list: [],
             project_list: [],
             event_type_list: [],
-            user_list:[],
+            user_list: [],
+            dateOption: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7 * 2;
+                }
+            },
             form: {
                 description: '',
-                start_time: '',
-                end_time: '',
+                event_date: '',
+                event_time: '',
                 fin_percentage: '',
                 up_reporter_id: '',
                 down_reporter_ids: '',
                 dev_event_remark: '',
                 project_id: '3',
-                project_name:'',
+                project_name: '',
                 event_type_id: '',
             },
             editForm: {
@@ -213,7 +229,17 @@ export default {
         this.get_users()
     },
     methods: {
-        get_users:function(params){
+        dateChange(val) {
+            var v = this;
+            v.form.event_date = val
+
+        },
+        timeChange(val) {
+            var v = this;
+            v.form.event_time = val
+
+        },
+        get_users: function (params) {
             var v = this;
             this.$axios.get('/accounts/get_username/')
                 .then(function (response) {
@@ -252,21 +278,21 @@ export default {
         addWork: function () {
             var v = this;
 
-            function convertDatetime(d) {
-                var result = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                return result;
-            }
+            // function convertDatetime(d) {
+            //     var result = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+            //     return result;
+            // }
 
-            if (v.form.start_time) {
-                v.form.start_time = convertDatetime(v.form.start_time);
-            } else {
-                v.form.start_time = ''
-            }
-            if (v.form.end_time) {
-                v.form.end_time = convertDatetime(v.form.end_time);
-            } else {
-                v.form.end_time = ''
-            }
+            // if (v.form.start_time) {
+            //     v.form.start_time = convertDatetime(v.form.start_time);
+            // } else {
+            //     v.form.start_time = ''
+            // }
+            // if (v.form.end_time) {
+            //     v.form.end_time = convertDatetime(v.form.end_time);
+            // } else {
+            //     v.form.end_time = ''
+            // }
 
             //后期改用此种方法合成json
             //                    function transToJson(data) {
@@ -278,7 +304,9 @@ export default {
             //                        return ret
             //                    }
             //                    console.log(transToJson(v.form));
-            let str = 'start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&project_id=' + v.form.project_id + '&event_type_id=' + v.form.event_type_id;
+            console.log(v.form);
+
+            let str = 'event_date=' + v.form.event_date + '&event_time=' + v.form.event_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&project_id=' + v.form.project_id + '&event_type_id=' + v.form.event_type_id;
             this.$axios.post('/works/insert_work/', str).then(function (response) {
 
                 if (response.data.code == 0) {
