@@ -43,11 +43,11 @@ class DevEvent(models.Model):
     down_reporter_ids = models.CharField(max_length=64, verbose_name='下游汇报人')
     dev_event_remark = models.TextField(
         null=True, blank=True, verbose_name="备注")
-    create_time = models.DateTimeField(auto_now_add=True)
+    dev_event_create_time = models.DateTimeField(auto_now_add=True)
 
-    owner_id = models.IntegerField(null=True, verbose_name='事件所属人')
-    project_id = models.IntegerField(null=True, verbose_name='所属项目')
-    event_type_id = models.IntegerField(null=True, verbose_name='事件类型')
+    dev_event_owner_id = models.IntegerField(null=True, verbose_name='事件所属人')
+    dev_event_project_id = models.IntegerField(null=True, verbose_name='所属项目')
+    dev_event_type_id = models.IntegerField(null=True, verbose_name='事件类型')
 
     def __unicode__(self):
         return u"{}".format(self.description)

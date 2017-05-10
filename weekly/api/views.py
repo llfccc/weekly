@@ -34,23 +34,33 @@ def fetch_data(sql):
 
 
 class GetWorks(View):
-    def get(self, request):
-        
-        param = "*"
-        plain_sql = "SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.project_id = pro.id \
-            left join api_deveventtype on dev.event_type_id = api_deveventtype.id ;".format(param)
+    '''
+    查询每日工作内容
+    '''
+    def get(self, request):    
+
+        dev_event_field = ["dev.id as dev_event_id", "description","event_date", "start_time", "end_time", "fin_percentage",\
+            "up_reporter_id", "down_reporter_ids", "dev_event_remark","dev_event_create_time","dev_event_owner_id",\
+            "dev_event_project_id","dev_event_type_id"]
+        project_field = ["project_name"]
+        event_type_field = ["event_type_name"]
+        all_select_field=dev_event_field+project_field+event_type_field
+
+        select_param=",".join(all_select_field)
+
+        plain_sql = "SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
+            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id ;".format(select_param)
         row = fetch_data(plain_sql)
 
-        query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
-               "event_name", "dev_event_remark"]
-
-        data_dict = dict_to_json(row)
-        content = data_dict
+        content = dict_to_json(row)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
 
 class GetProjects(View):
+    '''
+    查询所有项目属性
+    '''
     def get(self, request):   
         data = DevProject.objects.all()
         query_field = ["id","creater_id","status","dev_project_remark","project_name", "create_time"]
@@ -60,6 +70,9 @@ class GetProjects(View):
         return response
 
 class GetEventTypes(View):
+    '''
+    查询所有项目属性
+    '''
     def get(self, request):   
         data = DevEventType.objects.all()
         query_field = ["id","creator_id","event_type_name","dev_event_type_remark", "create_time"]
@@ -74,16 +87,12 @@ class InsertWork(View):
         # username = cache.get(sid).get("username")
         data = request.POST
         print(data)
-        insert_field=["description","event_date","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
+        insert_field=["description","event_date","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
         result={}
         for t in insert_field:
             result[t]=data.get(t)
 
-        # result['project']=DevProject.objects.get(pk=result['project'])
-        # result['event_type']=DevEventType.objects.get(pk=result['event_type'])
         result['owner_id']=1
-        result['start_time']='12:00:00'
-        result['end_time']='13:00:10'
         content = {"id": 0}
         if result:
             inset_job = DevEvent(**result)
@@ -96,24 +105,24 @@ class InsertWork(View):
         return response
 
 
-class HideWork(View):
+class DelWork(View):
     def post(self, request):
         data = request.POST
         print(data)
-        hidedid = data.get("hidedid")
-        DevEvent.objects.filter(id=hidedid).update(hided=1)
-        response = HttpResponse("yes no")
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Origin, x-requested-with, content-type"
+        delID = data.get("delID")
+        del_event_id=DevEvent.objects.filter(id=delID).delete()
+        print(del_event_id[0])
+        if del_event_id[0]==0:
+            response = my_response(code=1, msg=u"删除失败")      
+        else:
+            content = {"id": del_event_id[0]}
+            response = my_response(code=0, msg=u"success", content=content)
         return response
-
 
 class Test(View):
     def get(self, request):
         return HttpResponse("ok")
-
-
-
+        
 
 class GetSaleEvents(View):
     ''''
