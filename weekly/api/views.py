@@ -87,12 +87,12 @@ class InsertWork(View):
         # username = cache.get(sid).get("username")
         data = request.POST
         print(data)
-        insert_field=["description","event_date","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","project_id","event_type_id"]
+        insert_field=["description","event_date","start_time","end_time","fin_percentage","up_reporter_id","down_reporter_ids","dev_event_remark","dev_event_project_id","dev_event_type_id"]
         result={}
         for t in insert_field:
             result[t]=data.get(t)
 
-        result['owner_id']=1
+        result['dev_event_owner_id']=1
         content = {"id": 0}
         if result:
             inset_job = DevEvent(**result)
@@ -122,7 +122,7 @@ class DelWork(View):
 class Test(View):
     def get(self, request):
         return HttpResponse("ok")
-        
+
 
 class GetSaleEvents(View):
     ''''

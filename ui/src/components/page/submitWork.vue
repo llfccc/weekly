@@ -20,8 +20,8 @@
             <el-form ref="form" :model="form" label-width="90px">
                 <el-form-item label="项目名称">
     
-                    <el-select v-model="form.project_id" clearable filterable placeholder="项目名">
-                        <el-option v-for="item in project_list" :key="item.project_id" :label="item.project_name" :value="item.id">
+                    <el-select v-model="form.dev_event_project_id" clearable filterable placeholder="项目名">
+                        <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
                         </el-option>
                     </el-select>
                     <el-select v-model="form.event_type_id" clearable filterable placeholder="类型">
@@ -40,19 +40,10 @@
                         <span class="demonstration"></span>
                         <el-date-picker v-model="form.event_date" align="right" type="date" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
                         </el-date-picker>
-                        <el-time-picker is-range v-model="form.event_time" placeholder="选择时间范围" @input="timeChange">
+                        <el-time-picker label="时间" is-range v-model="form.event_time" placeholder="选择时间范围" @input="timeChange">
                         </el-time-picker>
-                    </div>
-    
-                    <!--<el-col :span="11" class="block">
-                                                    <el-date-picker v-model="form.start_time" type="datetime" placeholder="选择日期时间">
-                                                    </el-date-picker>
-                                                </el-col>
-                                                <el-col class="line" :span="2">-</el-col>
-                                                <el-col :span="11" class="block">
-                                                    <el-date-picker v-model="form.end_time" type="datetime" placeholder="选择日期时间">
-                                                    </el-date-picker>
-                                                </el-col>-->
+                    </div>    
+
                 </el-form-item>
                 <el-form-item label="其他：">
                     <el-col :span="8">
@@ -198,7 +189,7 @@ export default {
                 up_reporter_id: '',
                 down_reporter_ids: '',
                 dev_event_remark: '',
-                project_id: '3',
+                dev_event_project_id:'',
                 project_name: '',
                 event_type_id: '',
             },
@@ -226,7 +217,7 @@ export default {
         }
     },
     created() {
-        // 组件创建完后获取数据，这里和1.0不一样，改成了这个样子
+        // 组件创建完后获取数据
         this.get_data()
         this.get_projects()
         this.get_event_types()
@@ -297,11 +288,10 @@ export default {
             //                    console.log(transToJson(v.form));
             console.log(v.form);
 
-            let str = 'event_date=' + v.form.event_date + '&start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&project_id=' + v.form.project_id + '&event_type_id=' + v.form.event_type_id;
+            let str = 'event_date=' + v.form.event_date + '&start_time=' + v.form.start_time + '&end_time=' + v.form.end_time + '&description=' + v.form.description + '&fin_percentage=' + v.form.fin_percentage + '&up_reporter_id=' + v.form.up_reporter_id + '&down_reporter_ids=' + v.form.down_reporter_ids + '&dev_event_remark=' + v.form.dev_event_remark + '&dev_event_project_id=' + v.form.dev_event_project_id + '&event_type_id=' + v.form.event_type_id;
             this.$axios.post('/works/insert_work/', str).then(function (response) {
 
                 if (response.data.code == 0) {
-                    // v.work_list.push(v.form);
                     v.get_data()
                     v.$message({
                         message: '恭喜你，新增成功',
@@ -351,13 +341,13 @@ export default {
         },
         handleAdd: function () {
             this.addFormVisible = true;
-            this.addForm = {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            };
+            // this.addForm = {
+            //     name: '',
+            //     sex: -1,
+            //     age: 0,
+            //     birth: '',
+            //     addr: ''
+            // };
         },
     },
 }
