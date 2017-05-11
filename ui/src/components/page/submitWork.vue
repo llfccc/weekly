@@ -47,7 +47,7 @@
                         <span class="demonstration"></span>
                         <el-date-picker v-model="form.event_date" align="right" type="date" default-value="new Date()" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
                         </el-date-picker>
-                        <el-time-picker label="时间" is-range v-model="form.event_time" range-separator='*' placeholder="选择时间范围" @input="timeChange">
+                        <el-time-picker label="时间" is-range v-model="form.event_time" range-separator='-' placeholder="选择时间范围" @input="timeChange">
                         </el-time-picker>
                     </div>
 
@@ -55,20 +55,13 @@
                 <el-form-item label="其他：">
                     <el-col :span="8">
                         <el-select v-model="form.up_reporter_id" clearable filterable placeholder="上游汇报人">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>
-
-                        <!--<el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="form.up_reporter_id">
-                                                                                    上游汇报人
-                                                                                </el-input>-->
-
                     </el-col>
                     <el-col :span="8">
-                        <!--<el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="form.down_reporter_ids">下游汇报人
-                                                                            </el-input>-->
                         <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-col>
@@ -406,7 +399,7 @@ export default {
             //     birth: '',
             //     addr: ''
             // };
-        },
+           },
     },
 }
 </script>

@@ -6,7 +6,9 @@ import datetime
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json, getMondaySunday
 from utils.export_excel import ReportExcel
-from .models import DevEvent, DevProject, DevEventType, SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
+from .models import DevEvent, DevProject, DevEventType
+from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
+from .models import WeekSummary
 from django.db.models import Q
 import StringIO
 from django.core.cache import cache
@@ -67,6 +69,9 @@ class GetWorks(View):
                            "dev_event_owner_id", "dev_event_project_id", "dev_event_type_id"]
         project_field = ["project_name"]
         event_type_field = ["event_type_name"]
+        #没有完成显示出对应的上下游对接人
+        # up_user_field=["chinese_name as up_reporter_name "]
+        # down_user_field = ["chinese_name as down_reporter_name "]
         all_select_field = dev_event_field + project_field + event_type_field
 
         select_param = ",".join(all_select_field)
@@ -125,13 +130,13 @@ class InsertWork(View):
         result['dev_event_owner_id'] = 1
         content = {"id": 0}
         if result:
-            inset_job = DevEvent(**result)
-            # try:
-            inset_job.save()
-            content = {"id": inset_job.id}
-            response = my_response(code=0, msg=u"success", content=content)
-            # except:
-            #     response = my_response(code=1, msg=u"error", content=content)
+            inset_process = DevEvent(**result)
+            try:
+                inset_process.save()
+                content = {"id": inset_process.id}
+                response = my_response(code=0, msg=u"success", content=content)
+            except:
+                response = my_response(code=1, msg=u"error", content=content)
         return response
 
 
@@ -219,4 +224,41 @@ class GetExcel(View):
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
             'output.xlsx')
+        return response
+
+
+class GetWeeklySummary(View):
+    '''
+    查询所有项目属性
+    '''
+
+    def get(self, request):
+        data = WeekSummary.objects.all()
+        query_field = ["id", "start_time", "end_time", "summary", "self_evaluation", "plan", "create_time"]
+        data_dict = queryset_to_dict(data, query_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+class InsertSummary(View):
+    def post(self, request):
+        # sid = request.COOKIES.get("sid")
+        # username = cache.get(sid).get("username")
+        data = request.POST
+        print(data)
+        insert_field = ["start_time", "end_time", "summary", "self_evaluation", "plan"]
+        result = {}
+        for t in insert_field:
+            result[t] = data.get(t)
+
+        result['summary_owner_id'] = 1
+        content = {"id": 0}
+        if result:
+            inset_process = WeekSummary(**result)
+            try:
+                inset_process.save()
+                content = {"id": inset_process.id}
+                response = my_response(code=0, msg=u"success", content=content)
+            except:
+                response = my_response(code=1, msg=u"error", content=content)
         return response

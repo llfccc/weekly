@@ -54,13 +54,13 @@ class DevEvent(models.Model):
 
 
 class WeekSummary(models.Model):
-    start_time = models.DateTimeField(verbose_name='开始时间')
-    end_time = models.DateTimeField(verbose_name='结束时间')
+    start_time = models.DateField(verbose_name='开始时间')
+    end_time = models.DateField(verbose_name='结束时间')
     summary = models.CharField(max_length=500, verbose_name='总结')
     self_evaluation = models.CharField(max_length=500, verbose_name='自我评价')
     plan = models.CharField(max_length=500, verbose_name='计划')
     create_time = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, verbose_name='事件所属人')
+    summary_owner_id = models.IntegerField(verbose_name='事件所属人')
 
     def __unicode__(self):
         return u"{}".format(self.summary)

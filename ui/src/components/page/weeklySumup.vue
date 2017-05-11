@@ -1,86 +1,155 @@
 <template>
-  <div>
- <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-            <el-form ref="form" :model="form" label-width="90px">
-                <el-form-item label="项目名称">
-
-                    <el-select v-model="form.dev_event_project_id" clearable filterable placeholder="项目名">
-                        <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select v-model="form.dev_event_type_id" clearable filterable placeholder="类型">
-                        <el-option v-for="item in event_type_list" :key="item.id" :label="item.event_type_name" :value="item.id">
-                        </el-option>
-                    </el-select>
-
-                </el-form-item>
-                <el-form-item label="工作内容">
-                    <el-input type="textarea" class="form-control" id="description" placeholder="工作内容" v-model="form.description">工作内容
-                    </el-input>
-                </el-form-item>
-
-                <el-form-item label="工作时间">
+    <div>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-table :data="summary_list" border style="width: 100%">
+            <el-table-column prop="id" style="display:none" label="id" width="150" sortable>
+            </el-table-column>
+            <el-table-column prop="start_time" label="开始时间" width="150" fixed sortable>
+            </el-table-column>
+            <el-table-column prop="end_time" label="结束时间" width="150" sortable>
+            </el-table-column>
+            <el-table-column prop="summary" label="总结" width="150" sortable>
+            </el-table-column>
+            <el-table-column prop="self_evaluation" label="自我评价" width="150" sortable>
+            </el-table-column>
+            <el-table-column prop="plan" label="计划" width="150" sortable>
+            </el-table-column>
+            <el-table-column label="操作" width="180" fixed="right">
+                <template scope="scope">
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    
+        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+            <el-form ref="insertForm" :model="insertForm" label-width="90px">
+    
+                <el-form-item label="时间范围:">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="form.event_date" align="right" type="date" default-value="new Date()" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
+                        <el-date-picker v-model="insertForm.start_time" align="right" type="date" default-value="new Date()" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
                         </el-date-picker>
-                        <el-time-picker label="时间" is-range v-model="form.event_time" range-separator='*' placeholder="选择时间范围" @input="timeChange">
-                        </el-time-picker>
+                        <el-date-picker v-model="insertForm.end_time" align="right" type="date" default-value="new Date()" placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
+                        </el-date-picker>
                     </div>
-
+    
                 </el-form-item>
-                <el-form-item label="其他：">
-                    <el-col :span="8">
-                        <el-select v-model="form.up_reporter_id" clearable filterable placeholder="上游汇报人">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="form.fin_percentage">进度
-                        </el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="其他：">
-                    <el-input type="textarea" class="form-control" id="dev_event_remark" placeholder="备注" v-model="form.dev_event_remark">
-                        备注
+                <el-form-item label="总结：">
+                    <el-input type="textarea" class="form-control" id="summary" placeholder="总结" v-model="insertForm.summary">
+                        总结
                     </el-input>
                 </el-form-item>
+                <el-form-item label="自我评价：">
+                    <el-input type="textarea" class="form-control" id="self_evaluation" placeholder="自我评价" v-model="insertForm.self_evaluation">
+                        总结
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="计划：">
+                    <el-input type="textarea" class="form-control" id="plan" placeholder="计划" v-model="insertForm.plan">
+                        总结
+                    </el-input>
+                </el-form-item>
+    
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addWork" :loading="addLoading">提交</el-button>
+                <el-button type="primary" @click.native="insertSummary" :loading="addLoading">提交</el-button>
             </div>
-
+            <div>
+                <p>**每个内容最多500字符 </p>
+            </div>
         </el-dialog>
-      </div>
+    </div>
 </template>
 <script>
 export default {
     data() {
         return {
-                name: '标题',
-                addFormVisible:true,
+            name: '标题',
+            addFormVisible: false,
+            summary_list: [],
+            filters: {
+                project_name: '',
+                filter_date: '',
+                start_date: '',
+                end_date: '',
+            },
+            addLoading: false,
+            insertForm: {
+                start_time: '',
+                end_time: '',
+                summary:'',
+                plan:'',
+                self_evaluation:'',
+
+            },
         }
     },
     created() {
         // 组件创建完后获取数据，这里和1.0不一样，改成了这个样子
-        this.get_data()
-        this.get_projects()
-        this.get_event_types()
-        this.get_sale_event_types()
+        this.get_weekly()
+        // this.get_projects()
+        // this.get_event_types()
+        // this.get_sale_event_types()
     },
     methods: {
-        handleEdit: function (index, row) {
-            this.editFormVisible = true;
-            this.editForm = Object.assign({}, row);
+        dateChange1(val) {
+            var v = this;
+            v.insertForm.start_time = val
+
         },
-    },
+        dateChange2(val) {
+            var v = this;
+            v.insertForm.end_time = val
+
+        },
+        get_weekly: function (params) {
+            var v = this;
+            this.$axios.get('/works/get_weekly_summary/', {
+                params: {
+                    filterDate: v.filters.filterDate,
+                    project_name: v.filters.project_name
+                }
+            })
+                .then(function (response) {
+                    v.summary_list = eval(response.data.content);
+                    console.log(v.summary_list);
+                }
+                );
+        },
+        insertSummary: function () {
+            var v = this;
+            console.log(v.insertForm);
+            let str = 'start_time=' + v.insertForm.start_time + '&end_time=' + v.insertForm.end_time + '&summary=' + v.insertForm.summary + '&self_evaluation=' + v.insertForm.self_evaluation + '&plan=' + v.insertForm.plan;
+            this.$axios.post('/works/insert_summary/', str).then(function (response) {
+
+                if (response.data.code == 0) {
+
+                    v.$message({
+                        message: '恭喜你，新增成功',
+                        type: 'success'
+                    });
+                } else {
+                    v.$message({
+                        message: '插入失败',
+                        type: 'error'
+                    });
+                }
+
+            });
+            //this.$refs['addForm'].resetFields();
+            this.addFormVisible = false;
+            v.get_weekly()
+        },
+        // handleEdit: function (index, row) {
+        //     this.editFormVisible = true;
+        //     this.editForm = Object.assign({}, row);
+        // },
+        handleAdd: function () {
+            this.addFormVisible = true;
+        },
+
+    }
 }
 </script>
