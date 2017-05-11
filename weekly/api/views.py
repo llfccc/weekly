@@ -56,13 +56,14 @@ class GetWorks(View):
                 start_date, end_date = getMondaySunday()
         else:
             start_date, end_date = getMondaySunday()
-        where_condition = 'dev.event_date>="{0}" and dev.event_date<="{1}" '.format(start_date, end_date)
+        where_condition = u'dev.event_date>="{0}" and dev.event_date<="{1}" '.format(start_date, end_date)
         if project_name:
             where_condition += "and project_name like '%{0}%'".format(project_name)
 
         print(where_condition)
         dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
-                           "fin_percentage",      "up_reporter_id", "down_reporter_ids", "dev_event_remark", "dev_event_create_time",
+                           "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
+                           "dev_event_create_time",
                            "dev_event_owner_id", "dev_event_project_id", "dev_event_type_id"]
         project_field = ["project_name"]
         event_type_field = ["event_type_name"]
@@ -71,8 +72,8 @@ class GetWorks(View):
         select_param = ",".join(all_select_field)
 
         plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
-            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1};".format(select_param,
-                                                                                                    where_condition)
+            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time;".format(
+            select_param, where_condition)
         print(plain_sql)
         row = fetch_data(plain_sql)
 
