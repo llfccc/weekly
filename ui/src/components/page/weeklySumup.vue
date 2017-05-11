@@ -149,7 +149,6 @@ export default {
         handleAdd: function () {
             this.addFormVisible = true;
         },
-
     }
 }
 </script>

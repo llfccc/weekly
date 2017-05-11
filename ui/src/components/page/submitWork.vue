@@ -116,6 +116,7 @@
             </el-table-column>
         </el-table>
         <p>不选日期则取最近一星期的内容</p>
+        <p><a href='/works/get_event_excel/'>下载excel</a></p>
         <!--编辑界面-->
         <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
             <el-form ref="form" :model="editForm" label-width="80px">

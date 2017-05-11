@@ -11,6 +11,7 @@ from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActive
 from .models import WeekSummary
 from django.db.models import Q
 import StringIO
+import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
 
@@ -62,7 +63,7 @@ class GetWorks(View):
         if project_name:
             where_condition += "and project_name like '%{0}%'".format(project_name)
 
-        print(where_condition)
+
         dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
                            "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
                            "dev_event_create_time",
@@ -79,10 +80,11 @@ class GetWorks(View):
         plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
             left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time;".format(
             select_param, where_condition)
-        print(plain_sql)
+        # print(plain_sql)
         row = fetch_data(plain_sql)
 
         content = dict_to_json(row)
+
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -261,4 +263,70 @@ class InsertSummary(View):
                 response = my_response(code=0, msg=u"success", content=content)
             except:
                 response = my_response(code=1, msg=u"error", content=content)
+        return response
+
+class GetEventExcel(View):
+    '''
+    查询每日工作内容
+    '''
+
+    def get(self, request):
+
+        getParams = request.GET
+        project_name = getParams.get('project_name', '')
+        filter_date = getParams.get('filterDate', '')
+        # 创建查询条件
+        where_condition = ''
+        if filter_date:
+            try:
+                start_date = filter_date[:10]
+                end_date = filter_date[13:]
+            except:
+                start_date, end_date = getMondaySunday()
+        else:
+            start_date, end_date = getMondaySunday()
+        where_condition = u'dev.event_date>="{0}" and dev.event_date<="{1}" '.format(start_date, end_date)
+        if project_name:
+            where_condition += "and project_name like '%{0}%'".format(project_name)
+
+
+        dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
+                           "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
+                           "dev_event_create_time",
+                           "dev_event_owner_id", "dev_event_project_id", "dev_event_type_id"]
+        project_field = ["project_name"]
+        event_type_field = ["event_type_name"]
+        #没有完成显示出对应的上下游对接人
+        # up_user_field=["chinese_name as up_reporter_name "]
+        # down_user_field = ["chinese_name as down_reporter_name "]
+        all_select_field = dev_event_field + project_field + event_type_field
+
+        select_param = ",".join(all_select_field)
+
+        plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
+            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time;".format(
+            select_param, where_condition)
+        # print(plain_sql)
+        row = fetch_data(plain_sql)
+        # Create a Pandas dataframe from the data.
+        df = pd.DataFrame.from_dict(row)
+        #create an output stream
+        output = StringIO.StringIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+
+        #taken from the original question
+        df.to_excel(writer, startrow = 0, merge_cells = False, sheet_name = "Sheet_1")
+        # workbook = writer.book
+        # worksheet = writer.sheets["Sheet_1"]
+        # format = workbook.add_format()
+        # format.set_bg_color('#eeeeee')
+        # worksheet.set_column(0,9,28)
+        #the writer has done its job
+        writer.close()
+        #go back to the beginning of the stream
+        output.seek(0)
+        response = FileResponse(output.read())
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
+            'output.xlsx')
         return response
