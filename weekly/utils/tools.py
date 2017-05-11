@@ -2,19 +2,19 @@
 # 返回出口函数
 import json
 import logging
-from django.http import HttpResponse
-from django.forms.models import model_to_dict
 import sys
 import string, random
+import datetime
 from hashlib import md5
+from django.http import HttpResponse
+from django.forms.models import model_to_dict
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
 Logger = logging.getLogger("normal")
 
-import json
-import datetime
 
+from django.db import connection, transaction
 
 # 重写构造json类，遇到日期特殊处理
 class CJsonEncoder(json.JSONEncoder):
@@ -70,3 +70,19 @@ def getMondaySunday():
     Sunday = today + datetime.timedelta(6 - today.weekday())
     Monday  = today + datetime.timedelta(-today.weekday())
     return (Monday,Sunday)
+
+
+# 通过sql 获取数据,返回元祖
+def fetch_data(sql):
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        col_names = [desc[0] for desc in cursor.description]
+
+        sql_result = cursor.fetchall()
+        results = []
+
+        for row in sql_result:
+            if row is None:
+                break
+            results.append(dict(zip(col_names, row)))
+    return results

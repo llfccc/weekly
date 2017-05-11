@@ -6,6 +6,7 @@ import datetime
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json, getMondaySunday
 from utils.export_excel import ReportExcel
+from utils.tools import fetch_data
 from .models import DevEvent, DevProject, DevEventType
 from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from .models import WeekSummary
@@ -14,26 +15,6 @@ import StringIO
 import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
-
-
-# import weekly.settings.PROJECT_ROOT as PROJECT_ROOT
-
-# sql 获取数据
-
-
-def fetch_data(sql):
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        col_names = [desc[0] for desc in cursor.description]
-
-        sql_result = cursor.fetchall()
-        results = []
-
-        for row in sql_result:
-            if row is None:
-                break
-            results.append(dict(zip(col_names, row)))
-    return results
 
 
 # Create your views here.
@@ -48,7 +29,7 @@ class GetWorks(View):
 
         getParams = request.GET
         project_name = getParams.get('project_name', '')
-        filter_date = getParams.get('filterDate', '')
+        filter_date = getParams.get('filter_date', '')
         # 创建查询条件
         where_condition = ''
         if filter_date:

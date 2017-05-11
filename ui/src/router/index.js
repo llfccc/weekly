@@ -41,8 +41,8 @@ export default new Router({
                     component: resolve => require(['../components/page/weeklySumup.vue'], resolve) // vue-datasource组件
                 },
                 {
-                    path: '/weeklyGraph',
-                    component: resolve => require(['../components/page/weeklyGraph.vue'], resolve) // vue-datasource组件
+                    path: '/weeklyAnalysis',
+                    component: resolve => require(['../components/page/weeklyAnalysis.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/projectManage',

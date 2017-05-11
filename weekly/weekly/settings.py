@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'analysis',
     'accounts',
     #'rest_framework_swagger',
     'djcelery',

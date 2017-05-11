@@ -22,6 +22,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'works/', include('api.urls')),
+    url(r'analysis/', include('analysis.urls')),
     url(r'accounts/', include('accounts.urls')),
     # url(r'^$', schema_view)
 ]

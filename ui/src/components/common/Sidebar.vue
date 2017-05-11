@@ -10,7 +10,7 @@
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
                 <el-menu-item index="weeklySumup">周报总结</el-menu-item>
     
-                <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
+                <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
             <el-submenu index="3">
                 <template slot="title">
@@ -22,7 +22,7 @@
                 <template slot="title">
                     <i class="el-icon-star-on"></i>报表</template>
     
-                <el-menu-item index="weeklyGraph">总表汇总图</el-menu-item>
+                <el-menu-item index="weeklyAnalysis">周报分析</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
