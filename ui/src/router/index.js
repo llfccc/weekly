@@ -39,11 +39,23 @@ export default new Router({
                 {
                     path: '/weeklySumup',
                     component: resolve => require(['../components/page/weeklySumup.vue'], resolve) // vue-datasource组件
-                }, {
+                },
+                {
                     path: '/weeklyGraph',
                     component: resolve => require(['../components/page/weeklyGraph.vue'], resolve) // vue-datasource组件
                 },
-
+                {
+                    path: '/projectManage',
+                    component: resolve => require(['../components/page/projectManage.vue'], resolve) // vue-datasource组件
+                },
+                {
+                    path: '/saleTarget',
+                    component: resolve => require(['../components/page/saleTarget.vue'], resolve) // vue-datasource组件
+                },
+                {
+                    path: '/saleCustmoer',
+                    component: resolve => require(['../components/page/saleCustmoer.vue'], resolve) // vue-datasource组件
+                },
                 {
                     path: '/baseform',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve)

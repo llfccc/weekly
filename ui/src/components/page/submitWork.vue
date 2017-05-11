@@ -2,19 +2,26 @@
     <div>
         <h1 class="logo">工作内容</h1>
         <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="filters">
-                <el-form-item>
-                    <el-input v-model="filters.name" placeholder="姓名"></el-input>
-                </el-form-item>
-                <!--<el-form-item>
-                                                                          <el-button type="primary" v-on:click="getUsers">查询</el-button>
-                                                                      </el-form-item>-->
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
-            </el-form>
-        </el-col>
+        <div>
+            <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+                <el-form :inline="true" :model="filters">
+                    <el-form-item>
+    
+                        <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
+                    </el-form-item>
+                    <span class="demonstration">筛选时间</span>
+                    <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+                    </el-date-picker>
+                    <el-form-item>
+                        <el-button type="primary" v-on:click="get_data">查询</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="handleAdd">新增</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+    
+        </div>
     
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
             <el-form ref="form" :model="form" label-width="90px">
@@ -38,12 +45,12 @@
                 <el-form-item label="工作时间">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="form.event_date" align="right" type="date" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
+                        <el-date-picker v-model="form.event_date" align="right" type="date" default-value="new Date()" placeholder="选择日期" format="yyyy-MM-dd" @change="dateChange" :picker-options="dateOption">
                         </el-date-picker>
-                        <el-time-picker label="时间" is-range v-model="form.event_time" placeholder="选择时间范围" @input="timeChange">
+                        <el-time-picker label="时间" is-range v-model="form.event_time" range-separator='*' placeholder="选择时间范围" @input="timeChange">
                         </el-time-picker>
-                    </div>    
-
+                    </div>
+    
                 </el-form-item>
                 <el-form-item label="其他：">
                     <el-col :span="8">
@@ -53,13 +60,13 @@
                         </el-select>
     
                         <!--<el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="form.up_reporter_id">
-                                                                上游汇报人
-                                                            </el-input>-->
+                                                                                    上游汇报人
+                                                                                </el-input>-->
     
                     </el-col>
                     <el-col :span="8">
                         <!--<el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="form.down_reporter_ids">下游汇报人
-                                                        </el-input>-->
+                                                                            </el-input>-->
                         <el-select v-model="form.down_reporter_ids" clearable filterable placeholder="下游汇报人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
                             </el-option>
@@ -115,6 +122,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <p>不选日期则取最近一星期的内容</p>
         <!--编辑界面-->
         <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
             <el-form ref="form" :model="editForm" label-width="80px">
@@ -168,8 +176,39 @@ export default {
     data() {
         return {
             filters: {
-                name: ''
+                project_name: '',
+                filter_date: '',
+                start_date: '',
+                end_date: '',
             },
+            pickerOptions2: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
+            },
+
             work_list: [],
             project_list: [],
             event_type_list: [],
@@ -189,7 +228,7 @@ export default {
                 up_reporter_id: '',
                 down_reporter_ids: '',
                 dev_event_remark: '',
-                dev_event_project_id:'',
+                dev_event_project_id: '',
                 project_name: '',
                 event_type_id: '',
             },
@@ -224,9 +263,23 @@ export default {
         this.get_users()
     },
     methods: {
+        filterDateChange(val) {
+            var v = this;
+            v.filters.filterDate = val;
+            // v.filters.start_date = val[0];
+            // v.filters.end_date = val[1];
+            console.log(v.filters)
+
+        },
         dateChange(val) {
             var v = this;
             v.form.event_date = val
+
+        },
+        filterTable(val) {
+            var v = this;
+            let t = v.filters;
+            console.log(t);
 
         },
         timeChange(val) {
@@ -240,16 +293,22 @@ export default {
         },
         get_users: function (params) {
             var v = this;
+            console.log(v.filters)
             this.$axios.get('/accounts/get_username/')
                 .then(function (response) {
                     v.user_list = eval(response.data.content);
-
                 }
                 );
         },
         get_data: function (params) {
             var v = this;
-            this.$axios.get('/works/get_works/')
+            console.log(v.filters.project_name);
+            this.$axios.get('/works/get_works/', {
+                params: {
+                    filterDate: v.filters.filterDate,
+                    project_name: v.filters.project_name
+                }
+            })
                 .then(function (response) {
                     v.work_list = eval(response.data.content);
 
@@ -315,21 +374,21 @@ export default {
             var v = this;
             let delID = row.dev_event_id;
             console.log(delID);
-            let str = 'delID=' + delID        
-            this.$axios.post('/works/del_work/',str)
+            let str = 'delID=' + delID
+            this.$axios.post('/works/del_work/', str)
                 .then(function (response) {
                     if (response.data.code == 0) {
-                    v.get_data()
-                    v.$message({
-                        message: '恭喜你，删除成功',
-                        type: 'success'
-                    });
-                } else {
-                    v.$message({
-                        message: '删除失败',
-                        type: 'error'
-                    });
-                }
+                        v.get_data()
+                        v.$message({
+                            message: '恭喜你，删除成功',
+                            type: 'success'
+                        });
+                    } else {
+                        v.$message({
+                            message: '删除失败',
+                            type: 'error'
+                        });
+                    }
                     console.log(response)
                 }
                 );

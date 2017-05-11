@@ -63,3 +63,10 @@ def get_random():
     m5 = md5()
     m5.update(src)
     return m5.hexdigest()
+
+#获取当前日期的星期一及星期填的datetime
+def getMondaySunday():
+    today = datetime.date.today()
+    Sunday = today + datetime.timedelta(6 - today.weekday())
+    Monday  = today + datetime.timedelta(-today.weekday())
+    return (Monday,Sunday)

@@ -8,10 +8,12 @@
                     {{username}}
                 </span>
                 <el-dropdown-menu slot="dropdown">
+                           <el-dropdown-item command="admin">后台管理</el-dropdown-item>
                     <el-dropdown-item command="loginout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
+
     </div>
 </template>
 <script>
@@ -32,6 +34,10 @@
                 if(command == 'loginout'){
                     localStorage.removeItem('ms_username')
                     this.$router.push('/login');
+                };
+                if(command == 'admin'){
+                    // localStorage.removeItem('ms_username')
+                    this.$router.push('/admin');
                 }
             }
         }

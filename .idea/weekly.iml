@@ -6,8 +6,15 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.6.0 (D:\Anaconda2\envs\py3\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7.13 (D:\Anaconda2\envs\dj\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="vue-quanwei" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="E:/project/vue-quanwei/test/node_modules/._istanbul@0.4.5@istanbul/lib/report/templates" />
+      </list>
+    </option>
   </component>
 </module>
