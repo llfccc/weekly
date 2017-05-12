@@ -124,6 +124,8 @@
         </el-dialog>
     
         <el-table :data="sale_list" border style="width: 100%">
+              <el-table-column prop="sale_event_id" style="display:none" label="id" width="150" sortable>
+            </el-table-column>
             <el-table-column prop="short_name" label="客户简称" width="150" fixed sortable>
             </el-table-column>
             <el-table-column prop="phase_name" label="拜访阶段" width="150" fixed sortable>
@@ -370,18 +372,29 @@ export default {
 
         },
 
-        delWork: function (e) {
-            hidedid = e.currentTarget.getAttribute('hidedid');
-            // $.ajax({
-            //   type: "POST",
-            //   url: '/api/hide_work/',
-            //   data: {hidedid: hidedid}, /* 注意参数的格式和名称 */
-            //   dataType: "json",
-            //   success: function (result) {
-            //     this.jobs.push(this.new_work);
-            //     console.log(response);
-            //   }
-            // });
+        handleDelete: function (index, row) {
+            var self = this;
+            let delID = row.sale_event_id;
+            console.log(delID);
+            let str = 'delID=' + delID
+            this.$axios.post('/works/del_sale_event/', str)
+                .then(function (response) {
+                    if (response.data.code == 0) {
+                        self.get_data()
+                        self.$message({
+                            message: '恭喜你，删除成功',
+                            type: 'success'
+                        });
+                    } else {
+                        self.$message({
+                            message: '删除失败',
+                            type: 'error'
+                        });
+                    }
+                    console.log(response)
+                }
+                );
+
         },
         handleEdit: function (index, row) {
             this.editFormVisible = true;

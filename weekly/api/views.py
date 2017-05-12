@@ -149,7 +149,7 @@ class GetSaleEvents(View):
     '''
 
     def get(self, request):
-        param = "*"
+        param = "*,sale.id as sale_event_id"
         plain_sql = "SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
             left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
             left join api_salephase as phase on sale.sale_phase_id = phase.id ;".format(param)
@@ -379,4 +379,18 @@ class InsertSaleEvent(View):
                 response = my_response(code=0, msg=u"success", content=content)
             except:
                 response = my_response(code=1, msg=u"error", content=content)
+        return response
+
+class DelSaleEvent(View):
+    def post(self, request):
+        data = request.POST
+        print(data)
+        delID = data.get("delID")
+        del_event_id = SaleEvent.objects.filter(id=delID).delete()
+        print(del_event_id[0])
+        if del_event_id[0] == 0:
+            response = my_response(code=1, msg=u"删除失败")
+        else:
+            content = {"id": del_event_id[0]}
+            response = my_response(code=0, msg=u"删除成功", content=content)
         return response
