@@ -28,9 +28,9 @@
                 <el-form-item label="时间范围:">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="insertForm.start_time" align="right" type="date" default-value="new Date()" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
+                        <el-date-picker v-model="insertForm.start_time" align="right" type="date" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
                         </el-date-picker>
-                        <el-date-picker v-model="insertForm.end_time" align="right" type="date" default-value="new Date()" placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
+                        <el-date-picker v-model="insertForm.end_time" align="right" type="date"  placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
                         </el-date-picker>
                     </div>
     

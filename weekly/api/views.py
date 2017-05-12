@@ -21,6 +21,7 @@ from django.db import connection, transaction
 #获取当前用户的userid
 def get_user_id(request):
     sid=request.COOKIES.get("sid",'')
+    print(sid)
     user_object=cache.get(sid)
     user_id=user_object.get("user_id")
     return user_id
@@ -67,7 +68,7 @@ class GetWorks(View):
         select_param = ",".join(all_select_field)
 
         plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
-            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time;".format(
+            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time desc ;".format(
             select_param, where_condition)
         # print(plain_sql)
         row = fetch_data(plain_sql)
@@ -137,9 +138,10 @@ class DelWork(View):
         data = request.POST
         print(data)
         delID = data.get("delID")
-        del_event = DevEvent.objects.filter(id=delID)
+        del_event = DevEvent.objects.get(id=delID)
+        print(del_event.id)
         if del_event.dev_event_owner_id==user_id:
-            del_event.delete()
+            del_event_id=del_event.delete()
         else:
             response = my_response(code=1, msg=u"你不是该记录的所有人")
 
@@ -214,7 +216,6 @@ class GetCustomers(View):
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
-
 
 class GetSaleActiveTypes(View):
     def get(self, request):
