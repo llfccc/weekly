@@ -215,6 +215,16 @@ class GetSaleActiveTypes(View):
         return response
 
 
+class GetSalePhases(View):
+    def get(self, request):
+        data = SalePhase.objects.all()
+        query_field = ["id", "phase_name", "description","phase_count","sale_phase_remark" , "create_time"]
+        data_dict = queryset_to_dict(data, query_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+
 class GetExcel(View):
     def get(self, request):
         sid = request.COOKIES.get("sid")
@@ -343,4 +353,30 @@ class GetEventExcel(View):
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
             'output.xlsx')
+        return response
+
+class InsertSaleEvent(View):
+    def post(self, request):
+               
+        data = request.POST
+        print(data)
+     
+        insert_field = ["visit_date", "cus_con_post", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark", "sale_phase_id",
+                "active_type_id", "sale_customer_id"]
+        result = {}
+        for t in insert_field:
+            result[t] = data.get(t)
+
+        result['sale_event_owner_id'] = 3
+
+        content = {"id": 0}
+        if result:
+            inset_process = SaleEvent(**result)
+            inset_process.save()
+            try:
+                inset_process.save()
+                content = {"id": inset_process.id}
+                response = my_response(code=0, msg=u"success", content=content)
+            except:
+                response = my_response(code=1, msg=u"error", content=content)
         return response

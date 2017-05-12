@@ -45,7 +45,7 @@
     
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="insertForm.event_date" type="date" placeholder="选择日期" @change="dateChange"  :picker-options="dateOption">
+                        <el-date-picker v-model="insertForm.event_date" type="date" placeholder="选择日期" @change="dateChange" :picker-options="dateOption">
                         </el-date-picker>
                         <el-time-picker label="时间" is-range v-model="insertForm.event_time" range-separator='-' placeholder="选择时间范围" @input="timeChange">
                         </el-time-picker>
@@ -274,8 +274,6 @@ export default {
         filterDateChange(val) {
             var self = this;
             self.filters.filter_date = val;
-            // self.filters.start_date = val[0];
-            // self.filters.end_date = val[1];
             console.log(self.filters)
 
         },

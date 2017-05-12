@@ -130,7 +130,7 @@ class SaleTarget(models.Model):
 
 class SaleEvent(models.Model):
     cus_con_post = models.CharField(max_length=500, verbose_name='客户职位')
-    visit_date = models.DateTimeField(verbose_name='拜访时间')
+    visit_date = models.DateField(verbose_name='拜访时间')
     # end_time = models.DateTimeField(verbose_name='结束时间')
     cus_con_mdn = models.CharField(
         max_length=64, default=None, verbose_name='手机号码')

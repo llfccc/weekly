@@ -15,7 +15,7 @@
             <el-submenu index="3">
                 <template slot="title">
                     <i class="el-icon-menu"></i>销售拜访</template>
-                <el-menu-item index="submitVisit">添加拜访</el-menu-item>
+                <el-menu-item index="submitEvent">添加拜访</el-menu-item>
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
             <el-submenu index="4">

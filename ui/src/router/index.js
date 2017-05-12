@@ -29,8 +29,8 @@ export default new Router({
                     component: resolve => require(['../components/page/submitWork.vue'], resolve)
                 },
                 {
-                    path: '/submitVisit',
-                    component: resolve => require(['../components/page/submitVisit.vue'], resolve)
+                    path: '/submitEvent',
+                    component: resolve => require(['../components/page/submitEvent.vue'], resolve)
                 },
                 {
                     path: '/vuetable',
