@@ -367,7 +367,7 @@ export default {
 
             });
             //this.$refs['addForm'].resetFields();
-            this.addFormVisible = false;
+            this.addEventVisible = false;
             this.get_data();
 
         },

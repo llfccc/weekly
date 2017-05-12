@@ -5,8 +5,7 @@
         <div>
             <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
                 <el-form :inline="true" :model="filters">
-                    <el-form-item>
-    
+                    <el-form-item>    
                         <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
                     </el-form-item>
                     <span class="demonstration">筛选时间</span>
@@ -60,7 +59,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="8">
-                        <el-select v-model="insertForm.down_reporter_ids" clearable filterable placeholder="下游汇报人">
+                        <el-select v-model="insertForm.down_reporter_ids" multiple  clearable filterable placeholder="下游汇报人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -273,8 +272,8 @@ export default {
         // },
         filterDateChange(val) {
             var self = this;
-            self.filters.filter_date = val;
-            console.log(self.filters)
+            self.filters.filterDate = val;
+
 
         },
         dateChange(val) {

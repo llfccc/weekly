@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import InsertWork, GetWorks, GetProjects,DelWork,Test,GetExcel,GetEventTypes,GetEventExcel
+from .views import InsertWork, GetWorks, GetProjects,DelWork,Test,GetEventTypes,GetEventExcel
 from .views import GetSaleEvents,GetCustomers,GetSaleActiveTypes
 from .views import GetWeeklySummary,InsertSummary,GetSalePhases
 from api.views import InsertCustomer,InsertSaleEvent,DelSaleEvent
@@ -23,6 +23,6 @@ urlpatterns = [
     url(r'get_customers/', GetCustomers.as_view(), name="api_get_works"),
     url(r'get_sale_event_types/', GetSaleActiveTypes.as_view(), name="api_get_works"),
 
-    url(r'get_excel/', GetExcel.as_view(), name="api_GetExcel"),
+    #url(r'get_excel/', GetExcel.as_view(), name="api_GetExcel"),
     url(r'^test/', Test.as_view(), name="test"),
 ]

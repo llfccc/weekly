@@ -18,6 +18,12 @@ from django.db import connection, transaction
 
 
 # Create your views here.
+#获取当前用户的userid
+def get_user_id(request):
+    sid=request.COOKIES.get("sid",'')
+    user_object=cache.get(sid)
+    user_id=user_object.get("user_id")
+    return user_id
 
 
 class GetWorks(View):
@@ -26,6 +32,7 @@ class GetWorks(View):
     '''
 
     def get(self, request):
+        user_id=get_user_id(request)
 
         getParams = request.GET
         project_name = getParams.get('project_name', '')
@@ -40,10 +47,11 @@ class GetWorks(View):
                 start_date, end_date = getMondaySunday()
         else:
             start_date, end_date = getMondaySunday()
-        where_condition = u'dev.event_date>="{0}" and dev.event_date<="{1}" '.format(start_date, end_date)
+        where_condition = u'dev.dev_event_owner_id={0} and dev.event_date>="{1}" and dev.event_date<="{2}" '.format(user_id,start_date, end_date)
+
         if project_name:
             where_condition += "and project_name like '%{0}%'".format(project_name)
-
+        
 
         dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
                            "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
@@ -100,7 +108,7 @@ class GetEventTypes(View):
 
 class InsertWork(View):
     def post(self, request):
-               
+        user_id=get_user_id(request)        
         data = request.POST
         print(data)
         insert_field = ["description", "event_date", "start_time", "end_time", "fin_percentage", "up_reporter_id",
@@ -109,7 +117,7 @@ class InsertWork(View):
         for t in insert_field:
             result[t] = data.get(t)
 
-        result['dev_event_owner_id'] = 1
+        result['dev_event_owner_id'] = user_id
 
         content = {"id": 0}
         if result:
@@ -125,16 +133,21 @@ class InsertWork(View):
 
 class DelWork(View):
     def post(self, request):
+        user_id=get_user_id(request)
         data = request.POST
         print(data)
         delID = data.get("delID")
-        del_event_id = DevEvent.objects.filter(id=delID).delete()
-        print(del_event_id[0])
+        del_event = DevEvent.objects.filter(id=delID)
+        if del_event.dev_event_owner_id==user_id:
+            del_event.delete()
+        else:
+            response = my_response(code=1, msg=u"你不是该记录的所有人")
+
         if del_event_id[0] == 0:
-            response = my_response(code=1, msg=u"删除失败")
+            response = my_response(code=1, msg=u"删除失败，可能已经不存在")
         else:
             content = {"id": del_event_id[0]}
-            response = my_response(code=0, msg=u"success", content=content)
+            response = my_response(code=0, msg=u"删除成功", content=content)
         return response
 
 
@@ -149,10 +162,12 @@ class GetSaleEvents(View):
     '''
 
     def get(self, request):
+        user_id=get_user_id(request)
         param = "*,sale.id as sale_event_id"
         plain_sql = "SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
             left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
-            left join api_salephase as phase on sale.sale_phase_id = phase.id ;".format(param)
+            left join api_salephase as phase on sale.sale_phase_id = phase.id \
+            where sale_event_owner_id={1};".format(param,user_id)
         row = fetch_data(plain_sql)
         # query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
         #        "event_name", "dev_event_remark"]
@@ -162,6 +177,7 @@ class GetSaleEvents(View):
 
 class InsertCustomer(View):
     def post(self, request):
+        user_id=get_user_id(request)
         content = {"id": 0}
         data = request.POST
         print(data)
@@ -175,7 +191,7 @@ class InsertCustomer(View):
         if customer_exist:
             response = my_response(code=1, msg=u"公司全称已存在")
             return response
-        result['sale_customer_owner_id'] = 3
+        result['sale_customer_owner_id'] = user_id
         
         if result:
             inset_process = SaleCustomer(**result)
@@ -189,16 +205,11 @@ class InsertCustomer(View):
 
 class GetCustomers(View):
     def get(self, request):
-        
-        sid=request.COOKIES.get("sid",'')
-        user_object=cache.get(sid)
-        print(user_object)
-        user_id=user_object.get("user_id")
-        print(user_id)
+        user_id=get_user_id(request)
+
         query_field = ["id", "full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
                        "sale_customer_remark", "create_time"]
         data = SaleCustomer.objects.filter(sale_customer_owner_id=user_id).all()
-        print(data)
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -225,32 +236,32 @@ class GetSalePhases(View):
         return response
 
 
-class GetExcel(View):
-    def get(self, request):
-        sid = request.COOKIES.get("sid")
-        username = cache.get(sid).get("username")
-        data = request.POST
-        start_time = data.get("start_time")
-        end_time = data.get("end_time")
-        if not start_time:
-            start_time = '2017-4-26'
-        if not end_time:
-            end_time = '2017-4-30'
-        data = DevEvent.objects.filter(Q(start_time__gte=start_time) | Q(end_time__lte=end_time)).filter(
-            operator=username).all()
-        query_field = ["work_title", "complete_status"]
-        data_dict = queryset_to_dict(data, query_field)
+# class GetExcel(View):
+#     def get(self, request):
+#         sid = request.COOKIES.get("sid")
+#         username = cache.get(sid).get("username")
+#         data = request.POST
+#         start_time = data.get("start_time")
+#         end_time = data.get("end_time")
+#         if not start_time:
+#             start_time = '2017-4-26'
+#         if not end_time:
+#             end_time = '2017-4-30'
+#         data = DevEvent.objects.filter(Q(start_time__gte=start_time) | Q(end_time__lte=end_time)).filter(
+#             operator=username).all()
+#         query_field = ["work_title", "complete_status"]
+#         data_dict = queryset_to_dict(data, query_field)
 
-        output = StringIO.StringIO()
-        excel_instance = ReportExcel(output)
-        excel_instance.write_excel(data_dict)
-        output.seek(0)
+#         output = StringIO.StringIO()
+#         excel_instance = ReportExcel(output)
+#         excel_instance.write_excel(data_dict)
+#         output.seek(0)
 
-        response = FileResponse(output.read())
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
-            'output.xlsx')
-        return response
+#         response = FileResponse(output.read())
+#         response['Content-Type'] = 'application/octet-stream'
+#         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
+#             'output.xlsx')
+#         return response
 
 
 class GetWeeklySummary(View):
@@ -259,7 +270,8 @@ class GetWeeklySummary(View):
     '''
 
     def get(self, request):
-        data = WeekSummary.objects.all()
+        user_id=get_user_id(request)
+        data = WeekSummary.objects.filter(summary_owner_id=user_id).all()
         query_field = ["id", "start_time", "end_time", "summary", "self_evaluation", "plan", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
@@ -268,16 +280,15 @@ class GetWeeklySummary(View):
 
 class InsertSummary(View):
     def post(self, request):
-        # sid = request.COOKIES.get("sid")
-        # username = cache.get(sid).get("username")
+        user_id=get_user_id(request)        
         data = request.POST
-        print(data)
+
         insert_field = ["start_time", "end_time", "summary", "self_evaluation", "plan"]
         result = {}
         for t in insert_field:
             result[t] = data.get(t)
 
-        result['summary_owner_id'] = 1
+        result['summary_owner_id'] = user_id
         content = {"id": 0}
         if result:
             inset_process = WeekSummary(**result)
@@ -295,7 +306,7 @@ class GetEventExcel(View):
     '''
 
     def get(self, request):
-
+        user_id=get_user_id(request)
         getParams = request.GET
         project_name = getParams.get('project_name', '')
         filter_date = getParams.get('filterDate', '')
@@ -309,7 +320,7 @@ class GetEventExcel(View):
                 start_date, end_date = getMondaySunday()
         else:
             start_date, end_date = getMondaySunday()
-        where_condition = u'dev.event_date>="{0}" and dev.event_date<="{1}" '.format(start_date, end_date)
+        where_condition = u'dev.dev_event_owner_id={0} and dev.event_date>="{1}" and dev.event_date<="{2}" '.format(user_id,start_date, end_date)
         if project_name:
             where_condition += "and project_name like '%{0}%'".format(project_name)
 
@@ -357,7 +368,7 @@ class GetEventExcel(View):
 
 class InsertSaleEvent(View):
     def post(self, request):
-               
+        user_id=get_user_id(request)       
         data = request.POST
         print(data)
      
@@ -367,7 +378,7 @@ class InsertSaleEvent(View):
         for t in insert_field:
             result[t] = data.get(t)
 
-        result['sale_event_owner_id'] = 3
+        result['sale_event_owner_id'] = user_id
 
         content = {"id": 0}
         if result:
