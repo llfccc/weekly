@@ -50,5 +50,19 @@ class PrintCheck(MiddlewareMixin):
 
     @staticmethod
     def process_request(request):
-        print("middleware")
-        
+        """
+        :param request:
+        :return:
+        """
+        # print "start", time.time()
+        if "login" in request.path:
+            return
+        # request.COOKIES["sid"] = "9342c00a6cb65a2d35e2bd48cc2ab163"
+        sid = request.COOKIES.get("sid")
+        content = cache.get(sid)
+        if content:
+            chinese_name = content.get("chinese_name")
+            Logger.debug("{0}: request, url is: {1}".format(username, request.path.encode("utf-8")))
+            request.COOKIES["chinese_name"] = chinese_name
+        else:
+            return my_response(code=-1, msg="登录超时！")

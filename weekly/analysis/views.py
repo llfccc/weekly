@@ -51,9 +51,7 @@ class AnanlysisWorker(View):
         # up_user_field=["chinese_name as up_reporter_name "]
         # down_user_field = ["chinese_name as down_reporter_name "]
         all_select_field = dev_event_field + project_field + event_type_field
-
         select_param = ",".join(all_select_field)
-
         
         if worker_name:
             where_condition += "and project_name like '%{0}%'".format(project_name)

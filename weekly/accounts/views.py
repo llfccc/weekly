@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views import View
 from utils.tools import my_response, get_random
 from forms import UserForm, RegisterForm
-from models import User
+from accounts.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
@@ -22,12 +22,16 @@ class LoginHandler(View):
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
                 sid = get_random()
-                content = {"username": username}
+                user_object=User.objects.get(username=username)
+                chinese_name=user_object.chinese_name
+                user_id=user_object.id
+
+                content = {"username": username,"chinese_name":chinese_name,"user_id":user_id}
                 response = my_response(code=0, msg="登录成功！", content=content)
                 # login(request, user)
                 cache.set(sid, content, timeout=self.cookie_timeout)
                 response.set_cookie("sid", sid)  # , max_age=self.cookie_timeout)
-                print(sid)
+
                 return response
             else:
                 return my_response(code=1, msg="账号密码错误！")

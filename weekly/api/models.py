@@ -77,6 +77,9 @@ class SaleActiveType(models.Model):
 
 
 class SaleCustomer(models.Model):
+    '''
+    客户信息表
+    '''
     full_name = models.CharField(max_length=100, verbose_name='客户全称')
     short_name = models.CharField(max_length=100, verbose_name='客户简称')
     contact_post = models.CharField(max_length=100, verbose_name='主要联系人职位')
@@ -86,6 +89,7 @@ class SaleCustomer(models.Model):
         max_length=100, verbose_name='主要联系人电话号码')
     sale_customer_remark = models.CharField(max_length=64, null=True,
                                             blank=True, verbose_name='客户备注')
+    sale_customer_owner_id = models.IntegerField( verbose_name='客户添加人')
     create_time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

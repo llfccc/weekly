@@ -79,7 +79,7 @@ export default {
 
 <style scoped>
 .echarts {
-  width: 400px;
+  width: 900px;
   height: 400px;
 }
 </style>

@@ -100,8 +100,7 @@ class GetEventTypes(View):
 
 class InsertWork(View):
     def post(self, request):
-        # sid = request.COOKIES.get("sid")
-        # username = cache.get(sid).get("username")
+               
         data = request.POST
         print(data)
         insert_field = ["description", "event_date", "start_time", "end_time", "fin_percentage", "up_reporter_id",
@@ -111,6 +110,7 @@ class InsertWork(View):
             result[t] = data.get(t)
 
         result['dev_event_owner_id'] = 1
+
         content = {"id": 0}
         if result:
             inset_process = DevEvent(**result)
@@ -160,12 +160,45 @@ class GetSaleEvents(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
+class InsertCustomer(View):
+    def post(self, request):
+        content = {"id": 0}
+        data = request.POST
+        print(data)
+        insert_field = ["full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
+                       "sale_customer_remark"]
+        result = {}
+        for t in insert_field:
+            result[t] = data.get(t)
+        customer_exist=SaleCustomer.objects.filter(full_name=result['full_name']).all()
+        print(customer_exist)
+        if customer_exist:
+            response = my_response(code=1, msg=u"公司全称已存在")
+            return response
+        result['sale_customer_owner_id'] = 3
+        
+        if result:
+            inset_process = SaleCustomer(**result)
+            try:
+                inset_process.save()
+                content = {"id": inset_process.id}
+                response = my_response(code=0, msg=u'恭喜你，新增成功', content=content)
+            except:
+                response = my_response(code=1, msg=u'插入失败', content=content)
+        return response
 
 class GetCustomers(View):
     def get(self, request):
-        data = SaleCustomer.objects.all()
-        query_field = ["id", "full_name", "contact_post", "contact_name", "contact_mdn", "contact_tel_num",
+        
+        sid=request.COOKIES.get("sid",'')
+        user_object=cache.get(sid)
+        print(user_object)
+        user_id=user_object.get("user_id")
+        print(user_id)
+        query_field = ["id", "full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
                        "sale_customer_remark", "create_time"]
+        data = SaleCustomer.objects.filter(sale_customer_owner_id=user_id).all()
+        print(data)
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
