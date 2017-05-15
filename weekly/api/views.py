@@ -15,7 +15,7 @@ import StringIO
 import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
-
+from accounts.models import User
 
 # Create your views here.
 #获取当前用户的userid
@@ -71,9 +71,20 @@ class GetWorks(View):
             left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time desc ;".format(
             select_param, where_condition)
         # print(plain_sql)
-        row = fetch_data(plain_sql)
-
-        content = dict_to_json(row)
+        query_result = fetch_data(plain_sql)
+        #将down_reporter_ids由id对应具体的人
+        for row in query_result:
+            down_reporter_id_list= row['down_reporter_ids'].split(',')
+            down_reporter_name_list=[]
+            
+            for i in down_reporter_id_list:
+                print(i)
+                down_reporter_name=User.objects.get(id=i).chinese_name
+                if down_reporter_name:
+                        down_reporter_name_list.append(down_reporter_name)                
+            row['down_reporter_ids']=','.join(down_reporter_name_list)
+        
+        content = dict_to_json(query_result)
 
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
