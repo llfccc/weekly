@@ -8,6 +8,12 @@
           <el-form-item>
             <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
           </el-form-item>
+                    <el-form-item>
+            <el-input v-model="filters.department_name" placeholder="部门"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="filters.employee_name" placeholder="员工姓名"></el-input>
+          </el-form-item>
           <span class="demonstration">筛选时间</span>
           <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
           </el-date-picker>
@@ -21,7 +27,8 @@
     </div>
     <br>
     </br>
-    <div id="main" style="width: 600px;height: 400px;"> </div>
+    <div id="type" style="width: 500px;height: 400px;"> </div>
+        <div id="main" style="width: 500px;height: 400px;"> </div>
   </div>
 </template>
 <script>
@@ -32,9 +39,11 @@ export default {
     return {
       filters: {
         project_name: '',
+        employee_name: '',
+        department_name:'',
         filter_date: '',
-        start_date: '',
-        end_date: '',
+        // start_date: '',
+        // end_date: '',
       },
       pickerOptions2: {
         shortcuts: [{
@@ -46,10 +55,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         },
-
-
-
-         {
+        {
           text: '最近一个月',
           onClick(picker) {
             const end = new Date();
@@ -68,7 +74,6 @@ export default {
         }]
       },
 
-      type_analysis_list:[],
       charts: '',
       opinion: [],
       opinionData: []
@@ -78,18 +83,21 @@ export default {
     drawPie(id) {
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
+        title: {
+          text: '工作类型占比'
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a}<br/>{b}:{c} ({d}%)'
         },
         legend: {
           orient: 'vertical',
-          x: 'left',
+          x: 'right',
           data: this.opinion
         },
         series: [
           {
-            name: '类型占比',
+            name: '工作类型',
             type: 'pie',
             radius: ['50%', '70%'],
             avoidLabelOverlap: false,
@@ -124,18 +132,18 @@ export default {
       var self = this;
       this.$axios.get('/analysis/analysis_worker/', {
         params: {
-          filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name
+          filter_date: self.filters.filter_date,
+          employee_name: self.filters.employee_name,
+          project_name: self.filters.project_name,
+          department_name:self.filters.department_name,
         }
       })
         .then(function (response) {
-          var responseContent=JSON.parse(response.data.content) ;  
+          var responseContent = JSON.parse(response.data.content);
 
-          self.opinionData=responseContent.type_count
-          self.opinion=responseContent.type_list
-          console.log(self.opinionData)
-                    console.log(self.opinion)
-          self.drawPie('main')
+          self.opinionData = responseContent.type_count
+          self.opinion = responseContent.type_list
+          self.drawPie('type')
         }
         );
     },
