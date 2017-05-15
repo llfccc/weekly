@@ -23,10 +23,11 @@ class AnanlysisWorker(View):
     def get(self, request):
         getParams = request.GET
         worker_name = getParams.get('worker_name', '')
-        filter_date = getParams.get('filterDate', '')
+        filter_date = getParams.get('filter_date', '')
         department_name = getParams.get('department_name', '')
         # 创建查询条件
         where_condition = ''
+        print(filter_date)
         if filter_date:
             try:
                 start_date = filter_date[:10]
@@ -62,10 +63,11 @@ class AnanlysisWorker(View):
             select_param, where_condition)
         print(plain_sql)
         group_sql = u'select event_type_name,count(event_type_name) as event_type_name_count from ({0}) group by event_type_name '.format(plain_sql)
-        print(group_sql)
         row = fetch_data(group_sql)
-
-        content = dict_to_json(row)
+        #转换数据为echarts能接受的格式
+        type_list=[i['event_type_name'] for i in row]
+        type_count=[{'name':i['event_type_name'],'value':i['event_type_name_count']} for i in row] 
+        content = dict_to_json({'type_list':type_list,'type_count':type_count})
 
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

@@ -18,8 +18,7 @@
                         <el-button type="primary" @click="handleAdd">新增</el-button>
                     </el-form-item>
                 </el-form>
-            </el-col>
-    
+            </el-col>    
         </div>
     
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
@@ -203,7 +202,6 @@ export default {
                     }
                 }]
             },
-
             work_list: [],
             project_list: [],
             event_type_list: [],
@@ -273,8 +271,6 @@ export default {
         filterDateChange(val) {
             var self = this;
             self.filters.filterDate = val;
-
-
         },
         dateChange(val) {
             var self = this;

@@ -28,25 +28,32 @@ module.exports = {
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
         proxyTable: {
-            '/api':{
-                target:'http://jsonplaceholder.typicode.com',
-                changeOrigin:true,
-                pathRewrite:{
-                    '/api':''
+            '/api': {
+                target: 'http://jsonplaceholder.typicode.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '/api': ''
                 }
             },
-                        '/works':{
-                target:'http://localhost:8000',
-                changeOrigin:true,
-                pathRewrite:{
-                    '/works':'works'
+            '/works': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                pathRewrite: {
+                    '/works': 'works'
                 }
             },
-                                    '/accounts':{
-                target:'http://localhost:8000',
-                changeOrigin:true,
-                pathRewrite:{
-                    '/accounts':'accounts'
+            '/accounts': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                pathRewrite: {
+                    '/accounts': 'accounts'
+                }
+            },
+            '/analysis': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                pathRewrite: {
+                    '/analysis': 'analysis'
                 }
             },
         },

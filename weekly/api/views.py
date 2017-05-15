@@ -78,7 +78,7 @@ class GetWorks(View):
             down_reporter_name_list=[]
             
             for i in down_reporter_id_list:
-                print(i)
+
                 down_reporter_name=User.objects.get(id=i).chinese_name
                 if down_reporter_name:
                         down_reporter_name_list.append(down_reporter_name)                

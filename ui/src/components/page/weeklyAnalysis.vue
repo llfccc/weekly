@@ -1,85 +1,157 @@
 <template>
-  <div class="echarts">
-    <IEcharts :option="bar" :loading="loading" @ready="onReady" @click="onClick"></IEcharts>
-    <button @click="doRandom">Random</button>
+  <!--为echarts准备一个具备大小的容器dom-->
+  <div>
+  
+    <div>
+      <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+        <el-form :inline="true" :model="filters">
+          <el-form-item>
+            <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
+          </el-form-item>
+          <span class="demonstration">筛选时间</span>
+          <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+          </el-date-picker>
+          <el-form-item>
+            <el-button type="primary" v-on:click="get_data">查询</el-button>
+          </el-form-item>
+  
+        </el-form>
+      </el-col>
+  
+    </div>
+    <br>
+    </br>
+    <div id="main" style="width: 600px;height: 400px;"> </div>
   </div>
 </template>
-
-<script type="text/babel">
-import IEcharts from 'vue-echarts-v3/src/full.vue';
+<script>
+import echarts from 'echarts'
 export default {
-  name: 'view',
-  components: {
-    IEcharts
-  },
-  filters: {
-    project_name: '',
-    filter_date: '',
-    start_date: '',
-    end_date: '',
-  },
-  props: {
-  },
-  worker_type:[],
-  data: () => ({
-    loading: false,
-    bar: {
-      title: {
-        text: '工作类型占比'
+  name: '',
+  data() {
+    return {
+      filters: {
+        project_name: '',
+        filter_date: '',
+        start_date: '',
+        end_date: '',
       },
-      tooltip: {},
-      xAxis: {
-        data: ['Shirt', 'Sweater', 'Chiffon Shirt', 'Pants', 'High Heels', 'Socks']
+      pickerOptions2: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        },
+
+
+
+         {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
       },
-      yAxis: {},
-      series: [{
-        name: 'Sales',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
-      }]
+
+      type_analysis_list:[],
+      charts: '',
+      opinion: [],
+      opinionData: []
     }
-  }),
-      created() {
-        // 组件创建完后获取数据
-        this.get_data()
-    },
+  },
   methods: {
-    get_data() {
-      const self = this;
+    drawPie(id) {
+      this.charts = echarts.init(document.getElementById(id))
+      this.charts.setOption({
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a}<br/>{b}:{c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          x: 'left',
+          data: this.opinion
+        },
+        series: [
+          {
+            name: '类型占比',
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                show: true,
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'blod'
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: true
+              }
+            },
+            data: this.opinionData
+          }
+        ]
+      })
+    },
+    filterDateChange(val) {
+      var self = this;
+      self.filters.filterDate = val;
+    },
+    get_data: function (params) {
+      var self = this;
       this.$axios.get('/analysis/analysis_worker/', {
         params: {
-          filterDate: self.filters.filterDate,
+          filter_date: self.filters.filterDate,
           project_name: self.filters.project_name
         }
       })
         .then(function (response) {
-          self.worker_type = eval(response.data.content);
-          console.log(self.worker_type);
+          var responseContent=JSON.parse(response.data.content) ;  
+
+          self.opinionData=responseContent.type_count
+          self.opinion=responseContent.type_list
+          console.log(self.opinionData)
+                    console.log(self.opinion)
+          self.drawPie('main')
         }
         );
     },
-    doRandom() {
-      const that = this;
-      let data = [];
-      for (let i = 0, min = 5, max = 99; i < 6; i++) {
-        data.push(Math.floor(Math.random() * (max + 1 - min) + min));
-      }
-      that.loading = !that.loading;
-      that.bar.series[0].data = data;
-    },
-    onReady(instance) {
-      // console.log(instance);
-    },
-    onClick(event, instance, echarts) {
-      // console.log(arguments);
-    }
+  },
+  //调用 
+  mounted() {
+    this.$nextTick(function () {
+      this.get_data()
+    })
   }
-};
+}
 </script>
-
 <style scoped>
-.echarts {
-  width: 900px;
-  height: 400px;
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 </style>

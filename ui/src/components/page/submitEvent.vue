@@ -8,15 +8,14 @@
                     <el-input v-model="filters.name" placeholder="姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
                     <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
     
         <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false">
-            <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
     
+            <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
                 <el-form-item label="客户全称">
                     <el-input type="text" class="form-control" id="full_name" placeholder="客户全称" v-model="addCustomerForm.full_name">客户全称
                     </el-input>
@@ -53,6 +52,7 @@
         </el-dialog>
     
         <el-dialog title="新增拜访" v-model="addEventVisible" :close-on-click-modal="false">
+            <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
             <el-form ref="addEventForm" :model="addEventForm" label-width="90px">
                 <el-form-item label="拜访对象">
                     <el-date-picker v-model="addEventForm.visit_date" type="date" placeholder="拜访时间" @change="dateChange" :picker-options="dateOption">
@@ -107,9 +107,9 @@
                 <el-form-item label="其他：">
                     <el-input type="textarea" class="form-control" id="communicate_record" placeholder="沟通成果" v-model="addEventForm.communicate_record">沟通成果
                     </el-input>
-                    <el-col :span="8">    
+                    <el-col :span="8">
                     </el-col>
-
+    
                 </el-form-item>
                 <el-form-item label="其他：">
                     <el-input type="textarea" class="form-control" id="sale_event_remark" placeholder="备注" v-model="addEventForm.sale_event_remark">
@@ -124,7 +124,7 @@
         </el-dialog>
     
         <el-table :data="sale_list" border style="width: 100%">
-              <el-table-column prop="sale_event_id" style="display:none" label="id" width="150" sortable>
+            <el-table-column prop="sale_event_id" style="display:none" label="id" width="150" sortable>
             </el-table-column>
             <el-table-column prop="short_name" label="客户简称" width="150" fixed sortable>
             </el-table-column>
@@ -213,7 +213,7 @@ export default {
                 }
             },
             sale_list: [],
-            sale_phase_list:[],
+            sale_phase_list: [],
             customer_list: [],
             sale_event_type_list: [],
             user_list: [],
@@ -226,7 +226,7 @@ export default {
                 contact_tel_num: '',
                 sale_customer_remark: '',
             },
-                addEventForm: {
+            addEventForm: {
                 cus_con_post: '',
                 visit_date: '',
                 cus_con_mdn: '',
@@ -236,8 +236,8 @@ export default {
                 sale_event_remark: '',
                 active_type_id: '',
 
-                sale_customer_id:'',
-                sale_phase_id:'',
+                sale_customer_id: '',
+                sale_phase_id: '',
             },
             editForm: {
                 description: '',
@@ -272,7 +272,7 @@ export default {
         this.get_sale_event_types()
     },
     methods: {
-          dateChange(val) {
+        dateChange(val) {
             var self = this;
             self.addEventForm.visit_date = val
         },
@@ -328,7 +328,7 @@ export default {
                 if (response.data.code == 0) {
                     // self.work_list.push(self.form);
                     self.$message({
-                        message:  response.data.msg,
+                        message: response.data.msg,
                         type: 'success'
                     });
                 } else {
@@ -340,19 +340,19 @@ export default {
 
             });
             // this.addCustomerForm = Object.assign({},addCustomerForm);
-            this.addFormVisible = false;
+            this.addCustomerVisible = false;
             this.get_customers();
 
         },
 
         addWork: function () {
             var self = this;
-           
-            let str = 'visit_date=' + self.addEventForm.visit_date + '&cus_con_post=' + self.addEventForm.cus_con_post + '&cus_con_mdn=' + self.addEventForm.cus_con_mdn + '&cus_con_tel_num=' + self.addEventForm.cus_con_tel_num + '&cus_con_wechart=' + self.addEventForm.cus_con_wechart + '&communicate_record=' + self.addEventForm.communicate_record + '&sale_event_remark=' + self.addEventForm.sale_event_remark + '&sale_event_owner_id=' + self.addEventForm.sale_event_owner_id + '&active_type_id=' + self.addEventForm.active_type_id+'&sale_customer_id=' + self.addEventForm.sale_customer_id+'&sale_phase_id=' + self.addEventForm.sale_phase_id;
+
+            let str = 'visit_date=' + self.addEventForm.visit_date + '&cus_con_post=' + self.addEventForm.cus_con_post + '&cus_con_mdn=' + self.addEventForm.cus_con_mdn + '&cus_con_tel_num=' + self.addEventForm.cus_con_tel_num + '&cus_con_wechart=' + self.addEventForm.cus_con_wechart + '&communicate_record=' + self.addEventForm.communicate_record + '&sale_event_remark=' + self.addEventForm.sale_event_remark + '&sale_event_owner_id=' + self.addEventForm.sale_event_owner_id + '&active_type_id=' + self.addEventForm.active_type_id + '&sale_customer_id=' + self.addEventForm.sale_customer_id + '&sale_phase_id=' + self.addEventForm.sale_phase_id;
             this.$axios.post('/works/insert_sale_event/', str).then(function (response) {
 
                 if (response.data.code == 0) {
-                    
+
                     self.get_data()
                     self.$message({
                         message: response.data.msg,
