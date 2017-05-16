@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import InsertWork, GetWorks, GetProjects,DelWork,Test,GetEventTypes,GetEventExcel
 from .views import GetSaleEvents,GetCustomers,GetSaleActiveTypes
 from .views import GetWeeklySummary,InsertSummary,GetSalePhases
-from api.views import InsertCustomer,InsertSaleEvent,DelSaleEvent
+from api.views import InsertCustomer,InsertSaleEvent,DelSaleEvent,DelSummary
 urlpatterns = [
     url(r'get_works/', GetWorks.as_view(), name="api_get_works"),
     url(r'get_projects/', GetProjects.as_view(), name="api_get_works"),
@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'get_sale_phases/', GetSalePhases.as_view(), name="api_get_works"),
     url(r'insert_sale_event/', InsertSaleEvent.as_view(), name="api_get_works"),
     url(r'insert_summary/', InsertSummary.as_view(), name="api_InsertWork"),
-
+    url(r'del_summary/', DelSummary.as_view(), name="api_DelSaleEvent"),  
     url(r'insert_customer/', InsertCustomer.as_view(), name="api_DelWork"),
     url(r'del_sale_event/', DelSaleEvent.as_view(), name="api_DelSaleEvent"),  
     url(r'get_saleevents/', GetSaleEvents.as_view(), name="api_get_works"),

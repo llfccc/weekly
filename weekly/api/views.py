@@ -381,3 +381,17 @@ class DelSaleEvent(View):
             content = {"id": del_event_id[0]}
             response = my_response(code=0, msg=u"删除成功", content=content)
         return response
+
+class DelSummary(View):
+    def post(self, request):
+        data = request.POST
+        print(data)
+        delID = data.get("delID")
+        del_event_id = WeekSummary.objects.filter(id=delID).delete()
+        print(del_event_id[0])
+        if del_event_id[0] == 0:
+            response = my_response(code=1, msg=u"删除失败")
+        else:
+            content = {"id": del_event_id[0]}
+            response = my_response(code=0, msg=u"删除成功", content=content)
+        return response
