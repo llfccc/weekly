@@ -19,7 +19,7 @@ class Department(models.Model):
                               blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
-    owner_id =  models.IntegerField(verbose_name='创建人')
+    # owner_id =  models.IntegerField(verbose_name='创建人')
     def __unicode__(self):
         return u"{}".format(self.active_type_name)
 

@@ -34,7 +34,7 @@ class GetWorks(View):
         #没有完成显示出对应的上下游对接人
         # up_user_field=["chinese_name as up_reporter_name "]
         # down_user_field = ["chinese_name as down_reporter_name "]
-        plain_sql=join_sql(filter_date,project_name,'','')
+        plain_sql=join_sql(filter_date,project_name,'','',user_id)
 
         query_result = fetch_data(plain_sql)
         #将down_reporter_ids由id对应具体的人

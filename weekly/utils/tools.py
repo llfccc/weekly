@@ -9,7 +9,7 @@ from hashlib import md5
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
 from django.core.cache import cache
-
+import decimal
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -27,6 +27,8 @@ class CJsonEncoder(json.JSONEncoder):
             return obj.strftime("%Y-%m-%d")
         elif isinstance(obj, datetime.time):
             return obj.strftime('%H:%M:%S')
+        elif isinstance(obj,decimal.Decimal):
+            return float(obj)
         else:
             return json.JSONEncoder.default(self, obj)
 
