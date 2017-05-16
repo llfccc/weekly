@@ -248,7 +248,7 @@ class GetWeeklySummary(View):
     def get(self, request):
         user_id=get_user_id(request)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).all()
-        query_field = ["id", "start_time", "end_time", "summary", "self_evaluation", "plan", "create_time"]
+        query_field = ["id", "start_date", "end_date", "summary", "self_evaluation", "plan", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -259,7 +259,7 @@ class InsertSummary(View):
         user_id=get_user_id(request)        
         data = request.POST
 
-        insert_field = ["start_time", "end_time", "summary", "self_evaluation", "plan"]
+        insert_field = ["start_date", "end_date", "summary", "self_evaluation", "plan"]
         result = {}
         for t in insert_field:
             result[t] = data.get(t)

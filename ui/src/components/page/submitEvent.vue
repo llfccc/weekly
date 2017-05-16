@@ -228,14 +228,13 @@ export default {
             },
             addEventForm: {
                 cus_con_post: '',
-                visit_date: '',
+                visit_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
                 cus_con_mdn: '',
                 cus_con_tel_num: '',
                 cus_con_wechart: '',
                 communicate_record: '',
                 sale_event_remark: '',
                 active_type_id: '',
-
                 sale_customer_id: '',
                 sale_phase_id: '',
             },

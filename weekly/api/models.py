@@ -40,7 +40,7 @@ class DevEvent(models.Model):
     end_time = models.TimeField(verbose_name='事件结束时间')
     fin_percentage = models.IntegerField(default=0, verbose_name='完成百分比')
     up_reporter_id = models.CharField(max_length=64, verbose_name='上游汇报人')
-    down_reporter_ids = models.CharField(max_length=64, verbose_name='下游汇报人')
+    down_reporter_ids = models.CharField(max_length=64, verbose_name='下游交接人')
     dev_event_remark = models.TextField(
         null=True, blank=True, verbose_name="备注")
     dev_event_create_time = models.DateTimeField(auto_now_add=True)
@@ -57,8 +57,8 @@ class DevEvent(models.Model):
 
 
 class WeekSummary(models.Model):
-    start_time = models.DateField(verbose_name='开始时间')
-    end_time = models.DateField(verbose_name='结束时间')
+    start_date = models.DateField(verbose_name='开始时间')
+    end_date = models.DateField(verbose_name='结束时间')
     summary = models.CharField(max_length=500, verbose_name='总结')
     self_evaluation = models.CharField(max_length=500, verbose_name='自我评价')
     plan = models.CharField(max_length=500, verbose_name='计划')

@@ -26,7 +26,7 @@
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
-            <el-submenu index="5">
+            <!--<el-submenu index="5">
                 <template slot="title">
                     <i class="el-icon-star-on"></i>文件下载</template>
                 <el-menu-item index="rulesDownload">制度下载</el-menu-item>
@@ -34,6 +34,7 @@
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
+            -->
             <el-submenu index="6">
                 <template slot="title">
                     <i class="el-icon-star-on"></i>基础数据</template>

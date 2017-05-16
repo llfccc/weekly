@@ -39,8 +39,7 @@
                     </el-input>
                 </el-form-item>
     
-                <el-form-item label="工作时间">
-    
+                <el-form-item label="工作时间">    
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="insertForm.event_date" type="date" placeholder="选择日期" @change="dateChange" :picker-options="dateOption">
@@ -58,7 +57,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="8">
-                        <el-select v-model="insertForm.down_reporter_ids" multiple  clearable filterable placeholder="下游汇报人">
+                        <el-select v-model="insertForm.down_reporter_ids" multiple  clearable filterable placeholder="下游交接人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -106,9 +105,9 @@
             <el-table-column prop="dev_event_remark" label="备注" width="150">
             </el-table-column>
     
-            <el-table-column label="操作" width="180" fixed="right">
+            <el-table-column label="操作" width="110" fixed="right">
                 <template scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -213,7 +212,7 @@ export default {
             },
             insertForm: {
                 description: '',
-                event_date: '',
+                event_date: new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(),
                 event_time: '',
                 start_time: '',
                 end_time: '',
@@ -393,10 +392,10 @@ export default {
                 );
 
         },
-        handleEdit: function (index, row) {
-            this.editFormVisible = true;
-            this.editForm = Object.assign({}, row);
-        },
+        // handleEdit: function (index, row) {
+        //     this.editFormVisible = true;
+        //     this.editForm = Object.assign({}, row);
+        // },
         handleAdd: function () {
             this.addFormVisible = true;
             // this.addForm = {

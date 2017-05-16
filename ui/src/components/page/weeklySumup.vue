@@ -4,9 +4,9 @@
         <el-table :data="summary_list" border style="width: 100%">
             <el-table-column prop="id" style="display:none" label="id" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="start_time" label="开始时间" width="150" fixed sortable>
+            <el-table-column prop="start_date" label="开始时间" width="150" fixed sortable>
             </el-table-column>
-            <el-table-column prop="end_time" label="结束时间" width="150" sortable>
+            <el-table-column prop="end_date" label="结束时间" width="150" sortable>
             </el-table-column>
             <el-table-column prop="summary" label="总结" width="150" sortable>
             </el-table-column>
@@ -28,9 +28,9 @@
                 <el-form-item label="时间范围:">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="insertForm.start_time" align="right" type="date" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
+                        <el-date-picker v-model="insertForm.start_date" align="right" type="date" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
                         </el-date-picker>
-                        <el-date-picker v-model="insertForm.end_time" align="right" type="date"  placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
+                        <el-date-picker v-model="insertForm.end_date" align="right" type="date"  placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
                         </el-date-picker>
                     </div>
     
@@ -77,8 +77,8 @@ export default {
             },
             addLoading: false,
             insertForm: {
-                start_time: '',
-                end_time: '',
+                start_date: '',
+                end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
                 summary:'',
                 plan:'',
                 self_evaluation:'',
@@ -96,12 +96,12 @@ export default {
     methods: {
         dateChange1(val) {
             var v = this;
-            v.insertForm.start_time = val
+            v.insertForm.start_date = val
 
         },
         dateChange2(val) {
             var v = this;
-            v.insertForm.end_time = val
+            v.insertForm.end_date = val
 
         },
         get_weekly: function (params) {
@@ -121,7 +121,7 @@ export default {
         insertSummary: function () {
             var v = this;
             console.log(v.insertForm);
-            let str = 'start_time=' + v.insertForm.start_time + '&end_time=' + v.insertForm.end_time + '&summary=' + v.insertForm.summary + '&self_evaluation=' + v.insertForm.self_evaluation + '&plan=' + v.insertForm.plan;
+            let str = 'start_date=' + v.insertForm.start_date + '&end_date=' + v.insertForm.end_date + '&summary=' + v.insertForm.summary + '&self_evaluation=' + v.insertForm.self_evaluation + '&plan=' + v.insertForm.plan;
             this.$axios.post('/works/insert_summary/', str).then(function (response) {
 
                 if (response.data.code == 0) {
