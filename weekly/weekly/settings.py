@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*', '']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'accounts',
     #'rest_framework_swagger',
     'djcelery',
+    'xadmin',
+    'crispy_forms',
+    'reversion',
 ]
 
 MIDDLEWARE = [

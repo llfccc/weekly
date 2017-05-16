@@ -1,3 +1,4 @@
+# coding=utf-8
 """weekly URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -18,9 +19,16 @@ from django.contrib import admin
 # from rest_framework_swagger.views import get_swagger_view
 # schema_view = get_swagger_view(title='Pastebin API')
 
+from xadmin.plugins import xversion
+import xadmin
+
+#version模块自动注册需要版本控制的 Model
+xversion.register_models()
+
+xadmin.autodiscover()
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'xadmin/', include(xadmin.site.urls)),
     url(r'works/', include('api.urls')),
     url(r'analysis/', include('analysis.urls')),
     url(r'accounts/', include('accounts.urls')),
