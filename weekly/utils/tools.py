@@ -8,6 +8,8 @@ import datetime
 from hashlib import md5
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
+from django.core.cache import cache
+
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -86,3 +88,12 @@ def fetch_data(sql):
                 break
             results.append(dict(zip(col_names, row)))
     return results
+
+
+#获取当前用户的userid
+def get_user_id(request):
+    sid=request.COOKIES.get("sid",'')
+    print(sid)
+    user_object=cache.get(sid)
+    user_id=user_object.get("user_id")
+    return user_id

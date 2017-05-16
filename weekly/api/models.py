@@ -15,7 +15,7 @@ class DevProject(models.Model):
                                           blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 
-    creator = models.ForeignKey(User, verbose_name='创建人')
+    creator_id = models.IntegerField(null=True, verbose_name='创建人')
 
     def __unicode__(self):
         return u"{}".format(self.project_name)

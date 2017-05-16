@@ -4,9 +4,9 @@ import json
 from django.http import HttpResponse, FileResponse, Http404
 import datetime
 from django.views.generic import View
-from utils.tools import my_response, queryset_to_dict, dict_to_json, getMondaySunday
+from utils.tools import my_response, queryset_to_dict, dict_to_json
 from utils.export_excel import ReportExcel
-from utils.tools import fetch_data
+from utils.tools import fetch_data,get_user_id
 from .models import DevEvent, DevProject, DevEventType
 from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from .models import WeekSummary
@@ -16,15 +16,9 @@ import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
 from accounts.models import User
+from sqljoint.query import join_sql
 
 # Create your views here.
-#获取当前用户的userid
-def get_user_id(request):
-    sid=request.COOKIES.get("sid",'')
-    print(sid)
-    user_object=cache.get(sid)
-    user_id=user_object.get("user_id")
-    return user_id
 
 
 class GetWorks(View):
@@ -34,43 +28,14 @@ class GetWorks(View):
 
     def get(self, request):
         user_id=get_user_id(request)
-
         getParams = request.GET
         project_name = getParams.get('project_name', '')
         filter_date = getParams.get('filter_date', '')
-        # 创建查询条件
-        where_condition = ''
-        if filter_date:
-            try:
-                start_date = filter_date[:10]
-                end_date = filter_date[13:]
-            except:
-                start_date, end_date = getMondaySunday()
-        else:
-            start_date, end_date = getMondaySunday()
-        where_condition = u'dev.dev_event_owner_id={0} and dev.event_date>="{1}" and dev.event_date<="{2}" '.format(user_id,start_date, end_date)
-
-        if project_name:
-            where_condition += "and project_name like '%{0}%'".format(project_name)
-        
-
-        dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
-                           "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
-                           "dev_event_create_time",
-                           "dev_event_owner_id", "dev_event_project_id", "dev_event_type_id"]
-        project_field = ["project_name"]
-        event_type_field = ["event_type_name"]
         #没有完成显示出对应的上下游对接人
         # up_user_field=["chinese_name as up_reporter_name "]
         # down_user_field = ["chinese_name as down_reporter_name "]
-        all_select_field = dev_event_field + project_field + event_type_field
+        plain_sql=join_sql(filter_date,project_name,'','')
 
-        select_param = ",".join(all_select_field)
-
-        plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
-            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time desc ;".format(
-            select_param, where_condition)
-        # print(plain_sql)
         query_result = fetch_data(plain_sql)
         #将down_reporter_ids由id对应具体的人
         for row in query_result:
@@ -78,7 +43,6 @@ class GetWorks(View):
             down_reporter_name_list=[]
             
             for i in down_reporter_id_list:
-
                 down_reporter_name=User.objects.get(id=i).chinese_name
                 if down_reporter_name:
                         down_reporter_name_list.append(down_reporter_name)                
