@@ -1,9 +1,9 @@
 from django.conf.urls import url
-from analysis.views import AnanlysisWorker
+from analysis.views import AnanlysisWorker,AnanlysisProject
 
 urlpatterns = [
     url(r'analysis_worker/', AnanlysisWorker.as_view(), name="api_get_works"),
-    # url(r'get_projects/', GetProjects.as_view(), name="api_get_works"),
+    url(r'analysis_project/', AnanlysisProject.as_view(), name="api_get_works"),
     # url(r'get_event_types/', GetEventTypes.as_view(), name="api_get_works"),
     # url(r'insert_work/', InsertWork.as_view(), name="api_InsertWork"),
     # url(r'del_work/', DelWork.as_view(), name="api_DelWork"),

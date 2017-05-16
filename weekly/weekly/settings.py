@@ -25,7 +25,7 @@ SECRET_KEY = '#56s&yij@0e_th#ry#eb%hdw%#jq&+=@^y1o33m^0zn@vc6$$v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','']
+ALLOWED_HOSTS = ['*', '']
 
 # Application definition
 
@@ -77,13 +77,31 @@ WSGI_APPLICATION = 'weekly.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
+    'default': {
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'test',  # 数据库名字
+
+        'USER': 'test',  # 登录用户名
+
+        'PASSWORD': 'test',
+
+        'HOST': '127.0.0.1',  # 数据库IP地址
+
+        'PORT': '5432',
+
+    }
+
+}
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -130,5 +148,5 @@ CACHES = {
         }
     }
 }
-#自定义user，Substituting a custom User model
+# 自定义user，Substituting a custom User model
 AUTH_USER_MODEL = 'accounts.User'

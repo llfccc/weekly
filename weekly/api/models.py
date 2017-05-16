@@ -52,6 +52,9 @@ class DevEvent(models.Model):
     def __unicode__(self):
         return u"{}".format(self.description)
 
+    def time_cousuming(self, keyword):
+        return self.start_time-self.end_time
+
 
 class WeekSummary(models.Model):
     start_time = models.DateField(verbose_name='开始时间')
