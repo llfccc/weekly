@@ -1,12 +1,13 @@
 from django.conf.urls import url
 from analysis.views import AnanlysisWorker,AnanlysisProject,AnanlysisLoad,AnanlysisDepartment
+from analysis.views import DisplayWeekly
 
 urlpatterns = [
     url(r'analysis_worker/', AnanlysisWorker.as_view(), name="api_get_works"),
     url(r'analysis_project/', AnanlysisProject.as_view(), name="api_get_works"),
     url(r'analysis_load/', AnanlysisLoad.as_view(), name="api_get_works"),
     url(r'analysis_department/', AnanlysisDepartment.as_view(), name="api_InsertWork"),
-    # url(r'del_work/', DelWork.as_view(), name="api_DelWork"),
+    url(r'display_weekly/', DisplayWeekly.as_view(), name="api_DelWork"),
 
     # url(r'get_event_excel/', GetEventExcel.as_view(), name="api_get_works"),
     # url(r'get_weekly_summary/', GetWeeklySummary.as_view(), name="api_get_works"),

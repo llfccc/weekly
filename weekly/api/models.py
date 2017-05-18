@@ -57,8 +57,8 @@ class DevEvent(models.Model):
 
 
 class WeekSummary(models.Model):
-    start_date = models.DateField(verbose_name='开始时间')
-    end_date = models.DateField(verbose_name='结束时间')
+    start_date = models.DateField(verbose_name='起始日期')
+    # end_date = models.DateField(verbose_name='结束日期')
     summary = models.CharField(max_length=500, verbose_name='总结')
     self_evaluation = models.CharField(max_length=500, verbose_name='自我评价')
     plan = models.CharField(max_length=500, verbose_name='计划')
