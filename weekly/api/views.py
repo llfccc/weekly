@@ -60,7 +60,7 @@ class GetProjects(View):
     '''
 
     def get(self, request):
-        data = DevProject.objects.all()
+        data = DevProject.objects.filter(project_is_closed=False).all()
         query_field = ["id", "creater_id", "status", "dev_project_remark", "project_name", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)

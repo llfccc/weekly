@@ -129,8 +129,8 @@ export default {
       filters: {
         project_name: '',
         employee_name: '',
-        department_name: '技术服务中心',
-        filter_date: '',
+        department_name: '',
+        filter_date:'',
         // start_date: '',
         // end_date: '',
       },
@@ -172,21 +172,23 @@ export default {
       self.filters.filterDate = val;
     },
     filter: function (params) {
-      // this.get_depart_data();
-      // this.get_personal_data();
-      // this.get_project_data();
-      // this.get_load();
+      this.get_weekly();
     },
-    get_depart_data: function (params) {
+    get_weekly: function (params) {
       var self = this;
-      this.$axios.get('/analysis/display_weekly/')
+      console.log(self.filters.filter_date)
+      this.$axios.get('/analysis/display_weekly/', {
+        params: {
+          filter_date: self.filters.filterDate,
+          // employee_name: self.filters.employee_name,
+          // project_name: self.filters.project_name,
+          // department_name: self.filters.department_name,
+        }
+      })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
-          console.log(responseContent)
           self.weekly_dict = responseContent
-          // self.echartsDepart.opinionData = responseContent.type_count
-          // self.echartsDepart.opinion = responseContent.type_list
-          //self.drawDepartPie('department');
+
         }
         );
     },
@@ -196,7 +198,7 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
-      this.get_depart_data()
+      this.get_weekly()
 
     })
   }

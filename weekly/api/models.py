@@ -13,6 +13,7 @@ class DevProject(models.Model):
     status = models.CharField(max_length=64, verbose_name='项目状态：00，关闭；01，启动')
     dev_project_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='备注')
+    project_is_closed = models.BooleanField(default=False,verbose_name="true代表关闭")
     create_time = models.DateTimeField(auto_now_add=True)
 
     creator_id = models.IntegerField(null=True, verbose_name='创建人')

@@ -152,7 +152,9 @@ class DisplayWeekly(View):
             field_data['event_date']=event_date
             alternation_list.append(field_data)
 
-        event_date_list=set(event_date_list)
+        event_date_list=list(set(event_date_list))      
+        event_date_list.sort(reverse=True)
+
         result=dict.fromkeys(event_date_list)
         for value in alternation_list:
             if not result[value['event_date']]:
@@ -173,10 +175,5 @@ class DisplayWeekly(View):
             finalResult.append({'event_date':value,'total_time':result[value]['total_time'],'which_day':result[value]['which_day'],'other_row':result[value]['other_row']})
        
         content = dict_to_json(finalResult)
-        #转换数据为echarts能接受的格式
-        # type_list=[i['event_type_name'] for i in row]
-        # type_count=[{'name':i['event_type_name'],'value':i['date_diff']} for i in row]
-
-        # content = dict_to_json({'type_list':type_list,'type_count':type_count})
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
