@@ -26,6 +26,7 @@ class DevEventType(models.Model):
     event_type_name = models.CharField(max_length=100, verbose_name='事件类型名称')
     dev_event_type_remark = models.CharField(max_length=64, null=True,
                                              blank=True, verbose_name='备注')
+    devEventType_is_closed = models.BooleanField(default=False,verbose_name="true代表关闭")
     create_time = models.DateTimeField(auto_now_add=True)
 
     # creator =  models.ForeignKey(User, verbose_name='创建人')

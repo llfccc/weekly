@@ -74,7 +74,7 @@ class GetEventTypes(View):
     '''
 
     def get(self, request):
-        data = DevEventType.objects.all()
+        data = DevEventType.objects.filter(devEventType_is_closed=False).all()
         query_field = ["id", "creator_id", "event_type_name", "dev_event_type_remark", "create_time"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
