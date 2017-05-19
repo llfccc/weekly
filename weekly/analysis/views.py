@@ -6,7 +6,7 @@ import datetime
 from collections import defaultdict
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.tools import fetch_data
+from utils.tools import fetch_data,getfirstday
 from api.models import DevEvent, DevProject, DevEventType
 from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from api.models import WeekSummary
@@ -132,6 +132,9 @@ class DisplayWeekly(View):
         project_name = getParams.get('project_name', '')
         department_name = getParams.get('department_name', '')
         
+        if filter_date:
+            filter_date='-'.join(getfirstday(filter_date))
+        # print(filter_date)
         # 创建查询条件        
         plain_sql=join_sql(filter_date,project_name,department_name,employee_name)
         #统计分析
@@ -172,7 +175,7 @@ class DisplayWeekly(View):
 
         finalResult=[]
         for index,value in enumerate(event_date_list):
-            finalResult.append({'event_date':value,'total_time':result[value]['total_time'],'which_day':result[value]['which_day'],'other_row':result[value]['other_row']})
+            finalResult.append({'event_date':value,'total_time':round(result[value]['total_time'],2),'which_day':result[value]['which_day'],'other_row':result[value]['other_row']})
        
         content = dict_to_json(finalResult)
         response = my_response(code=0, msg=u"查询成功", content=content)

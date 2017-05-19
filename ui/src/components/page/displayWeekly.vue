@@ -5,16 +5,25 @@
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
-          <span class="demonstration">筛选时间</span>
-          <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-          </el-date-picker>
-          <el-form-item>
+          <el-col :span="8">
+            <span class="demonstration">筛选时间</span>
+            <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
+            </el-date-picker>
+          </el-col>
+  
+          <el-col :span="4">
+            <el-input type="text" class="form-control" id="employee_name" placeholder="员工名" v-model="filters.employee_name">
+              总结
+            </el-input>
+          </el-col>
+          <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
-          </el-form-item>
+          </el-col>
+  
         </el-form>
       </el-col>
   
-      <table class=" table-responsive table-bordered">
+      <table class="table table-responsive table-bordered">
         <tr>
           <th>日期 </th>
           <th>星期 </th>
@@ -94,29 +103,71 @@
     </div>
     <br>
     </br>
-    <el-row :gutter="24">
-  
+    <!--<el-row :gutter="24">  
+            <el-col :span="8">
+              <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
+              <div id="project" style="width: 300px;height: 300px;"> </div>
+            </el-col>
+        
+            <el-col :span="8">
+              <el-input v-model="filters.department_name" placeholder="部门"></el-input>
+              <div id="department" style="width: 300px;height: 300px;"> </div>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model="filters.employee_name" placeholder="员工姓名"></el-input>
+              <div id="personal" style="width: 400px;height: 300px;"> </div>
+            </el-col>  
+          </el-row>-->
+    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
-        <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
-        <div id="project" style="width: 300px;height: 300px;"> </div>
-      </el-col>
   
-      <el-col :span="8">
-        <el-input v-model="filters.department_name" placeholder="部门"></el-input>
-        <div id="department" style="width: 300px;height: 300px;"> </div>
       </el-col>
       <el-col :span="8">
-        <el-input v-model="filters.employee_name" placeholder="员工姓名"></el-input>
-        <div id="personal" style="width: 400px;height: 300px;"> </div>
-      </el-col>
   
-    </el-row>
-    <el-row :gutter="24">
-  
-      <el-col :span="12">
-        <div id="load" style="width: 900px;height: 300px;"> </div>
       </el-col>
-    </el-row>
+      <el-col :span="8">
+  
+      </el-col>
+    </el-col>
+  
+    <el-card class="box-card">
+       <template v-if='summary'>
+      <div slot="header" class="clearfix">
+        <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
+        <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+      </div>
+        <div class="text item">
+          <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span style="line-height: 16px;">周总结</span>
+                </div>
+                {{summary.summary}}
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span style="line-height: 16px;">自我评价</span>
+                </div>
+                {{summary.self_evaluation}}
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span style="line-height: 16px;">计划</span>
+                </div>
+                {{summary.plan}}
+              </el-card>
+            </el-col>
+          </el-col>
+  
+        </div>
+      </template>
+  
+    </el-card>
   </div>
 </template>
 <script>
@@ -127,79 +178,63 @@ export default {
     return {
       weekly_dict: '',
       filters: {
-        project_name: '',
+        filter_date: '',
         employee_name: '',
-        department_name: '',
-        filter_date:'',
-        // start_date: '',
-        // end_date: '',
+        naturalWeek: '',
       },
-      pickerOptions2: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        },
-        {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
-
+      summary: '',
     }
   },
   methods: {
-
-    filterDateChange(val) {
+    dateChange1(val) {
       var self = this;
-      self.filters.filterDate = val;
+      self.filters.naturalWeek = val
     },
+
     filter: function (params) {
       this.get_weekly();
+      this.get_summary();
     },
     get_weekly: function (params) {
       var self = this;
       console.log(self.filters.filter_date)
       this.$axios.get('/analysis/display_weekly/', {
         params: {
-          filter_date: self.filters.filterDate,
-          // employee_name: self.filters.employee_name,
-          // project_name: self.filters.project_name,
-          // department_name: self.filters.department_name,
+          filter_date: self.filters.naturalWeek,
+          employee_name: self.filters.employee_name,
         }
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.weekly_dict = responseContent
+          console.log(responseContent)
 
         }
         );
     },
-
+    get_summary: function (params) {
+      var self = this;
+      console.log(self.filters.filter_date)
+      this.$axios.get('/works/get_weekly_summary/', {
+        params: {
+          filter_date: self.filters.naturalWeek,
+          employee_name: self.filters.employee_name,
+        }
+      })
+        .then(function (response) {
+          var responseContent = JSON.parse(response.data.content);
+          self.summary = responseContent[0]
+          console.log(self.summary)
+        }
+        );
+    },
 
   },
   //调用 
   mounted() {
     this.$nextTick(function () {
-      this.get_weekly()
-
+      // this.get_weekly()
+      // this.get_summary()
     })
   }
 }

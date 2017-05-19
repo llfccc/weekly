@@ -68,8 +68,11 @@ def get_random():
     m5.update(src)
     return m5.hexdigest()
 
-#获取当前日期的星期一及星期填的datetime
+
 def getMondaySunday():
+    '''
+    获取当前日期的星期一及星期填的datetime
+    '''
     today = datetime.date.today()
     Sunday = today + datetime.timedelta(6 - today.weekday())
     Monday  = today + datetime.timedelta(-today.weekday())
@@ -92,10 +95,38 @@ def fetch_data(sql):
     return results
 
 
-#获取当前用户的userid
+
 def get_user_id(request):
+    '''
+    从缓存中获取当前用户的userid
+    '''
     sid=request.COOKIES.get("sid",'')
-    print(sid)
+
     user_object=cache.get(sid)
     user_id=user_object.get("user_id")
     return user_id
+
+
+def getfirstday(weekflag):     
+    '''
+    根据周数获得每周的起始和结束日期,传入的值例如“2017-01-5周”
+    '''
+    print(weekflag)
+    yearnum = weekflag[0:4]   #取到年份
+    weeknum = weekflag[5:7]   #取到周
+    stryearstart = yearnum +'0101'   #当年第一天
+    print(stryearstart)
+    yearstart = datetime.datetime.strptime(stryearstart,'%Y%m%d') #格式化为日期格式
+    yearstartcalendarmsg = yearstart.isocalendar()  #当年第一天的周信息
+    yearstartweek = yearstartcalendarmsg[1]  
+    yearstartweekday = yearstartcalendarmsg[2]
+    yearstartyear = yearstartcalendarmsg[0]
+    if yearstartyear < int (yearnum):
+        daydelat = (8-int(yearstartweekday))+(int(weeknum)-1)*7
+    else :
+        daydelat = (8-int(yearstartweekday))+(int(weeknum)-2)*7     
+    first_day = (yearstart+datetime.timedelta(days=daydelat)).date()
+    last_day =first_day+datetime.timedelta(days=6)
+    start_date=first_day.strftime("%Y-%m-%d")
+    end_date=last_day.strftime("%Y-%m-%d")
+    return (start_date,end_date)

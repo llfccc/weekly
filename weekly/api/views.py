@@ -1,12 +1,13 @@
 # coding:utf-8
 import os
 import json
+import re
 from django.http import HttpResponse, FileResponse, Http404
 import datetime
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from utils.export_excel import ReportExcel
-from utils.tools import fetch_data,get_user_id
+from utils.tools import fetch_data,get_user_id,getfirstday
 from .models import DevEvent, DevProject, DevEventType
 from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from .models import WeekSummary
@@ -94,7 +95,6 @@ class InsertWork(View):
             result[t] = data.get(t)
 
         result['dev_event_owner_id'] = user_id
-
         content = {"id": 0}
         if result:
             inset_process = DevEvent(**result)
@@ -246,9 +246,17 @@ class GetWeeklySummary(View):
     '''
 
     def get(self, request):
-        user_id=get_user_id(request)
+        getParams = request.GET        
+        employee_name= getParams.get('employee_name', '')
+        filter_date = getParams.get('filter_date', '')
+        if filter_date:
+            filter_date='-'.join(getfirstday(filter_date))
+        if employee_name:
+            user_id=User.objects.get(chinese_name=employee_name).id
+        else:
+            user_id=0
         data = WeekSummary.objects.filter(summary_owner_id=user_id).all()
-        query_field = ["id", "start_date", "end_date", "summary", "self_evaluation", "plan", "create_time"]
+        query_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -259,11 +267,17 @@ class InsertSummary(View):
         user_id=get_user_id(request)        
         data = request.POST
 
-        insert_field = ["start_date", "end_date", "summary", "self_evaluation", "plan"]
+        insert_field = ["natural_week", "summary", "self_evaluation", "plan"]
         result = {}
         for t in insert_field:
             result[t] = data.get(t)
 
+        natural_week=result['natural_week'][:7]
+        __match=re.compile('^\d{4}-\d{2}').match(natural_week)
+        if __match:
+            result['natural_week']=__match.group()
+        else:
+            return  my_response(code=1, msg=u"自然周填写格式错误", content=content)
         result['summary_owner_id'] = user_id
         content = {"id": 0}
         if result:

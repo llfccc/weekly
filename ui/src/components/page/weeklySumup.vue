@@ -4,9 +4,7 @@
         <el-table :data="summary_list" border style="width: 100%">
             <el-table-column prop="id" style="display:none" label="id" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="start_date" label="开始时间" width="150" fixed sortable>
-            </el-table-column>
-            <el-table-column prop="end_date" label="结束时间" width="150" sortable>
+            <el-table-column prop="natural_week" label="自然周数" width="150" fixed sortable>
             </el-table-column>
             <el-table-column prop="summary" label="总结" width="150" sortable>
             </el-table-column>
@@ -24,12 +22,10 @@
     
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
             <el-form ref="insertForm" :model="insertForm" label-width="90px">
-                <el-form-item label="时间范围:">
+                <el-form-item label="周数:">
                     <div class="block">
-                        <span class="demonstration"></span>
-                        <el-date-picker v-model="insertForm.start_date" align="right" type="date" placeholder="开始日期" format="yyyy-MM-dd" @change="dateChange1">
-                        </el-date-picker>
-                        <el-date-picker v-model="insertForm.end_date" align="right" type="date" placeholder="结束日期" format="yyyy-MM-dd" @change="dateChange2">
+                        <span class="demonstration">周</span>
+                        <el-date-picker v-model="insertForm.natural_week" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
                         </el-date-picker>
                     </div>
     
@@ -76,8 +72,8 @@ export default {
             },
             addLoading: false,
             insertForm: {
-                start_date: '',
-                end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+                natural_week: '',
+                // end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
                 summary: '',
                 plan: '',
                 self_evaluation: '',
@@ -87,23 +83,15 @@ export default {
     },
     created() {
         // 组件创建完后获取数据，这里和1.0不一样，改成了这个样子
-        this.get_weekly()
-        // this.get_projects()
-        // this.get_event_types()
-        // this.get_sale_event_types()
+        this.get_summary()
+
     },
     methods: {
         dateChange1(val) {
             var self = this;
-            self.insertForm.start_date = val
-
+            self.insertForm.naturalWeek = val
         },
-        dateChange2(val) {
-            var self = this;
-            self.insertForm.end_date = val
-
-        },
-        get_weekly: function (params) {
+        get_summary: function (params) {
             var self = this;
             this.$axios.get('/works/get_weekly_summary/', {
                 params: {
@@ -118,10 +106,10 @@ export default {
         },
         insertSummary: function () {
             var self = this;
-            let str = 'start_date=' + self.insertForm.start_date + '&end_date=' + self.insertForm.end_date + '&summary=' + self.insertForm.summary + '&self_evaluation=' + self.insertForm.self_evaluation + '&plan=' + self.insertForm.plan;
+            let str = 'natural_week=' + self.insertForm.naturalWeek + '&summary=' + self.insertForm.summary + '&self_evaluation=' + self.insertForm.self_evaluation + '&plan=' + self.insertForm.plan;
             this.$axios.post('/works/insert_summary/', str).then(function (response) {
                 if (response.data.code == 0) {
-                    self.get_weekly();
+                    self.get_summary();
                     self.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'
@@ -132,7 +120,7 @@ export default {
                         type: 'error'
                     });
                 }
-            });            
+            });
             //this.$refs['addForm'].resetFields();
             this.addFormVisible = false;
 
@@ -152,7 +140,7 @@ export default {
             this.$axios.post('/works/del_summary/', str)
                 .then(function (response) {
                     if (response.data.code == 0) {
-                        self.get_weekly()
+                        self.get_summary()
                         self.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'

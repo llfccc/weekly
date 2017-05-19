@@ -59,8 +59,7 @@ class DevEvent(models.Model):
 
 
 class WeekSummary(models.Model):
-    start_date = models.DateField(verbose_name='起始日期')
-    # end_date = models.DateField(verbose_name='结束日期')
+    natural_week = models.CharField(max_length=64, verbose_name='自然周')
     summary = models.CharField(max_length=500, verbose_name='总结')
     self_evaluation = models.CharField(max_length=500, verbose_name='自我评价')
     plan = models.CharField(max_length=500, verbose_name='计划')
@@ -69,7 +68,6 @@ class WeekSummary(models.Model):
 
     def __unicode__(self):
         return u"{}".format(self.summary)
-
 
 class SaleActiveType(models.Model):
     active_type_name = models.CharField(max_length=100, verbose_name='活动类型名称')
