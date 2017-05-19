@@ -111,11 +111,11 @@ def getfirstday(weekflag):
     '''
     根据周数获得每周的起始和结束日期,传入的值例如“2017-01-5周”
     '''
-    print(weekflag)
+
     yearnum = weekflag[0:4]   #取到年份
     weeknum = weekflag[5:7]   #取到周
     stryearstart = yearnum +'0101'   #当年第一天
-    print(stryearstart)
+
     yearstart = datetime.datetime.strptime(stryearstart,'%Y%m%d') #格式化为日期格式
     yearstartcalendarmsg = yearstart.isocalendar()  #当年第一天的周信息
     yearstartweek = yearstartcalendarmsg[1]  

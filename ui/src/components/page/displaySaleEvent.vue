@@ -23,7 +23,7 @@
         </el-form>
       </el-col>
   
-      <table class="table table-responsive table-bordered">
+      <!--<table class="table table-responsive table-bordered">
         <tr>
           <th>日期 </th>
           <th>星期 </th>
@@ -98,8 +98,9 @@
             </table>
           </td>
         </tr>
-      </table>
-  
+      </table>-->
+  <table id="table"></table>
+
     </div>
     <br>
     </br>
@@ -178,13 +179,13 @@ export default {
     },
 
     filter: function (params) {
-      this.get_weekly();
+      this.get_sale_events();
       this.get_summary();
     },
-    get_weekly: function (params) {
+    get_sale_events: function (params) {
       var self = this;
       console.log(self.filters.naturalWeek)
-      this.$axios.get('/analysis/display_weekly/', {
+      this.$axios.get('/analysis/display_sale_events/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
@@ -200,7 +201,6 @@ export default {
     },
     get_summary: function (params) {
       var self = this;
-
       this.$axios.get('/works/get_weekly_summary/', {
         params: {
           filter_date: self.filters.naturalWeek,
@@ -224,6 +224,8 @@ export default {
     })
   }
 }
+
+
 </script>
 <style scoped>
 * {

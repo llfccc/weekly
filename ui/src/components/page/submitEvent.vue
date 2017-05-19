@@ -124,16 +124,17 @@
         </el-dialog>
     
         <el-table :data="sale_list" border style="width: 100%">
-            <el-table-column prop="sale_event_id" style="display:none" label="id" width="150" sortable>
+            <el-table-column prop="sale_event_id" style="display:none" label="id" width="100" sortable>
             </el-table-column>
-            <el-table-column prop="short_name" label="客户简称" width="150" fixed sortable>
+            <el-table-column prop="visit_date" label="拜访时间" width="150" fixed='left' sortable>
             </el-table-column>
-            <el-table-column prop="phase_name" label="拜访阶段" width="150" fixed sortable>
+            <el-table-column prop="short_name" label="客户简称" width="150"  sortable>
+            </el-table-column>
+            <el-table-column prop="phase_name" label="拜访阶段" width="150"  sortable>
             </el-table-column>
             <el-table-column prop="cus_con_post" label="客户职位" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="visit_date" label="拜访时间" width="150" sortable>
-            </el-table-column>
+
             <el-table-column prop="cus_con_mdn" label="手机号码" width="150" sortable>
             </el-table-column>
             <el-table-column prop="cus_con_tel_num" label="客户联系方式" width="190" sortable>

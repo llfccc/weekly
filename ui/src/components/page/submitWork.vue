@@ -3,22 +3,26 @@
         <h1 class="logo">工作内容</h1>
         <!--工具条-->
         <div>
-            <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-                <el-form :inline="true" :model="filters">
-                    <el-form-item>    
-                        <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
-                    </el-form-item>
-                    <span class="demonstration">筛选时间</span>
-                    <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-                    </el-date-picker>
-                    <el-form-item>
-                        <el-button type="primary" v-on:click="get_data">查询</el-button>
-                    </el-form-item>
+    
+            <el-form :inline="true" :model="filters">
+                <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
                     <el-form-item>
                         <el-button type="primary" @click="handleAdd">新增</el-button>
                     </el-form-item>
-                </el-form>
-            </el-col>    
+                </el-col>
+                <span class="demonstration">筛选项目</span>
+                <el-form-item>
+                    <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
+                </el-form-item>
+                <span class="demonstration">筛选时间</span>
+                <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+                </el-date-picker>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="get_data">查询</el-button>
+                </el-form-item>
+    
+            </el-form>
+    
         </div>
     
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
@@ -39,7 +43,7 @@
                     </el-input>
                 </el-form-item>
     
-                <el-form-item label="工作时间">    
+                <el-form-item label="工作时间">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="insertForm.event_date" type="date" placeholder="选择日期" @change="dateChange" :picker-options="dateOption">
@@ -57,7 +61,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="8">
-                        <el-select v-model="insertForm.down_reporter_ids" multiple  clearable filterable placeholder="下游交接人">
+                        <el-select v-model="insertForm.down_reporter_ids" multiple clearable filterable placeholder="下游交接人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -117,49 +121,48 @@
             <a href='/works/get_event_excel/'>下载excel</a>
         </p>
         <!--编辑界面-->
-        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-            <el-form ref="form" :model="editForm" label-width="80px">
-                <el-form-item label="工作内容">
-                    <el-input type="textarea" class="form-control" id="description" placeholder="工作内容" v-model="editForm.description">工作内容
-                    </el-input>
-                </el-form-item>
-    
-                <el-form-item label="工作时间">
-    
-                    <el-col :span="11" class="block">
-                        <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
-                        </el-date-picker>
-                    </el-col>
-                    <el-col class="line" :span="2">-</el-col>
-                    <el-col :span="11" class="block">
-                        <el-date-picker v-model="editForm.end_time" type="datetime" placeholder="选择日期时间">
-                        </el-date-picker>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="项目情况：">
-    
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="editForm.up_reporter_id">
-                            工作负责人
+        <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+                <el-form ref="form" :model="editForm" label-width="80px">
+                    <el-form-item label="工作内容">
+                        <el-input type="textarea" class="form-control" id="description" placeholder="工作内容" v-model="editForm.description">工作内容
                         </el-input>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="editForm.down_reporter_ids">下游汇报人
-                        </el-input>
-    
-                    </el-col>
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="editForm.fin_percentage">进度
-                        </el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="addFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addWork" :loading="addLoading">提交修改</el-button>
-            </div>
-    
-        </el-dialog>
+                    </el-form-item>
+        
+                    <el-form-item label="工作时间">
+        
+                        <el-col :span="11" class="block">
+                            <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
+                            </el-date-picker>
+                        </el-col>
+                        <el-col class="line" :span="2">-</el-col>
+                        <el-col :span="11" class="block">
+                            <el-date-picker v-model="editForm.end_time" type="datetime" placeholder="选择日期时间">
+                            </el-date-picker>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item label="项目情况：">
+        
+                        <el-col :span="8">
+                            <el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="editForm.up_reporter_id">
+                                工作负责人
+                            </el-input>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="editForm.down_reporter_ids">下游汇报人
+                            </el-input>
+        
+                        </el-col>
+                        <el-col :span="8">
+                            <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="editForm.fin_percentage">进度
+                            </el-input>
+                        </el-col>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="addFormVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="addWork" :loading="addLoading">提交修改</el-button>
+                </div>    
+            </el-dialog>-->
     
     </div>
 </template>
@@ -212,7 +215,7 @@ export default {
             },
             insertForm: {
                 description: '',
-                event_date: new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(),
+                event_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
                 event_time: '',
                 start_time: '',
                 end_time: '',
@@ -301,7 +304,7 @@ export default {
         },
         get_data: function (params) {
             var self = this;
-            this.$axios.get('/works/get_works/', {
+            this.$axios.get('/works/get_dev_events/', {
                 params: {
                     filter_date: self.filters.filterDate,
                     project_name: self.filters.project_name

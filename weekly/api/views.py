@@ -17,12 +17,12 @@ import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
 from accounts.models import User
-from sqljoint.query import join_sql
+from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 
 # Create your views here.
 
 
-class GetWorks(View):
+class GetDevEvent(View):
     '''
     查询每日工作内容
     '''
@@ -35,14 +35,14 @@ class GetWorks(View):
         #没有完成显示出对应的上下游对接人
         # up_user_field=["chinese_name as up_reporter_name "]
         # down_user_field = ["chinese_name as down_reporter_name "]
-        plain_sql=join_sql(filter_date,project_name,'','',user_id)
+        plain_sql=filter_dev_event_sql(filter_date,project_name,'','',user_id)
 
         query_result = fetch_data(plain_sql)
         #将down_reporter_ids由id对应具体的人
         for row in query_result:
             down_reporter_id_list= row['down_reporter_ids'].split(',')
-            down_reporter_name_list=[]
-            
+
+            down_reporter_name_list=[]            
             for i in down_reporter_id_list:
                 down_reporter_name=User.objects.get(id=i).chinese_name
                 if down_reporter_name:
@@ -50,7 +50,6 @@ class GetWorks(View):
             row['down_reporter_ids']=','.join(down_reporter_name_list)
         
         content = dict_to_json(query_result)
-
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -84,6 +83,9 @@ class GetEventTypes(View):
 
 
 class InsertWork(View):
+    '''
+    插入工作记录
+    '''
     def post(self, request):
         user_id=get_user_id(request)        
         data = request.POST
@@ -108,6 +110,9 @@ class InsertWork(View):
 
 
 class DelWork(View):
+    '''
+    删除工作记录
+    '''
     def post(self, request):
         user_id=get_user_id(request)
         data = request.POST
@@ -140,14 +145,21 @@ class GetSaleEvents(View):
 
     def get(self, request):
         user_id=get_user_id(request)
-        param = "*,sale.id as sale_event_id"
-        plain_sql = "SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
-            left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
-            left join api_salephase as phase on sale.sale_phase_id = phase.id \
-            where sale_event_owner_id={1};".format(param,user_id)
+        print(user_id)
+        getParams = request.GET        
+        filter_date = getParams.get('filter_date', '')
+        employee_name= getParams.get('employee_name', '')
+
+
+        #如果传入了周数，则转成日期段
+        if filter_date:
+            filter_date='-'.join(getfirstday(filter_date))
+        
+
+        plain_sql=filter_sale_event_sql(filter_date,employee_name,user_id)
         row = fetch_data(plain_sql)
-        # query_field = ["id", "project_name", "description", "start_time", "end_time", "fin_percentage", "up_reporter_id", "down_reporter_ids",
-        #        "event_name", "dev_event_remark"]
+
+        
         content = dict_to_json(row)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -247,15 +259,21 @@ class GetWeeklySummary(View):
 
     def get(self, request):
         getParams = request.GET        
-        employee_name= getParams.get('employee_name', '')
+        employee_name= getParams.get('employee_name', '').strip()
         filter_date = getParams.get('filter_date', '')
-        if filter_date:
-            filter_date='-'.join(getfirstday(filter_date))
-        if employee_name:
-            user_id=User.objects.get(chinese_name=employee_name).id
+
+        __match=re.compile('^\d{4}-\d{2}').match(filter_date)
+        if __match:
+            filter_date=__match.group()
         else:
-            user_id=0
-        data = WeekSummary.objects.filter(summary_owner_id=user_id).all()
+            filter_date=''
+        print(filter_date)
+        user_id=0
+        if employee_name:
+            user_queryset=User.objects.filter(chinese_name=employee_name)
+            if user_queryset:
+                user_id=user_queryset.first().id
+        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
         query_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
@@ -361,7 +379,7 @@ class InsertSaleEvent(View):
         user_id=get_user_id(request)       
         data = request.POST
         print(data)
-     
+        
         insert_field = ["visit_date", "cus_con_post", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark", "sale_phase_id",
                 "active_type_id", "sale_customer_id"]
         result = {}

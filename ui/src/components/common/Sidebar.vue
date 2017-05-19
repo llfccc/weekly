@@ -20,12 +20,12 @@
             </el-submenu>
             <el-submenu index="4">
                 <template slot="title">
-                    <i class="el-icon-star-on"></i>报表</template>
-    
+                    <i class="el-icon-star-on"></i>报表</template>   
 
                 <el-menu-item index="displayWeekly">查看周报</el-menu-item>
+                <el-menu-item index="displaySaleEvent">销售周报</el-menu-item>
                 <el-menu-item index="weeklyAnalysis">周报分析</el-menu-item>
-                <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
+
             </el-submenu>
             <!--<el-submenu index="5">
                 <template slot="title">

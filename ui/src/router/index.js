@@ -53,6 +53,11 @@ export default new Router({
                     component: resolve => require(['../components/page/projectManage.vue'], resolve) // vue-datasource组件
                 },
                 {
+                    path: '/displaySaleEvent',
+                    component: resolve => require(['../components/page/displaySaleEvent.vue'], resolve) // vue-datasource组件
+                },
+
+                {
                     path: '/saleTarget',
                     component: resolve => require(['../components/page/saleTarget.vue'], resolve) // vue-datasource组件
                 },
