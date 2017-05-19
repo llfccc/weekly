@@ -2,32 +2,40 @@
     <div class="sidebar">
         <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
             <el-menu-item index="readme">
-                <i class="el-icon-setting"></i>说明
+                <i ></i>说明
             </el-menu-item>
             <el-submenu index="2">
                 <template slot="title">
-                    <i class="el-icon-menu"></i>周报</template>
+                    <i class="el-icon-menu"></i>办公周报</template>
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
                 <el-menu-item index="weeklySumup">周报总结</el-menu-item>
     
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
-            <el-submenu index="3">
+                        <el-submenu index="3">
+                <template slot="title">
+                    <i class="el-icon-star-on"></i>办公报表</template>    
+                <el-menu-item index="displayWeekly">查看周报</el-menu-item>
+                <el-menu-item index="weeklyAnalysis">周报分析</el-menu-item>    
+            </el-submenu>
+            <el-submenu index="4">
                 <template slot="title">
                     <i class="el-icon-menu"></i>销售拜访</template>
                 <el-menu-item index="submitEvent">添加拜访</el-menu-item>
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
-            <el-submenu index="4">
+
+
+            <el-submenu index="5">
                 <template slot="title">
-                    <i class="el-icon-star-on"></i>报表</template>   
-
-                <el-menu-item index="displayWeekly">查看周报</el-menu-item>
-                <el-menu-item index="displaySaleEvent">销售周报</el-menu-item>
-                <el-menu-item index="weeklyAnalysis">周报分析</el-menu-item>
-
+                    <i class="el-icon-star-on"></i>销售报表</template>
+                     <el-menu-item index="displaySaleEvent">销售周报</el-menu-item>
+                <el-menu-item index="displaySalePerformance">销售业绩</el-menu-item>
+                <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
+                <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
-            <!--<el-submenu index="5">
+
+                <!--<el-submenu index="5">
                 <template slot="title">
                     <i class="el-icon-star-on"></i>文件下载</template>
                 <el-menu-item index="rulesDownload">制度下载</el-menu-item>
@@ -35,10 +43,9 @@
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
-            -->
             <el-submenu index="6">
                 <template slot="title">
-                    <i class="el-icon-star-on"></i>基础数据</template>
+                    <i class="el-icon-setting"></i>基础数据</template>
                 <el-menu-item index="projectManage">项目管理</el-menu-item>
                 <el-menu-item index="saleTarget">销售目标管理</el-menu-item>
                 <el-menu-item index="saleCustmoer">客户管理</el-menu-item>

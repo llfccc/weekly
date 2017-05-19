@@ -62,7 +62,8 @@ def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
     active_type_field=['active_type_name']
     sale_customer_field=['short_name']
     sale_phase_field=['phase_name']
-    all_select_field = sale_event_field + active_type_field + sale_customer_field+sale_phase_field
+    user_field=['chinese_name','id as user_id']
+    all_select_field = sale_event_field + active_type_field + sale_customer_field+sale_phase_field+user_field
     select_param = ",".join(all_select_field)
 
     start_date, end_date=default_date(filter_date)
@@ -78,9 +79,10 @@ def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
                 user_id=user_queryset.first().id     
             where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
 
-    plain_sql = u"SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
+    plain_sql = u"SELECT {0} FROM api_saleevent as sale\
+        left join api_saleactivetype as type on sale.active_type_id = type.id \
         left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
-        left join api_salephase as phase on sale.sale_phase_id = phase.id where {1} \
-        order by sale.visit_date;".format(select_param,where_condition)
- 
+        left join api_salephase as phase on sale.sale_phase_id = phase.id \
+        where {1} ".format(select_param,where_condition)
+
     return plain_sql

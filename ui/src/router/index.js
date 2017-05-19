@@ -56,6 +56,10 @@ export default new Router({
                     path: '/displaySaleEvent',
                     component: resolve => require(['../components/page/displaySaleEvent.vue'], resolve) // vue-datasource组件
                 },
+                {
+                    path: '/displaySalePerformance',
+                    component: resolve => require(['../components/page/displaySalePerformance.vue'], resolve) // vue-datasource组件
+                },
 
                 {
                     path: '/saleTarget',

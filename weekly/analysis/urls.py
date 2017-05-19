@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from analysis.views import AnanlysisWorker,AnanlysisProject,AnanlysisLoad,AnanlysisDepartment
-from analysis.views import DisplayWeekly,DisplaySaleEvent
+from analysis.views import DisplayWeekly,DisplaySaleEvent,GetSalePerformace
 
 urlpatterns = [
     url(r'analysis_worker/', AnanlysisWorker.as_view(), name="api_get_works"),
@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'display_weekly/', DisplayWeekly.as_view(), name="api_DelWork"),
     url(r'display_sale_event/', DisplaySaleEvent.as_view(), name="analysis_display_sale_event"),
 
-    # url(r'get_event_excel/', GetEventExcel.as_view(), name="api_get_works"),
+    url(r'get_sale_performance/', GetSalePerformace.as_view(), name="api_get_works"),
     # url(r'get_weekly_summary/', GetWeeklySummary.as_view(), name="api_get_works"),
     # # url(r'get_projects/', GetProjects.as_view(), name="api_get_works"),
     # # url(r'get_event_types/', GetEventTypes.as_view(), name="api_get_works"),
