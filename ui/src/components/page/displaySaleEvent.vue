@@ -23,88 +23,36 @@
         </el-form>
       </el-col>
   
-      <!--<table class="table table-responsive table-bordered">
+      <table border="1" class="table table-responsive table-bordered">
         <tr>
           <th>日期 </th>
           <th>星期 </th>
-          <th>项目名称 </th>
-          <th>类型 </th>
-          <th>事件描述 </th>
-          <th>持续时间 </th>
-          <th>上游汇报人</th>
-          <th>下游对接人 </th>
-          <th>完成百分比 </th>
+          <th>活动类型 </th>
+          <th>拜访客户
+          </th>
+          <th>阶段
+          </th>
+          <th>沟通记录 </th>
           <th>备注 </th>
         </tr>
-        <tr v-for="item in weekly_dict">
-          <td>
-            {{item.event_date}}
-          </td>
-          <td>
-            {{item.which_day}}
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.project_name}}</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.event_type_name}}</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.description}}</td>
-              </tr>
-            </table>
+        <tr v-for="item in sale_event_list">
+          <td> {{item.visit_date}}</td>
+          <td> {{item.visit_date}}</td>
+          <td> {{item.active_type_name}}</td>
+          <td> {{item.short_name}}</td>
+          <td> {{item.phase_name}}</td>
+          <td> {{item.communicate_record}}</td>
+          <td> {{item.sale_event_remark}}</td>
+          <!--<td> {{item.}}</td>-->
   
-          </td>
-          <td>
-            {{item.total_time}}
-  
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.up_reporter_id}}</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.down_reporter_ids}}</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.fin_percentage}}</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
-              <tr v-for="child in item.other_row">
-                <td>{{child.dev_event_remark}}</td>
-              </tr>
-            </table>
-          </td>
         </tr>
-      </table>-->
-  <table id="table"></table>
-
+      </table>
+      <table id="table"></table>
+  
     </div>
     <br>
     </br>
-
+  
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
   
@@ -118,11 +66,11 @@
     </el-col>
   
     <el-card class="box-card">
-       <template v-if='summary'>
-      <div slot="header" class="clearfix">
-        <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
-        <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
-      </div>
+      <template v-if='summary'>
+        <div slot="header" class="clearfix">
+          <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
+          <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+        </div>
         <div class="text item">
           <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-col :span="8">
@@ -163,7 +111,7 @@ export default {
   name: '',
   data() {
     return {
-      weekly_dict: '',
+      sale_event_list: '',
       filters: {
         filter_date: '',
         employee_name: '',
@@ -185,7 +133,7 @@ export default {
     get_sale_events: function (params) {
       var self = this;
       console.log(self.filters.naturalWeek)
-      this.$axios.get('/analysis/display_sale_events/', {
+      this.$axios.get('/analysis/display_sale_event/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
@@ -193,8 +141,8 @@ export default {
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
-          self.weekly_dict = responseContent
-          // console.log(responseContent)
+          self.sale_event_list = responseContent
+          console.log(responseContent)
 
         }
         );

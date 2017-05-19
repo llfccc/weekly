@@ -43,7 +43,7 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
         if employee_name:       
             user_queryset=User.objects.filter(chinese_name=employee_name)
             if user_queryset:
-                user_id=user_queryset.id     
+                user_id=user_queryset.first().id     
             where_condition += "and dev_event_owner_id = '{0}' ".format(user_id)
 
     plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
@@ -53,7 +53,7 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
         select_param, where_condition)        
     return plain_sql
 
-def filter_sale_event_sql(filter_date='',project_name='',department_name='',employee_name='',user_id=''):
+def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
@@ -75,7 +75,7 @@ def filter_sale_event_sql(filter_date='',project_name='',department_name='',empl
         if employee_name:       
             user_queryset=User.objects.filter(chinese_name=employee_name)
             if user_queryset:
-                user_id=user_queryset.id     
+                user_id=user_queryset.first().id     
             where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
 
     plain_sql = u"SELECT {0} FROM api_saleevent as sale left join api_saleactivetype as type on sale.active_type_id = type.id \
