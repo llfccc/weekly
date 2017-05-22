@@ -116,9 +116,10 @@ class SalePhase(models.Model):
 
 
 class SaleTarget(models.Model):
-    start_time = models.DateTimeField(verbose_name='开始时间')
-    end_time = models.DateTimeField(verbose_name='结束时间')
-    target = models.CharField(max_length=500, verbose_name='目标，json存储')
+    natural_week = models.CharField(max_length=64, verbose_name='自然周')
+    phase_name = models.CharField(
+        max_length=64, verbose_name='阶段名称，例如B,C,D,E,F,G')
+    target = models.IntegerField(verbose_name='目标')
     phase_count = models.IntegerField(verbose_name='最大拜访次数')
     sale_target_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='销售目标备注')

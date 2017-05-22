@@ -12,10 +12,10 @@
           </el-col>
   
           <!--<el-col :span="4">
-                <el-input type="text" class="form-control" id="employee_name" placeholder="员工名" v-model="filters.employee_name">
-                  总结
-                </el-input>
-              </el-col>-->
+                  <el-input type="text" class="form-control" id="employee_name" placeholder="员工名" v-model="filters.employee_name">
+                    总结
+                  </el-input>
+                </el-col>-->
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
           </el-col>
@@ -32,7 +32,7 @@
           <th colspan="2">D </th>
           <th colspan="2">E </th>
           <th colspan="2">F </th>
-          <th colspan="2">G </th>
+          <!--<th colspan="2">G </th>-->
         </tr>
         <tr>
           <th> 实际</th>
@@ -47,19 +47,25 @@
           <th> 目标</th>
           <th> 实际</th>
           <th> 目标</th>
-          <th> 实际</th>
-          <th> 目标</th>  
+          <!--<th> 实际</th>
+          <th> 目标</th>-->
         </tr>
-        <tr v-for="item in sale_event_list">
-          <td> {{item.visit_date}}</td>
-          <td> {{item.visit_date}}</td>
-          <td> {{item.active_type_name}}</td>
-          <td> {{item.short_name}}</td>
-          <td> {{item.phase_name}}</td>
-          <td> {{item.communicate_record}}</td>
-          <td> {{item.sale_event_remark}}</td>
-          <!--<td> {{item.}}</td>-->
-  
+        <tr v-for="item in sale_performance_list">
+          <td> {{item.chinese_name}}</td>
+          <td> {{item.A}}</td>
+          <td> {{item.target_A}}</td>
+          <td> {{item.B}}</td>
+          <td> {{item.target_B}}</td>
+          <td> {{item.C}}</td>
+          <td> {{item.target_C}}</td>
+          <td> {{item.D}}</td>
+          <td> {{item.target_D}}</td>
+          <td> {{item.E}}</td>
+          <td> {{item.target_E}}</td>
+          <td> {{item.F}}</td>
+          <td> {{item.target_F}}</td>
+            <!--<td> {{item.G}}</td>
+          <td> {{item.target_G}}</td>-->
         </tr>
       </table>
       <table id="table"></table>
@@ -80,44 +86,6 @@
       </el-col>
     </el-col>
   
-    <el-card class="box-card">
-      <template v-if='summary'>
-        <div slot="header" class="clearfix">
-          <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
-          <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
-        </div>
-        <div class="text item">
-          <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-col :span="8">
-              <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span style="line-height: 16px;">周总结</span>
-                </div>
-                {{summary.summary}}
-              </el-card>
-            </el-col>
-            <el-col :span="8">
-              <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span style="line-height: 16px;">自我评价</span>
-                </div>
-                {{summary.self_evaluation}}
-              </el-card>
-            </el-col>
-            <el-col :span="8">
-              <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span style="line-height: 16px;">计划</span>
-                </div>
-                {{summary.plan}}
-              </el-card>
-            </el-col>
-          </el-col>
-  
-        </div>
-      </template>
-  
-    </el-card>
   </div>
 </template>
 <script>
@@ -142,6 +110,7 @@ export default {
     },
 
     filter: function (params) {
+      this.sale_performance_list=[];
       this.get_sale_performance();
       // this.get_summary();
     },

@@ -53,7 +53,7 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
         select_param, where_condition)        
     return plain_sql
 
-def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
+def filter_sale_event_sql(filter_date='', employee_name='',department_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
@@ -62,7 +62,7 @@ def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
     active_type_field=['active_type_name']
     sale_customer_field=['short_name']
     sale_phase_field=['phase_name']
-    user_field=['chinese_name','id as user_id']
+    user_field=['chinese_name','accounts_user.id as user_id']
     all_select_field = sale_event_field + active_type_field + sale_customer_field+sale_phase_field+user_field
     select_param = ",".join(all_select_field)
 
@@ -83,6 +83,7 @@ def filter_sale_event_sql(filter_date='', employee_name='',user_id=''):
         left join api_saleactivetype as type on sale.active_type_id = type.id \
         left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
         left join api_salephase as phase on sale.sale_phase_id = phase.id \
+        left join accounts_user  on accounts_user.id = sale.sale_event_owner_id \
         where {1} ".format(select_param,where_condition)
 
     return plain_sql

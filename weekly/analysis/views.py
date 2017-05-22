@@ -218,22 +218,48 @@ class GetSalePerformace(View):
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        employee_name= getParams.get('employee_name', '')
-        # project_name = getParams.get('project_name', '')
-        # department_name = getParams.get('department_name', '')
+        # employee_name= getParams.get('employee_name', '')
+        # # project_name = getParams.get('project_name', '')
+        department_name = getParams.get('department_name', '')
         
+        natural_week=''
         if filter_date:
+            natural_week = filter_date[:7]
             filter_date='-'.join(getfirstday(filter_date))
-        # print(filter_date)
+
+
+        target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget where natural_week='{0}'".format(natural_week)
         # 创建查询条件        
         # employee_filter={'employee_name':employee_name}
-        plain_sql=filter_sale_event_sql(filter_date)
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,department_name=department_name)
 
         #统计分析
-        group_sql = u'select child.phase_name,count(child.phase_name) from ({0}) as child group by child.phase_name '.format(plain_sql)
-        
-        print(group_sql)
-        data = fetch_data(plain_sql)
+        group_sql = u'select child.user_id,child.chinese_name,child.phase_name,count(child.phase_name) as phase_count \
+            from ({0}) as child group by child.phase_name,child.chinese_name,child.user_id '.format(plain_sql)
+
+        # join_sql=u''
+        union_sql=u'''select  a_user.chinese_name,phase_name,phase_count,target_phase_name,target \
+                    from ({1}) as target  \
+                    left join ({0}) as group_count on \
+                    target.sale_target_owner_id=group_count.user_id and target.target_phase_name=group_count.phase_name
+                    left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(group_sql,target_sql)
+        pivot_sql=u'''select chinese_name,   
+            sum(case when phase_name = 'A' then phase_count else 0 end) as "A",  
+            sum(case when phase_name = 'B' then phase_count else 0 end) as "B",  
+            sum(case when phase_name = 'C' then phase_count else 0 end) as "C",
+            sum(case when phase_name = 'D' then phase_count else 0 end) as "D",
+            sum(case when phase_name = 'E' then phase_count else 0 end) as "E",
+            sum(case when phase_name = 'F' then phase_count else 0 end) as "F",
+            sum(case when target_phase_name = 'A' then target else 0 end) as "target_A",  
+            sum(case when target_phase_name = 'B' then target else 0 end) as "target_B",  
+            sum(case when target_phase_name = 'C' then target else 0 end) as "target_C",
+            sum(case when target_phase_name = 'D' then target else 0 end) as "target_D",
+            sum(case when target_phase_name = 'E' then target else 0 end) as "target_E",
+            sum(case when target_phase_name = 'F' then target else 0 end) as "target_F"       
+            from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
+        print(pivot_sql)
+        data = fetch_data(pivot_sql)
         content = dict_to_json(data)
+        # print(content)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
