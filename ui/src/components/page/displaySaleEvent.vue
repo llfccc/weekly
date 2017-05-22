@@ -12,9 +12,10 @@
           </el-col>
   
           <el-col :span="4">
-            <el-input type="text" class="form-control" id="employee_name" placeholder="员工名" v-model="filters.employee_name">
-              总结
-            </el-input>
+  <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            </el-option>
+                        </el-select>
           </el-col>
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
@@ -118,6 +119,7 @@ export default {
         naturalWeek: '',
       },
       summary: '',
+           user_list: [],
     }
   },
   methods: {
@@ -125,10 +127,18 @@ export default {
       var self = this;
       self.filters.naturalWeek = val
     },
-
+    get_users: function (params) {
+            var self = this;
+            this.$axios.get('/accounts/get_username/')
+                .then(function (response) {
+                    self.user_list = eval(response.data.content);
+                }
+                );
+        },
     filter: function (params) {
       this.get_sale_events();
       this.get_summary();
+      this.get_users();
     },
     get_sale_events: function (params) {
       var self = this;

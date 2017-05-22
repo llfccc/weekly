@@ -261,6 +261,7 @@ class GetWeeklySummary(View):
         getParams = request.GET        
         employee_name= getParams.get('employee_name', '').strip()
         filter_date = getParams.get('filter_date', '')
+        # department_name =u'销售部'
         #验证日期是否符合 2017-01的格式
         __match=re.compile('^\d{4}-\d{2}').match(filter_date)
         if __match:

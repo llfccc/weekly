@@ -22,6 +22,7 @@ class LoginHandler(View):
             # 获取的表单数据与数据库进行比较
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
+                # login(request, user)
                 sid = get_random()
                 user_object=User.objects.get(username=username)
                 chinese_name=user_object.chinese_name
@@ -70,7 +71,7 @@ class LogoutHandler(View):
 
 
 # 注册
-def regist(req):
+def register(req):
     if req.method == 'POST':
         uf = UserForm(req.POST)
         if uf.is_valid():

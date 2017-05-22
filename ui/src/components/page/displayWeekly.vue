@@ -184,11 +184,10 @@ export default {
       this.summary=[];
       this.get_weekly();
       this.get_summary();
-      this.get_users()
+      this.get_users();
     },
     get_users: function (params) {
             var self = this;
-
             this.$axios.get('/accounts/get_username/')
                 .then(function (response) {
                     self.user_list = eval(response.data.content);

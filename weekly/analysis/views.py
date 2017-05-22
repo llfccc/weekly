@@ -136,14 +136,14 @@ class DisplayWeekly(View):
         employee_name= getParams.get('employee_name', '')
         project_name = getParams.get('project_name', '')
         #error，此处需要修改强制条件为主管所属部门
-        department_name = getParams.get('department_name', '技术服务中心')
+        department_name = getParams.get('department_name', '销售部')
         
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
   
         # 创建查询条件
         if employee_name:          
-            plain_sql=filter_dev_event_sql(filter_date,project_name,department_name,employee_name)
+            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,department_name=department_name,employee_name=employee_name)
         else:
             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          
@@ -200,13 +200,13 @@ class DisplaySaleEvent(View):
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
         # project_name = getParams.get('project_name', '')
-        # department_name = getParams.get('department_name', '')
+        department_name = getParams.get('department_name', '销售部')
         
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
         # print(filter_date)
         # 创建查询条件        
-        plain_sql=filter_sale_event_sql(filter_date,employee_name)
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,employee_name=employee_name,department_name=department_name)
         #统计分析
         # group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 

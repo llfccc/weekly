@@ -71,7 +71,17 @@ def filter_sale_event_sql(filter_date='', employee_name='',department_name='',us
     else:               
         user_id=chinesename_to_userid(employee_name)     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
-
+    #根据部门名称筛选人
+    department_id=departmentname_to_departmentid(department_name)
+    user_queryset=User.objects.filter(department_id=department_id).all()
+    user_ids=tuple([i.id for i in user_queryset])           
+    if user_ids:
+        #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
+        if len(user_ids)==1:
+            where_condition += "and sale_event_owner_id =  {0} ".format(user_ids[0])
+        else:
+            where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
+            
     plain_sql = u"SELECT {0} FROM api_saleevent as sale\
         left join api_saleactivetype as type on sale.active_type_id = type.id \
         left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
