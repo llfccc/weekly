@@ -403,7 +403,7 @@ class InsertSaleEvent(View):
 class DelSaleEvent(View):
     def post(self, request):
         data = request.POST
-        print(data)
+
         delID = data.get("delID")
         del_event_id = SaleEvent.objects.filter(id=delID).delete()
         print(del_event_id[0])
@@ -417,7 +417,7 @@ class DelSaleEvent(View):
 class DelSummary(View):
     def post(self, request):
         data = request.POST
-        print(data)
+
         delID = data.get("delID")
         del_event_id = WeekSummary.objects.filter(id=delID).delete()
         print(del_event_id[0])

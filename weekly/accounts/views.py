@@ -4,6 +4,7 @@ from django.views import View
 from utils.tools import my_response, get_random
 from forms import UserForm, RegisterForm
 from accounts.models import User
+from accounts.models import Department
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
@@ -99,8 +100,24 @@ def logout(req):
 
 
 class GetUsername(View):
+    '''
+    查询所有用户中文名或者根据部门名来筛选
+    '''
     def get(self, request):   
-        data = User.objects.all()
+        getParams = request.GET
+        department_name = getParams.get('department_name', '')
+        if department_name:
+            department_queryset=Department.objects.filter(department_name=department_name)
+            if department_queryset:
+                department_id=department_queryset.first().id
+            else:
+                department_id=0
+
+            user_queryset=User.objects.filter(department_id=department_id).all()
+            user_ids=tuple([i.id for i in user_queryset])           
+            data = User.objects.filter(pk__in=user_ids).all()
+        else:
+            data = User.objects.all()
         query_field = ["id","username","chinese_name","department_id", "position_id"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)

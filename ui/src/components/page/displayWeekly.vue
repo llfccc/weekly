@@ -11,10 +11,11 @@
             </el-date-picker>
           </el-col>
   
-          <el-col :span="4">
-            <el-input type="text" class="form-control" id="employee_name" placeholder="员工名" v-model="filters.employee_name">
-              总结
-            </el-input>
+          <el-col :span="6">
+            <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                            </el-option>
+                        </el-select>
           </el-col>
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
@@ -157,7 +158,7 @@
   </div>
 </template>
 <script>
-import echarts from 'echarts'
+
 export default {
   name: '',
   data() {
@@ -169,6 +170,7 @@ export default {
         naturalWeek: '',
       },
       summary: '',
+      user_list: [],
     }
   },
   methods: {
@@ -178,9 +180,21 @@ export default {
     },
 
     filter: function (params) {
+      this.weekly_dict=[];
+      this.summary=[];
       this.get_weekly();
       this.get_summary();
+      this.get_users()
     },
+    get_users: function (params) {
+            var self = this;
+            console.log(self.filters)
+            this.$axios.get('/accounts/get_username/')
+                .then(function (response) {
+                    self.user_list = eval(response.data.content);
+                }
+                );
+        },
     get_weekly: function (params) {
       var self = this;
       console.log(self.filters.naturalWeek)
@@ -219,6 +233,7 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
+        this.get_users()
       // this.get_weekly()
       // this.get_summary()
     })

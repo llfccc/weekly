@@ -129,7 +129,7 @@ class SaleTarget(models.Model):
     sale_target_owner_id = models.IntegerField(verbose_name='目标所属人')
 
     def __unicode__(self):
-        return u"{}".format(self.owner)
+        return u"{}".format(self.sale_target_owner_id+"--"+self.natural_week)
 
 
 class SaleEvent(models.Model):

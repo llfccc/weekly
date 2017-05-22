@@ -25,14 +25,18 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
     if project_name:
         where_condition += "and project_name like '%{0}%' ".format(project_name)
     #筛选部门中所有人员
-    if department_name:
-        department_id=Department.objects.get(department_name=department_name).id 
+    if department_name:        
+        department_queryset=Department.objects.filter(department_name=department_name)
+        if department_queryset:
+            department_id=department_queryset.first().id
+        else:
+            department_id=0
         user_queryset=User.objects.filter(department_id=department_id).all()
         user_ids=tuple([i.id for i in user_queryset])           
         if user_ids:
             #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
             if len(user_ids)==1:
-                where_condition += "and dev_event_owner_id =  '{0}' ".format(user_ids[0])
+                where_condition += "and dev_event_owner_id =  {0} ".format(user_ids[0])
             else:
                 where_condition += "and dev_event_owner_id in  {0} ".format(user_ids)
 
@@ -43,7 +47,9 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
         if employee_name:       
             user_queryset=User.objects.filter(chinese_name=employee_name)
             if user_queryset:
-                user_id=user_queryset.first().id     
+                user_id=user_queryset.first().id
+            else:
+                user_id=0     
             where_condition += "and dev_event_owner_id = '{0}' ".format(user_id)
 
     plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
