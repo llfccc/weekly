@@ -17,7 +17,7 @@ import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
 from accounts.models import User
-from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
+from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql,chinesename_to_userid
 
 # Create your views here.
 
@@ -261,7 +261,7 @@ class GetWeeklySummary(View):
         getParams = request.GET        
         employee_name= getParams.get('employee_name', '').strip()
         filter_date = getParams.get('filter_date', '')
-
+        #验证日期是否符合 2017-01的格式
         __match=re.compile('^\d{4}-\d{2}').match(filter_date)
         if __match:
             filter_date=__match.group()
@@ -269,10 +269,8 @@ class GetWeeklySummary(View):
             filter_date=''
         print(filter_date)
         user_id=0
-        if employee_name:
-            user_queryset=User.objects.filter(chinese_name=employee_name)
-            if user_queryset:
-                user_id=user_queryset.first().id
+
+        user_id=chinesename_to_userid(employee_name)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
         query_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, query_field)

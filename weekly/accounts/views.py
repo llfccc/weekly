@@ -8,7 +8,7 @@ from accounts.models import Department
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-
+from sqljoint.query import departmentname_to_departmentid
 # Create your views here.
 class LoginHandler(View):
     cookie_timeout = 2 * 3600
@@ -106,18 +106,13 @@ class GetUsername(View):
     def get(self, request):   
         getParams = request.GET
         department_name = getParams.get('department_name', '')
-        if department_name:
-            department_queryset=Department.objects.filter(department_name=department_name)
-            if department_queryset:
-                department_id=department_queryset.first().id
-            else:
-                department_id=0
+        #error
+        department_name='技术服务中心'
+        department_id=departmentname_to_departmentid(department_name)
+        user_queryset=User.objects.filter(department_id=department_id).all()
+        user_ids=tuple([i.id for i in user_queryset])           
+        data = User.objects.filter(pk__in=user_ids).all()
 
-            user_queryset=User.objects.filter(department_id=department_id).all()
-            user_ids=tuple([i.id for i in user_queryset])           
-            data = User.objects.filter(pk__in=user_ids).all()
-        else:
-            data = User.objects.all()
         query_field = ["id","username","chinese_name","department_id", "position_id"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)

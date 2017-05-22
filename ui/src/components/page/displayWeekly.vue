@@ -188,7 +188,7 @@ export default {
     },
     get_users: function (params) {
             var self = this;
-            console.log(self.filters)
+
             this.$axios.get('/accounts/get_username/')
                 .then(function (response) {
                     self.user_list = eval(response.data.content);
@@ -197,7 +197,7 @@ export default {
         },
     get_weekly: function (params) {
       var self = this;
-      console.log(self.filters.naturalWeek)
+
       this.$axios.get('/analysis/display_weekly/', {
         params: {
           filter_date: self.filters.naturalWeek,
@@ -208,7 +208,6 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.weekly_dict = responseContent
           // console.log(responseContent)
-
         }
         );
     },
@@ -224,7 +223,7 @@ export default {
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.summary = responseContent[0]
-          console.log(self.summary)
+
         }
         );
     },
