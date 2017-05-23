@@ -73,14 +73,14 @@
           <td>
             <table class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
-                <td>{{child.up_reporter_id}}</td>
+                <td>{{child.up_reporter_name}}</td>
               </tr>
             </table>
           </td>
           <td>
             <table class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
-                <td>{{child.down_reporter_ids}}</td>
+                <td>{{child.down_reporter_name}}</td>
               </tr>
             </table>
           </td>

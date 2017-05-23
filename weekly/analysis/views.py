@@ -16,7 +16,7 @@ import StringIO
 import pandas as pd
 from django.core.cache import cache
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
-
+from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 
 class AnanlysisWorker(View):
     '''
@@ -150,7 +150,10 @@ class DisplayWeekly(View):
         #先变换数据
         alternation_list=[]
         event_date_list=[]   #保存所有不重复的日期
-        for key,value in enumerate(data):           
+        for key,value in enumerate(data): 
+            '''
+            获取所有日期字段保存为list，并将需要的字段放入alternation_list备用
+            '''          
             event_date=value.get('event_date').strftime("%Y-%m-%d")
             event_date_list.append(event_date)  
             duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
@@ -158,6 +161,8 @@ class DisplayWeekly(View):
             field_data={key:value.get(key) for key in data_list}
             field_data['duration_time']=duration_time
             field_data['event_date']=event_date
+            field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
+            field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
             alternation_list.append(field_data)
 
         event_date_list=list(set(event_date_list))      
@@ -165,6 +170,9 @@ class DisplayWeekly(View):
 
         result=dict.fromkeys(event_date_list)
         for value in alternation_list:
+            '''
+            统计每天的耗时
+            '''
             if not result[value['event_date']]:
                 #初始化时间合计
                 result[value['event_date']]={'total_time':value['duration_time']}

@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.forms.models import model_to_dict
 from django.core.cache import cache
 import decimal
-
+import re
 reload(sys)
 sys.setdefaultencoding("utf-8")
 Logger = logging.getLogger("normal")
@@ -146,28 +146,19 @@ def day_of_week(source):
     '''
     计算某一天是星期几，输入格式为 2017-1-1
     '''
+
     week_list=['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+    __match=re.compile('^\d{4}-\d{1,2}-\d{1,2}').match(source)
 
     if isinstance(source, datetime.datetime):
         date=source           
     elif isinstance(source, datetime.date):
         date=source
-    else:
-        return -1
+    elif __match:
+        source=__match.group()
+        date=datetime.datetime.strptime(source,"%Y-%m-%d")
+
     week_id=int(date.strftime("%w"))
     which_day=week_list[week_id]
     return   which_day
 
-# def day_of_week(source):
-#     '''
-#     计算某一天是星期几，输入格式为 2017-1-1
-#     '''
-#     if isinstance(source, datetime.datetime):
-#         date=datetime.datetime.strptime(source,'%Y-%m-%d %H:%M:%S')
-#     elif isinstance(source, datetime.date):
-#         date=datetime.datetime.strptime(source,"%Y-%m-%d")
-#     else:
-#         return -1
-#     week_id=int(date.strftime("%w"))
-#     which_day=week_list[week_id]
-#     return which_day
