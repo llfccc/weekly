@@ -158,22 +158,20 @@ class GetSaleEvents(View):
 
     def get(self, request):
         user_id=get_user_id(request)
-        print(user_id)
-        getParams = request.GET        
+        
+        getParams = request.GET
+        print(getParams)        
         filter_date = getParams.get('filter_date', '')
-        employee_name= getParams.get('employee_name', '')
-
+        customer_id= getParams.get('customer_id', '')
 
         #如果传入了周数，则转成日期段
-        if filter_date:
-            filter_date='-'.join(getfirstday(filter_date))
-        
+        # if filter_date:
+        #     filter_date='-'.join(getfirstday(filter_date))     
 
-        plain_sql=filter_sale_event_sql(filter_date,employee_name,user_id)
-        row = fetch_data(plain_sql)
-
-        
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,customer_id=customer_id)
+        row = fetch_data(plain_sql)        
         content = dict_to_json(row)
+        print(content)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 

@@ -2,7 +2,7 @@
     <div>
         <h1 class="logo">登记拜访</h1>
         <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+        <!--<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="姓名"></el-input>
@@ -11,8 +11,26 @@
                     <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
                 </el-form-item>
             </el-form>
-        </el-col>
-    
+        </el-col>-->
+    <el-form :inline="true" :model="filters">
+                <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
+  <el-form-item>
+                    <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
+                </el-form-item>
+                </el-col>
+                <span class="demonstration">筛选客户</span>
+                <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
+                     <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
+                        </el-option>
+                </el-select>
+                <span class="demonstration">筛选时间</span>
+                <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+                </el-date-picker>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="get_data">查询</el-button>
+                </el-form-item>
+            </el-form>
+
         <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false">
     
             <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
@@ -206,7 +224,36 @@ export default {
     data() {
         return {
             filters: {
-                name: ''
+                customer_id: '',
+                filter_date:'',
+
+            },
+            pickerOptions2: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
             },
             dateOption: {
                 disabledDate(time) {
@@ -254,13 +301,13 @@ export default {
             editFormVisible: false,//编辑界面是否显示
             editLoading: false,
             //新增界面数据
-            addForm: {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            },
+            // addForm: {
+            //     name: '',
+            //     sex: -1,
+            //     age: 0,
+            //     birth: '',
+            //     addr: ''
+            // },
         }
     },
     created() {
@@ -272,17 +319,22 @@ export default {
         this.get_sale_event_types()
     },
     methods: {
+        filterDateChange(val) {
+            var self = this;
+            self.filters.filterDate = val;
+        },
         dateChange(val) {
             var self = this;
             self.addEventForm.visit_date = val
+        },
+        filter(val){
+            this.get_data();
         },
         get_sale_event_types: function (params) {
             var self = this;
             this.$axios.get('/works/get_sale_event_types/')
                 .then(function (response) {
                     self.sale_event_type_list = eval(response.data.content);
-                    console.log(self.sale_event_type_list)
-
                 }
                 );
         },
@@ -297,10 +349,14 @@ export default {
         },
         get_data: function (params) {
             var self = this;
-            this.$axios.get('/works/get_saleevents/')
+            this.$axios.get('/works/get_saleevents/', {
+                params: {
+                    filter_date: self.filters.filterDate,
+                    customer_id: self.filters.customer_id
+                }
+            })
                 .then(function (response) {
                     self.sale_list = eval(response.data.content);
-
                 }
                 );
         },

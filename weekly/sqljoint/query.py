@@ -3,6 +3,9 @@ from utils.tools import getMondaySunday
 from accounts.models import User,Department
 
 def default_date(filter_date):
+    '''
+    如果传入日期为空，则返回当周默认第一天和最后一天。如果传入“2017-05-11-2017-06-22”否则返回拆开后的日期
+    '''
     if filter_date:
         try:
             start_date = filter_date[:10]
@@ -49,14 +52,14 @@ def filter_dev_event_sql(filter_date='',project_id='',department_name='',employe
         select_param, where_condition)        
     return plain_sql
 
-def filter_sale_event_sql(filter_date='', employee_name='',department_name='',user_id=''):
+def filter_sale_event_sql(filter_date='',user_id='',customer_id=''):
     '''
     给sql加入筛选条件
     '''
 
     sale_event_field = ["sale.id as sale_event_id", "cus_con_post", "visit_date", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark"]
     active_type_field=['active_type_name']
-    sale_customer_field=['short_name']
+    sale_customer_field=['customer.id as customer_id','short_name ']
     sale_phase_field=['phase_name']
     user_field=['chinese_name','accounts_user.id as user_id']
     all_select_field = sale_event_field + active_type_field + sale_customer_field+sale_phase_field+user_field
@@ -68,19 +71,22 @@ def filter_sale_event_sql(filter_date='', employee_name='',department_name='',us
     #筛选记录所属人
     if user_id:     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
-    else:               
-        user_id=chinesename_to_userid(employee_name)     
-        where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
+    if customer_id:
+        where_condition += "and customer.id = '{0}' ".format(customer_id)
+    # else:               
+    #     user_id=chinesename_to_userid(employee_name)     
+    #     where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
+    
     #根据部门名称筛选人
-    department_id=departmentname_to_departmentid(department_name)
-    user_queryset=User.objects.filter(department_id=department_id).all()
-    user_ids=tuple([i.id for i in user_queryset])           
-    if user_ids:
-        #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
-        if len(user_ids)==1:
-            where_condition += "and sale_event_owner_id =  {0} ".format(user_ids[0])
-        else:
-            where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
+    # department_id=departmentname_to_departmentid(department_name)
+    # user_queryset=User.objects.filter(department_id=department_id).all()
+    # user_ids=tuple([i.id for i in user_queryset])           
+    # if user_ids:
+    #     #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
+    #     if len(user_ids)==1:
+    #         where_condition += "and sale_event_owner_id =  {0} ".format(user_ids[0])
+    #     else:
+    #         where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
             
     plain_sql = u"SELECT {0} FROM api_saleevent as sale\
         left join api_saleactivetype as type on sale.active_type_id = type.id \
