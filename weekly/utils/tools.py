@@ -63,8 +63,11 @@ def dict_to_json(data_list):
     return data
 
 
-# 随机码生成
+
 def get_random():
+    '''
+    随机码生成
+    '''
     base = string.ascii_letters + "0123456789" + "!@#$%^&*<>?~{}"
     src = "".join(random.sample(base, 16))
     m5 = md5()
@@ -82,8 +85,11 @@ def getMondaySunday():
     return (Monday,Sunday)
 
 
-# 通过sql 获取数据,返回元祖
+
 def fetch_data(sql):
+    '''
+    通过sql 获取数据,返回元祖
+    '''
     with connection.cursor() as cursor:
         cursor.execute(sql)
         col_names = [desc[0] for desc in cursor.description]
@@ -135,3 +141,33 @@ def getfirstday(weekflag):
     start_date=first_day.strftime("%Y-%m-%d")
     end_date=last_day.strftime("%Y-%m-%d")
     return (start_date,end_date)
+
+def day_of_week(source):
+    '''
+    计算某一天是星期几，输入格式为 2017-1-1
+    '''
+    week_list=['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+
+    if isinstance(source, datetime.datetime):
+        date=source           
+    elif isinstance(source, datetime.date):
+        date=source
+    else:
+        return -1
+    week_id=int(date.strftime("%w"))
+    which_day=week_list[week_id]
+    return   which_day
+
+# def day_of_week(source):
+#     '''
+#     计算某一天是星期几，输入格式为 2017-1-1
+#     '''
+#     if isinstance(source, datetime.datetime):
+#         date=datetime.datetime.strptime(source,'%Y-%m-%d %H:%M:%S')
+#     elif isinstance(source, datetime.date):
+#         date=datetime.datetime.strptime(source,"%Y-%m-%d")
+#     else:
+#         return -1
+#     week_id=int(date.strftime("%w"))
+#     which_day=week_list[week_id]
+#     return which_day

@@ -27,9 +27,15 @@ class LoginHandler(View):
                 sid = get_random()
                 user_object=User.objects.get(username=username)
                 chinese_name=user_object.chinese_name
+                position_id=user_object.position.id
+                department_id=user_object.department.id
+     
                 user_id=user_object.id
 
-                content = {"username": username,"chinese_name":chinese_name,"user_id":user_id}
+                content = {"username": username, "chinese_name": chinese_name,\
+                           "position_id": position_id, "user_id": user_id,\
+                           "department_id":department_id}
+
                 response = my_response(code=0, msg="登录成功！", content=content)
                 # login(request, user)
                 cache.set(sid, content, timeout=self.cookie_timeout)
@@ -107,11 +113,12 @@ class GetUsername(View):
     '''
     def get(self, request):   
         getParams = request.GET
-        department_name = getParams.get('department_name', '')
-        #error
-        department_name='技术服务中心'
-        department_id=departmentname_to_departmentid(department_name)
-        user_queryset=User.objects.filter(department_id=department_id).all()
+        department_id = getParams.get('department_id', '')
+
+        if department_id:
+            user_queryset=User.objects.filter(department_id=department_id).all()
+        else:
+            user_queryset=User.objects.all()
         user_ids=tuple([i.id for i in user_queryset])           
         data = User.objects.filter(pk__in=user_ids).all()
 

@@ -168,10 +168,10 @@ class GetSaleEvents(View):
         # if filter_date:
         #     filter_date='-'.join(getfirstday(filter_date))     
 
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,customer_id=customer_id)
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,customer_id=customer_id,department_name='')
         row = fetch_data(plain_sql)        
         content = dict_to_json(row)
-        print(content)
+
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 

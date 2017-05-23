@@ -6,7 +6,7 @@ import datetime
 from collections import defaultdict
 from django.views.generic import View
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.tools import fetch_data,getfirstday
+from utils.tools import fetch_data,getfirstday,day_of_week
 from api.models import DevEvent, DevProject, DevEventType
 from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from api.models import WeekSummary
@@ -16,10 +16,6 @@ import StringIO
 import pandas as pd
 from django.core.cache import cache
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
-
-week_list=['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
-
-
 
 
 class AnanlysisWorker(View):
@@ -134,7 +130,7 @@ class DisplayWeekly(View):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
-        project_name = getParams.get('project_name', '')
+        project_id = getParams.get('project_id', '')
         #error，此处需要修改强制条件为主管所属部门
         department_name = getParams.get('department_name', '销售部')
         
@@ -143,7 +139,7 @@ class DisplayWeekly(View):
   
         # 创建查询条件
         if employee_name:          
-            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,department_name=department_name,employee_name=employee_name)
+            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,department_name=department_name,employee_name=employee_name)
         else:
             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          
@@ -174,10 +170,7 @@ class DisplayWeekly(View):
                 result[value['event_date']]={'total_time':value['duration_time']}
                 result[value['event_date']]['other_row']=[]
                 #计算周几
-                date=datetime.datetime.strptime(value['event_date'],"%Y-%m-%d")
-                week_id=int(date.strftime("%w"))
-                which_day=week_list[week_id]  
-                result[value['event_date']]['which_day']=which_day
+                result[value['event_date']]['which_day']= day_of_week(value['event_date']) 
             if result[value['event_date']] and 'total_time' in result[value['event_date']]:            
                 result[value['event_date']]['total_time']+=value['duration_time']
             result[value['event_date']]['other_row'].append(value)
@@ -192,7 +185,7 @@ class DisplayWeekly(View):
 
 class DisplaySaleEvent(View):
     '''
-    查询职员工作类型占比
+    查询销售周报
     '''
 
     def get(self, request):
@@ -200,18 +193,27 @@ class DisplaySaleEvent(View):
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
         # project_name = getParams.get('project_name', '')
-        department_name = getParams.get('department_name', '销售部')
+        department_name = getParams.get('department_name', '')
         
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
         # print(filter_date)
         # 创建查询条件        
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,employee_name=employee_name,department_name=department_name)
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,employee_name=employee_name,department_name='')
         #统计分析
         # group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
         data = fetch_data(plain_sql)
-        content = dict_to_json(data)
+        result_list=[]
+
+        for row in data:
+            result_dict={}
+            for key,value in row.items():
+                result_dict[key]=value
+            result_dict['which_day']=day_of_week(row['visit_date'])
+            result_list.append(result_dict)
+
+        content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -224,14 +226,13 @@ class GetSalePerformace(View):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         # employee_name= getParams.get('employee_name', '')
-        # # project_name = getParams.get('project_name', '')
+        # project_name = getParams.get('project_name', '')
         department_name = getParams.get('department_name', '')
         
         natural_week=''
         if filter_date:
             natural_week = filter_date[:7]
             filter_date='-'.join(getfirstday(filter_date))
-
 
         target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget where natural_week='{0}'".format(natural_week)
         # 创建查询条件        
@@ -268,3 +269,5 @@ class GetSalePerformace(View):
         # print(content)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
+
+

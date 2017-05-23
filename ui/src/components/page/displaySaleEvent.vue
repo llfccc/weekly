@@ -12,10 +12,10 @@
           </el-col>
   
           <el-col :span="4">
-  <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-                            </el-option>
-                        </el-select>
+            <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
@@ -24,39 +24,29 @@
         </el-form>
       </el-col>
   
-      <table border="1" class="table table-responsive table-bordered">
-        <tr>
-          <th>日期 </th>
-          <th>星期 </th>
-          <th>活动类型 </th>
-          <th>拜访客户
-          </th>
-          <th>阶段
-          </th>
-          <th>沟通记录 </th>
-          <th>备注 </th>
-        </tr>
-        <tr v-for="item in sale_event_list">
-          <td> {{item.visit_date}}</td>
-          <td> {{item.visit_date}}</td>
-          <td> {{item.active_type_name}}</td>
-          <td> {{item.short_name}}</td>
-          <td> {{item.phase_name}}</td>
-          <td> {{item.communicate_record}}</td>
-          <td> {{item.sale_event_remark}}</td>
-          <!--<td> {{item.}}</td>-->
-  
-        </tr>
-      </table>
-      <table id="table"></table>
-  
+      <el-table :data="sale_event_list" stripe style="width: 100%">
+        <el-table-column prop="visit_date" label="日期" width="180">
+        </el-table-column>
+        <el-table-column prop="which_day" label="星期">
+        </el-table-column>
+        <el-table-column prop="active_type_name" label="活动类型" width="180">
+        </el-table-column>
+        <el-table-column prop="short_name" label="拜访客户">
+        </el-table-column>
+        <el-table-column prop="phase_name" label="阶段">
+        </el-table-column>
+        <el-table-column prop="communicate_record" label="沟通记录">
+        </el-table-column>
+        <el-table-column prop="sale_event_remark" label="备注">
+        </el-table-column>
+      </el-table> 
+   
     </div>
     <br>
     </br>
   
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-col :span="8">
-  
+      <el-col :span="8">  
       </el-col>
       <el-col :span="8">
   
@@ -112,14 +102,14 @@ export default {
   name: '',
   data() {
     return {
-      sale_event_list: '',
+      sale_event_list: [],
       filters: {
         filter_date: '',
         employee_name: '',
         naturalWeek: '',
       },
       summary: '',
-           user_list: [],
+      user_list: [],
     }
   },
   methods: {
@@ -128,13 +118,13 @@ export default {
       self.filters.naturalWeek = val
     },
     get_users: function (params) {
-            var self = this;
-            this.$axios.get('/accounts/get_username/')
-                .then(function (response) {
-                    self.user_list = eval(response.data.content);
-                }
-                );
-        },
+      var self = this;
+      this.$axios.get('/accounts/get_username/')
+        .then(function (response) {
+          self.user_list = eval(response.data.content);
+        }
+        );
+    },
     filter: function (params) {
       this.get_sale_events();
       this.get_summary();
@@ -177,7 +167,7 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
-      // this.get_weekly()
+      this.get_users()
       // this.get_summary()
     })
   }
