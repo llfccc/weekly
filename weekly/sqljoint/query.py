@@ -17,7 +17,7 @@ def default_date(filter_date):
     return (start_date,end_date)
 
 
-def filter_dev_event_sql(filter_date='',project_id='',department_name='',employee_name='',user_id=''):
+def filter_dev_event_sql(filter_date='',project_name='',project_id='',department_name='',employee_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
@@ -25,23 +25,26 @@ def filter_dev_event_sql(filter_date='',project_id='',department_name='',employe
     
     start_date, end_date=default_date(filter_date)
     where_condition = u"dev.event_date>='{0}' and dev.event_date<='{1}' ".format(start_date, end_date)
+    if project_name:
+        where_condition += "and project.project_name like '%{0}%' ".format(project_name)
     if project_id:
         where_condition += "and project.id = '{0}' ".format(project_id)
     #筛选部门中所有人员
-    department_id=departmentname_to_departmentid(department_name)
-    user_queryset=User.objects.filter(department_id=department_id).all()
-    user_ids=tuple([i.id for i in user_queryset])           
-    if user_ids:
-        #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
-        if len(user_ids)==1:
-            where_condition += "and dev_event_owner_id =  {0} ".format(user_ids[0])
-        else:
-            where_condition += "and dev_event_owner_id in  {0} ".format(user_ids)
+    if department_name:
+        department_id=departmentname_to_departmentid(department_name)
+        user_queryset=User.objects.filter(department_id=department_id).all()
+        user_ids=tuple([i.id for i in user_queryset])           
+        if user_ids:
+            #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
+            if len(user_ids)==1:
+                where_condition += "and dev_event_owner_id =  {0} ".format(user_ids[0])
+            else:
+                where_condition += "and dev_event_owner_id in  {0} ".format(user_ids)
 
     #筛选记录所属人
     if user_id:     
         where_condition += "and dev_event_owner_id = '{0}' ".format(user_id)
-    else:
+    if employee_name:
         user_id=chinesename_to_userid(employee_name)                 
         where_condition += "and dev_event_owner_id = '{0}' ".format(user_id)
 

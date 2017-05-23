@@ -27,11 +27,13 @@ class AnanlysisWorker(View):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
-        project_name = getParams.get('project_name', '')
-        department_name = getParams.get('department_name', '')
-
+        # department_name= getParams.get('department_name', '')
+        if not employee_name:
+            employee_name=u'空姓名'
+        #error
+        department_name=u'技术服务中心'
         # 创建查询条件        
-        plain_sql=filter_dev_event_sql(filter_date,project_name,department_name,employee_name)
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,employee_name=employee_name,project_id='',project_name='',department_name='',user_id='')
         #统计分析
         group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
@@ -53,12 +55,15 @@ class AnanlysisDepartment(View):
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        department_name=u'技术服务中心'
+        department_name = getParams.get('department_name', '')
+        print(getParams)
+        if not department_name:
+            department_name=u"空部门"
         # 创建查询条件        
-        plain_sql=filter_dev_event_sql(filter_date,'',department_name,'','')
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
         #统计分析
         group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
-
+        print(group_sql)
         row = fetch_data(group_sql)
         #转换数据为echarts能接受的格式
         type_list=[i['event_type_name'] for i in row]
@@ -77,12 +82,16 @@ class AnanlysisProject(View):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         project_name = getParams.get('project_name', '')
-        department_name=u'技术服务中心'
+        department_name = getParams.get('department_name', '')
+        if  not project_name:
+            project_name='空项目'
+
+
         # 创建查询条件       
-        plain_sql=filter_dev_event_sql(filter_date,project_name,department_name,'','')
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,department_name=department_name,project_id='')
         #统计分析select dev_event_project_id, count((end_time-start_time)) as time_diff from api_devevent group by dev_event_project_id
         group_sql = u'select chinese_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2)   as date_diff from ({0})  as child group by chinese_name order by date_diff desc '.format(plain_sql)
-             
+
         row = fetch_data(group_sql)
 
         #转换数据为echarts能接受的格式
@@ -97,19 +106,22 @@ class AnanlysisProject(View):
 
 class AnanlysisLoad(View):
     '''
-    查询职员工作类型占比
+    查询整个部门职员工作类型占比
     '''
 
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        department_name=u'技术服务中心'
+        department_name = getParams.get('department_name', '')
+        # project_name= getParams.get('project_name', '')
+  
         # 创建查询条件       
-        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name='',department_name=department_name,employee_name='',user_id='')
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
         #统计分析select dev_event_project_id, count((end_time-start_time)) as time_diff from api_devevent group by dev_event_project_id
         group_sql = u'select chinese_name, ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600/5)::numeric,3)   as date_diff  from ({0}) as child group by chinese_name order by date_diff desc'.format(plain_sql)
 
         row = fetch_data(group_sql)
+     
 
         #转换数据为echarts能接受的格式
         x_data=[i['chinese_name'] for i in row]
@@ -272,6 +284,7 @@ class GetSalePerformace(View):
             sum(case when target_phase_name = 'F' then target else 0 end) as "target_F"       
             from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
         print(pivot_sql)
+
         data = fetch_data(pivot_sql)
         content = dict_to_json(data)
         # print(content)

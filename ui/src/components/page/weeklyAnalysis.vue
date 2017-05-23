@@ -18,12 +18,15 @@
     <br>
     </br>
     <el-row :gutter="24">
-  
+      <el-col :span="12">
+        <div id="load" style="width: 900px;height: 300px;"> </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="24">
       <el-col :span="8">
         <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
         <div id="project" style="width: 300px;height: 300px;"> </div>
       </el-col>
-  
       <el-col :span="8">
         <el-input v-model="filters.department_name" placeholder="部门"></el-input>
         <div id="department" style="width: 300px;height: 300px;"> </div>
@@ -31,13 +34,6 @@
       <el-col :span="8">
         <el-input v-model="filters.employee_name" placeholder="员工姓名"></el-input>
         <div id="personal" style="width: 400px;height: 300px;"> </div>
-      </el-col>
-  
-    </el-row>
-    <el-row :gutter="24">
-  
-      <el-col :span="12">
-        <div id="load" style="width: 900px;height: 300px;"> </div>
       </el-col>
     </el-row>
   </div>
@@ -262,18 +258,24 @@ export default {
       var self = this;
       self.filters.filterDate = val;
     },
-    filter:function(params){
-      this.get_depart_data();
+    filter: function (params) {
+      this.get_department_data();
       this.get_personal_data();
       this.get_project_data();
       this.get_load();
     },
-    get_depart_data: function (params) {
+    get_department_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_department/')
+      this.$axios.get('/analysis/analysis_department/', {
+        params: {
+          filter_date: self.filters.filterDate,
+          // employee_name: self.filters.employee_name,
+          // project_name: self.filters.project_name,
+          department_name: self.filters.department_name,
+        }
+      })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
-
           self.echartsDepart.opinionData = responseContent.type_count
           self.echartsDepart.opinion = responseContent.type_list
           self.drawDepartPie('department');
@@ -284,7 +286,7 @@ export default {
       var self = this;
       this.$axios.get('/analysis/analysis_worker/', {
         params: {
-          // filter_date: self.filters.filter_date,
+          filter_date: self.filters.filterDate,
           employee_name: self.filters.employee_name,
           // project_name: self.filters.project_name,
           // department_name: self.filters.department_name,
@@ -303,17 +305,16 @@ export default {
       var self = this;
       this.$axios.get('/analysis/analysis_project/', {
         params: {
-          // filter_date: self.filters.filter_date,
+          filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
           project_name: self.filters.project_name,
-          // department_name: self.filters.department_name,
+          department_name: '技术服务中心',
         }
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.echartsProject.x_data = responseContent.x_data
           self.echartsProject.y_data = responseContent.y_data
-          console.log(responseContent.x_data)
           self.drawProject('project')
         }
         );
@@ -322,10 +323,10 @@ export default {
       var self = this;
       this.$axios.get('/analysis/analysis_load/', {
         params: {
-          // filter_date: self.filters.filter_date,
+          filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
-          project_name: self.filters.project_name,
-          // department_name: self.filters.department_name,
+          // project_name: self.filters.project_name,
+           department_name: '技术服务中心',
         }
       })
         .then(function (response) {
@@ -341,7 +342,7 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
-      this.get_depart_data()
+      this.get_department_data()
       this.get_project_data()
       this.get_load()
     })
