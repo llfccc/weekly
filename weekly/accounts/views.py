@@ -5,11 +5,12 @@ from utils.tools import my_response, get_random
 from forms import UserForm, RegisterForm
 from accounts.models import User
 from accounts.models import Department
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from sqljoint.query import departmentname_to_departmentid
 # Create your views here.
+
 class LoginHandler(View):
     cookie_timeout = 2 * 3600
 

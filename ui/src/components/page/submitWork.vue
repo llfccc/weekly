@@ -11,9 +11,12 @@
                     </el-form-item>
                 </el-col>
                 <span class="demonstration">筛选项目</span>
-                <el-form-item>
-                    <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
-                </el-form-item>
+                  <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
+                        <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
+                        </el-option>
+                    </el-select>
+
+      
                 <span class="demonstration">筛选时间</span>
                 <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
                 </el-date-picker>
@@ -98,10 +101,10 @@
             </el-table-column>
             <el-table-column prop="end_time" label="结束时间" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="up_reporter_id" label="上游汇报人" width="190" sortable>
+            <el-table-column prop="up_reporter_name" label="上游汇报人" width="190" sortable>
             </el-table-column>
     
-            <el-table-column prop="down_reporter_ids" label="下游汇报人" width="190" sortable>
+            <el-table-column prop="down_reporter_name" label="下游汇报人" width="190" sortable>
             </el-table-column>
     
             <el-table-column prop="fin_percentage" label="完成百分比" width='170' sortable>

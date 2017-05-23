@@ -17,7 +17,10 @@ import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
 from accounts.models import User
-from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql,chinesename_to_userid
+# from django.contrib.auth.decorators import login_required  
+
+from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
+from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 
 # Create your views here.
 
@@ -29,27 +32,31 @@ class GetDevEvent(View):
 
     def get(self, request):
         user_id=get_user_id(request)
+
+        print(user_id)
         getParams = request.GET
-        project_name = getParams.get('project_name', '')
+        project_id = getParams.get('project_name', '')
         filter_date = getParams.get('filter_date', '')
         #没有完成显示出对应的上下游对接人
         # up_user_field=["chinese_name as up_reporter_name "]
         # down_user_field = ["chinese_name as down_reporter_name "]
-        plain_sql=filter_dev_event_sql(filter_date,project_name,'','',user_id)
+        plain_sql=filter_dev_event_sql(filter_date,project_id,'','',user_id)
 
         query_result = fetch_data(plain_sql)
-        #将down_reporter_ids由id对应具体的人
-        for row in query_result:
-            down_reporter_id_list= row['down_reporter_ids'].split(',')
-
-            down_reporter_name_list=[]            
-            for i in down_reporter_id_list:
-                down_reporter_name=User.objects.get(id=i).chinese_name
-                if down_reporter_name:
-                        down_reporter_name_list.append(down_reporter_name)                
-            row['down_reporter_ids']=','.join(down_reporter_name_list)
         
-        content = dict_to_json(query_result)
+        #限定返回给前端的字段
+        result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
+        result_list=[]
+        for row in query_result:
+            row_dict={}
+            #由id转换成对应具体的人名
+            row_dict['down_reporter_name']=userid_to_chinesename(row['down_reporter_ids'])
+            row_dict['up_reporter_name']=userid_to_chinesename(row['up_reporter_id'])
+            for key in result_field:
+                row_dict[key]=row.get(key,'')
+            result_list.append(row_dict)
+        print(result_list)
+        content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -61,8 +68,8 @@ class GetProjects(View):
 
     def get(self, request):
         data = DevProject.objects.filter(project_is_closed=False).all()
-        query_field = ["id", "creater_id", "status", "dev_project_remark", "project_name", "create_time"]
-        data_dict = queryset_to_dict(data, query_field)
+        result_field = ["id", "creater_id", "status", "dev_project_remark", "project_name", "create_time"]
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -75,8 +82,8 @@ class GetEventTypes(View):
 
     def get(self, request):
         data = DevEventType.objects.filter(devEventType_is_closed=False).all()
-        query_field = ["id", "creator_id", "event_type_name", "dev_event_type_remark", "create_time"]
-        data_dict = queryset_to_dict(data, query_field)
+        result_field = ["id", "creator_id", "event_type_name", "dev_event_type_remark", "create_time"]
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -89,15 +96,21 @@ class InsertWork(View):
     def post(self, request):
         user_id=get_user_id(request)        
         data = request.POST
-        print(data)
+
         insert_field = ["description", "event_date", "start_time", "end_time", "fin_percentage", "up_reporter_id",
                         "down_reporter_ids", "dev_event_remark", "dev_event_project_id", "dev_event_type_id"]
-        result = {}
-        for t in insert_field:
-            result[t] = data.get(t)
 
-        result['dev_event_owner_id'] = user_id
-        content = {"id": 0}
+        #查询是否有user_id，如果没有则认为未登录
+        content = {"id": 0}    
+        result = {}            
+        for t in insert_field:
+            result[t] = data.get(t,'')
+
+        if user_id!=0:
+            result['dev_event_owner_id'] = user_id
+        else:
+            return my_response(code=1, msg=u"未登录", content=content)
+
         if result:
             inset_process = DevEvent(**result)
             try:
@@ -105,7 +118,7 @@ class InsertWork(View):
                 content = {"id": inset_process.id}
                 response = my_response(code=0, msg=u"success", content=content)
             except:
-                response = my_response(code=1, msg=u"error", content=content)
+                response = my_response(code=1, msg=u"插入数据失败", content=content)
         return response
 
 
@@ -196,10 +209,10 @@ class GetCustomers(View):
     def get(self, request):
         user_id=get_user_id(request)
 
-        query_field = ["id", "full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
+        result_field = ["id", "full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
                        "sale_customer_remark", "create_time"]
         data = SaleCustomer.objects.filter(sale_customer_owner_id=user_id).all()
-        data_dict = queryset_to_dict(data, query_field)
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -207,8 +220,8 @@ class GetCustomers(View):
 class GetSaleActiveTypes(View):
     def get(self, request):
         data = SaleActiveType.objects.all()
-        query_field = ["id", "active_type_name", "sale_active_type_remark", "create_time"]
-        data_dict = queryset_to_dict(data, query_field)
+        result_field = ["id", "active_type_name", "sale_active_type_remark", "create_time"]
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -217,8 +230,8 @@ class GetSaleActiveTypes(View):
 class GetSalePhases(View):
     def get(self, request):
         data = SalePhase.objects.all()
-        query_field = ["id", "phase_name", "description","phase_count","sale_phase_remark" , "create_time"]
-        data_dict = queryset_to_dict(data, query_field)
+        result_field = ["id", "phase_name", "description","phase_count","sale_phase_remark" , "create_time"]
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -237,8 +250,8 @@ class GetSalePhases(View):
 #             end_time = '2017-4-30'
 #         data = DevEvent.objects.filter(Q(start_time__gte=start_time) | Q(end_time__lte=end_time)).filter(
 #             operator=username).all()
-#         query_field = ["work_title", "complete_status"]
-#         data_dict = queryset_to_dict(data, query_field)
+#         result_field = ["work_title", "complete_status"]
+#         data_dict = queryset_to_dict(data, result_field)
 
 #         output = StringIO.StringIO()
 #         excel_instance = ReportExcel(output)
@@ -273,8 +286,8 @@ class GetWeeklySummary(View):
 
         user_id=chinesename_to_userid(employee_name)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
-        query_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
-        data_dict = queryset_to_dict(data, query_field)
+        result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
+        data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

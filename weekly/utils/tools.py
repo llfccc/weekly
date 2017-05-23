@@ -45,6 +45,9 @@ def my_response(code, msg, content="", status_code=200, content_type="text/json"
 
 
 def queryset_to_dict(queryset, query_field):
+    '''
+    只返回query_field中存在的字段，防止数据泄露
+    '''
     output_list = []
     for query in queryset:
         query = model_to_dict(query)
@@ -101,9 +104,11 @@ def get_user_id(request):
     从缓存中获取当前用户的userid
     '''
     sid=request.COOKIES.get("sid",'')
-
     user_object=cache.get(sid)
-    user_id=user_object.get("user_id")
+    try:
+        user_id=user_object.get("user_id")
+    except:
+        user_id=0
     return user_id
 
 

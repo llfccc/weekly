@@ -47,8 +47,8 @@ class User(AbstractUser):     #继承AbstractUser
     describition = models.TextField(null=True,blank=True,verbose_name='描述说明（非必须）')
     chinese_name = models.CharField(max_length=64, null=True,blank=True,verbose_name='中文名')
     # department_id = models.IntegerField(null=True,blank=True,verbose_name='部门id')
-    department = models.ForeignKey(Department)
-    position = models.ForeignKey(Position)
+    department = models.ForeignKey(Department, blank=True, null=True, on_delete=models.SET_NULL,verbose_name='部门')
+    position = models.ForeignKey(Position, blank=True, null=True, on_delete=models.SET_NULL,verbose_name='职位')
 
 
 

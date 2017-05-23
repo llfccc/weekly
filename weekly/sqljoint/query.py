@@ -14,7 +14,7 @@ def default_date(filter_date):
     return (start_date,end_date)
 
 
-def filter_dev_event_sql(filter_date='',project_name='',department_name='',employee_name='',user_id=''):
+def filter_dev_event_sql(filter_date='',project_id='',department_name='',employee_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
@@ -22,8 +22,8 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
     
     start_date, end_date=default_date(filter_date)
     where_condition = u"dev.event_date>='{0}' and dev.event_date<='{1}' ".format(start_date, end_date)
-    if project_name:
-        where_condition += "and project_name like '%{0}%' ".format(project_name)
+    if project_id:
+        where_condition += "and project.id = '{0}' ".format(project_id)
     #筛选部门中所有人员
     department_id=departmentname_to_departmentid(department_name)
     user_queryset=User.objects.filter(department_id=department_id).all()
@@ -42,7 +42,7 @@ def filter_dev_event_sql(filter_date='',project_name='',department_name='',emplo
         user_id=chinesename_to_userid(employee_name)                 
         where_condition += "and dev_event_owner_id = '{0}' ".format(user_id)
 
-    plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
+    plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as project on dev.dev_event_project_id = project.id \
         left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id \
         left join accounts_user  on accounts_user.id = dev.dev_event_owner_id \
         where {1} order by dev.event_date,dev.start_time".format(
@@ -106,3 +106,17 @@ def departmentname_to_departmentid(department_name=''):
     else:
         department_id=0
     return department_id
+
+def userid_to_chinesename(source_ids):
+    '''
+    根据user id来查找中文名
+    '''
+    id_list= source_ids.split(',')
+    chinese_name_list=[]            
+    for i in id_list:
+        chinese_name_queryset=User.objects.filter(id=i)
+        if chinese_name_queryset:
+            chinese_name=chinese_name_queryset.first().chinese_name
+            chinese_name_list.append(chinese_name)                
+    result=u'，'.join(chinese_name_list)
+    return result
