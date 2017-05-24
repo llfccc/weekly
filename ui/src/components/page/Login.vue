@@ -1,6 +1,6 @@
 <template>
     <div class="login-wrap">
-        <div class="ms-title">工作记录系统</div>
+        <div class="ms-title">数据周报管理系统</div>
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="username">

@@ -2,46 +2,47 @@
 import os
 import json
 import re
-from django.http import HttpResponse, FileResponse, Http404
+import StringIO
+import pandas as pd
 import datetime
+
 from django.views.generic import View
-from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.export_excel import ReportExcel
-from utils.tools import fetch_data,get_user_id,getfirstday
+from django.http import HttpResponse, FileResponse, Http404
 from .models import DevEvent, DevProject, DevEventType
 from .models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from .models import WeekSummary
 from django.db.models import Q
-import StringIO
-import pandas as pd
 from django.core.cache import cache
 from django.db import connection, transaction
+from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import User
 # from django.contrib.auth.decorators import login_required  
-
+from utils.tools import my_response, queryset_to_dict, dict_to_json
+from utils.export_excel import ReportExcel
+from utils.tools import fetch_data,get_user_id,getfirstday
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 
+
+
+
 # Create your views here.
+def email_check(request):
+    return request.user.email.endswith('@live.cn')
 
-
-class GetDevEvent(View):
+class GetDevEvent(LoginRequiredMixin,View):
     '''
-    查询每日工作内容
+    查询自己填写的每日工作内容
     '''
-
+    # @user_passes_test(email_check)
     def get(self, request):
         user_id=get_user_id(request)
 
-        print(user_id)
         getParams = request.GET
-        project_id = getParams.get('project_name', '')
+        project_id = getParams.get('project_id', '')
         filter_date = getParams.get('filter_date', '')
-        #没有完成显示出对应的上下游对接人
-        # up_user_field=["chinese_name as up_reporter_name "]
-        # down_user_field = ["chinese_name as down_reporter_name "]
-        plain_sql=filter_dev_event_sql(filter_date,project_id,'','',user_id)
 
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
         
         #限定返回给前端的字段
@@ -55,13 +56,13 @@ class GetDevEvent(View):
             for key in result_field:
                 row_dict[key]=row.get(key,'')
             result_list.append(row_dict)
-        print(result_list)
+   
         content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
 
-class GetProjects(View):
+class GetProjects(LoginRequiredMixin,View):
     '''
     查询所有项目属性
     '''
@@ -75,7 +76,7 @@ class GetProjects(View):
         return response
 
 
-class GetEventTypes(View):
+class GetEventTypes(LoginRequiredMixin,View):
     '''
     查询所有项目属性
     '''
@@ -89,7 +90,7 @@ class GetEventTypes(View):
         return response
 
 
-class InsertWork(View):
+class InsertWork(LoginRequiredMixin,View):
     '''
     插入工作记录
     '''
@@ -122,7 +123,7 @@ class InsertWork(View):
         return response
 
 
-class DelWork(View):
+class DelWork(LoginRequiredMixin,View):
     '''
     删除工作记录
     '''
@@ -146,19 +147,22 @@ class DelWork(View):
         return response
 
 
-class Test(View):
+class Test(LoginRequiredMixin,View):
     def get(self, request):
+        print(request.user)
+        print request.user.get_all_permissions()
+        if request.user.has_perm('api.view_devproject'):
+            print("yese")
         return HttpResponse("ok")
 
 
-class GetSaleEvents(View):
+class GetSaleEvents(LoginRequiredMixin,View):
     ''''
     查询拜访记录
     '''
 
     def get(self, request):
-        user_id=get_user_id(request)
-        
+        user_id=get_user_id(request)        
         getParams = request.GET
         print(getParams)        
         filter_date = getParams.get('filter_date', '')
@@ -175,7 +179,7 @@ class GetSaleEvents(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class InsertCustomer(View):
+class InsertCustomer(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)
         content = {"id": 0}
@@ -203,7 +207,7 @@ class InsertCustomer(View):
                 response = my_response(code=1, msg=u'插入失败', content=content)
         return response
 
-class GetCustomers(View):
+class GetCustomers(LoginRequiredMixin,View):
     def get(self, request):
         user_id=get_user_id(request)
 
@@ -215,7 +219,7 @@ class GetCustomers(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class GetSaleActiveTypes(View):
+class GetSaleActiveTypes(LoginRequiredMixin,View):
     def get(self, request):
         data = SaleActiveType.objects.all()
         result_field = ["id", "active_type_name", "sale_active_type_remark", "create_time"]
@@ -225,7 +229,7 @@ class GetSaleActiveTypes(View):
         return response
 
 
-class GetSalePhases(View):
+class GetSalePhases(LoginRequiredMixin,View):
     def get(self, request):
         data = SalePhase.objects.all()
         result_field = ["id", "phase_name", "description","phase_count","sale_phase_remark" , "create_time"]
@@ -235,7 +239,7 @@ class GetSalePhases(View):
         return response
 
 
-# class GetExcel(View):
+# class GetExcel(LoginRequiredMixin,View):
 #     def get(self, request):
 #         sid = request.COOKIES.get("sid")
 #         username = cache.get(sid).get("username")
@@ -263,7 +267,7 @@ class GetSalePhases(View):
 #         return response
 
 
-class GetWeeklySummary(View):
+class GetWeeklySummary(LoginRequiredMixin,View):
     '''
     查询所有项目属性
     '''
@@ -278,19 +282,20 @@ class GetWeeklySummary(View):
         if __match:
             filter_date=__match.group()
         else:
-            filter_date=''
-        print(filter_date)
-        user_id=0
+            filter_date='2017-21'
+
+        # user_id=get_user_id(request)
 
         user_id=chinesename_to_userid(employee_name)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
+        print(content)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class InsertSummary(View):
+class InsertSummary(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)        
         data = request.POST
@@ -318,51 +323,33 @@ class InsertSummary(View):
                 response = my_response(code=1, msg=u"error", content=content)
         return response
 
-class GetEventExcel(View):
+class GetEventExcel(LoginRequiredMixin,View):
     '''
-    查询每日工作内容
+    查询每日工作内容,并导出为excel
     '''
 
     def get(self, request):
         user_id=get_user_id(request)
         getParams = request.GET
-        project_name = getParams.get('project_name', '')
-        filter_date = getParams.get('filterDate', '')
-        # 创建查询条件
-        where_condition = ''
-        if filter_date:
-            try:
-                start_date = filter_date[:10]
-                end_date = filter_date[13:]
-            except:
-                start_date, end_date = getMondaySunday()
-        else:
-            start_date, end_date = getMondaySunday()
-        where_condition = u'dev.dev_event_owner_id={0} and dev.event_date>="{1}" and dev.event_date<="{2}" '.format(user_id,start_date, end_date)
-        if project_name:
-            where_condition += "and project_name like '%{0}%'".format(project_name)
+        project_id = getParams.get('project_id', '')
+        filter_date = getParams.get('filter_date', '')
 
-
-        dev_event_field = ["dev.id as dev_event_id", "description", "event_date", "start_time", "end_time",
-                           "fin_percentage", "up_reporter_id", "down_reporter_ids", "dev_event_remark",
-                           "dev_event_create_time",
-                           "dev_event_owner_id", "dev_event_project_id", "dev_event_type_id"]
-        project_field = ["project_name"]
-        event_type_field = ["event_type_name"]
-        #没有完成显示出对应的上下游对接人
-        # up_user_field=["chinese_name as up_reporter_name "]
-        # down_user_field = ["chinese_name as down_reporter_name "]
-        all_select_field = dev_event_field + project_field + event_type_field
-
-        select_param = ",".join(all_select_field)
-
-        plain_sql = u"SELECT {0} FROM api_devevent as dev left join api_devproject as pro on dev.dev_event_project_id = pro.id \
-            left join api_deveventtype on dev.dev_event_type_id = api_deveventtype.id where {1} order by dev.event_date,dev.start_time;".format(
-            select_param, where_condition)
-        # print(plain_sql)
-        row = fetch_data(plain_sql)
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
+        query_result = fetch_data(plain_sql)
+        
+        #限定返回给前端的字段
+        result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
+        result_list=[]
+        for row in query_result:
+            row_dict={}
+            #由id转换成对应具体的人名
+            row_dict['down_reporter_name']=userid_to_chinesename(row['down_reporter_ids'])
+            row_dict['up_reporter_name']=userid_to_chinesename(row['up_reporter_id'])
+            for key in result_field:
+                row_dict[key]=row.get(key,'')
+            result_list.append(row_dict)
         # Create a Pandas dataframe from the data.
-        df = pd.DataFrame.from_dict(row)
+        df = pd.DataFrame.from_dict(result_list)
         #create an output stream
         output = StringIO.StringIO()
         writer = pd.ExcelWriter(output, engine='xlsxwriter')
@@ -384,7 +371,7 @@ class GetEventExcel(View):
             'output.xlsx')
         return response
 
-class InsertSaleEvent(View):
+class InsertSaleEvent(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)       
         data = request.POST
@@ -410,7 +397,7 @@ class InsertSaleEvent(View):
                 response = my_response(code=1, msg=u"error", content=content)
         return response
 
-class DelSaleEvent(View):
+class DelSaleEvent(LoginRequiredMixin,View):
     def post(self, request):
         data = request.POST
 
@@ -424,7 +411,7 @@ class DelSaleEvent(View):
             response = my_response(code=0, msg=u"删除成功", content=content)
         return response
 
-class DelSummary(View):
+class DelSummary(LoginRequiredMixin,View):
     def post(self, request):
         data = request.POST
 

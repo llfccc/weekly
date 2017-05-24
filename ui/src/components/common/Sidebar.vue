@@ -8,15 +8,15 @@
                 <template slot="title">
                     <i class="el-icon-menu"></i>办公周报</template>
                 <el-menu-item index="submitWork">添加工作</el-menu-item>
-                <el-menu-item index="weeklySumup">周报总结</el-menu-item>
+                <el-menu-item index="insertWeeklySumup">添加总结</el-menu-item>
     
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
                         <el-submenu index="3">
                 <template slot="title">
                     <i class="el-icon-star-on"></i>办公报表</template>    
-                <el-menu-item index="displayWeekly">查看周报</el-menu-item>
-                <el-menu-item index="weeklyAnalysis">周报分析</el-menu-item>    
+                <el-menu-item index="analysisWeekly">分析周报</el-menu-item>
+                <el-menu-item index="analysisWeeklyGraph">可视周报</el-menu-item>    
             </el-submenu>
             <el-submenu index="4">
                 <template slot="title">

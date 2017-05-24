@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from sqljoint.query import departmentname_to_departmentid
+from django.contrib import auth
 # Create your views here.
 
 class LoginHandler(View):
@@ -25,6 +26,7 @@ class LoginHandler(View):
             if user is not None and user.is_active:
                 # login(request, user)
                 sid = get_random()
+                auth.login(request, user)
                 user_object=User.objects.get(username=username)
                 chinese_name=user_object.chinese_name
                 position_id=user_object.position.id
@@ -60,7 +62,7 @@ class RegisterHandler(View):
             print(username)
             if not User.objects.all().filter(username=username):
                     user = User.objects.create_user(username, '', password)
-                    user.save()
+                    user.save() 
                     # login_validate(request, username, password)
                     return my_response(code=0, msg="注册成功", content="")
             else:
@@ -72,6 +74,7 @@ class RegisterHandler(View):
 class LogoutHandler(View):
     def get(self, request):
         # username = request.get("username")
+        auth.logout(request)
         response = my_response(code=0, msg="用户登出成功.")
         response.set_cookie("sid", "", expires=0)
         return response

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 import json
-from django.http import HttpResponse, FileResponse, Http404
+import re
+import StringIO
+import pandas as pd
 import datetime
 from collections import defaultdict
 from django.views.generic import View
@@ -12,11 +14,13 @@ from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleAct
 from api.models import WeekSummary
 from accounts.models import User,Department
 from django.db.models import Q
-import StringIO
-import pandas as pd
+from django.http import HttpResponse, FileResponse, Http404
 from django.core.cache import cache
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class AnanlysisWorker(View):
     '''
@@ -24,6 +28,8 @@ class AnanlysisWorker(View):
     '''
 
     def get(self, request):
+        # if request.user.is_authenticated:
+        #     print("denglu   ")
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
@@ -133,25 +139,25 @@ class AnanlysisLoad(View):
         return response
 
 
-class DisplayWeekly(View):
+class AnalysisDevEvent(View):
     '''
-    查询职员工每日工作事件
+    查询非销售职员工每日工作事件
     '''
 
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
-        project_id = getParams.get('project_id', '')
+        # project_id = getParams.get('project_id', '')
         #error，此处需要修改强制条件为主管所属部门
-        department_name = getParams.get('department_name', '销售部')
+        department_name = getParams.get('department_name', '技术服务中心')
         
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
   
         # 创建查询条件
         if employee_name:          
-            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,department_name=department_name,employee_name=employee_name)
+            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',department_name=department_name,employee_name=employee_name)
         else:
             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          
@@ -239,7 +245,7 @@ class DisplaySaleEvent(View):
 
 class GetSalePerformace(View):
     '''
-    查询职员工作类型占比
+    查询销售职员工作类型占比
     '''
 
     def get(self, request):
@@ -292,3 +298,27 @@ class GetSalePerformace(View):
         return response
 
 
+class AnalysisWeeklySummary(LoginRequiredMixin,View):
+    '''
+    查询所有项目属性
+    '''
+
+    def get(self, request):
+        getParams = request.GET        
+        employee_name= getParams.get('employee_name', '').strip()
+        filter_date = getParams.get('filter_date', '')
+        # department_name =u'销售部'
+        #验证日期是否符合 2017-01的格式
+        __match=re.compile('^\d{4}-\d{2}').match(filter_date)
+        if __match:
+            filter_date=__match.group()
+        else:
+            filter_date='2017-21'
+
+        user_id=chinesename_to_userid(employee_name)
+        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
+        result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
+        data_dict = queryset_to_dict(data, result_field)
+        content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response

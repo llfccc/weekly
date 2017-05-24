@@ -37,16 +37,16 @@ export default new Router({
                     component: resolve => require(['../components/page/VueTable.vue'], resolve) // vue-datasource组件
                 },
                 {
-                    path: '/weeklySumup',
-                    component: resolve => require(['../components/page/weeklySumup.vue'], resolve) // vue-datasource组件
+                    path: '/insertWeeklySumup',
+                    component: resolve => require(['../components/page/insertWeeklySumup.vue'], resolve) // vue-datasource组件
                 },
                 {
-                    path: '/weeklyAnalysis',
-                    component: resolve => require(['../components/page/weeklyAnalysis.vue'], resolve) // vue-datasource组件
+                    path: '/analysisWeeklyGraph',
+                    component: resolve => require(['../components/page/analysisWeeklyGraph.vue'], resolve) // vue-datasource组件
                 },
                 {
-                    path: '/displayWeekly',
-                    component: resolve => require(['../components/page/displayWeekly.vue'], resolve) // vue-datasource组件
+                    path: '/analysisWeekly',
+                    component: resolve => require(['../components/page/analysisWeekly.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/projectManage',

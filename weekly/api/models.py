@@ -54,8 +54,14 @@ class DevEvent(models.Model):
     def __unicode__(self):
         return u"{}".format(self.description)
 
-    def time_cousuming(self, keyword):
-        return self.start_time-self.end_time
+    # def time_cousuming(self, keyword):
+    #     return self.start_time-self.end_time
+    class Meta:
+        permissions = (
+        ("export_excel", u"导出本人的事件为excel"),
+        # ("change_task_status", "Can change the status of tasks"),
+        # ("close_task", "Can remove a task by setting its status as closed"),
+        )
 
 
 class WeekSummary(models.Model):
@@ -68,6 +74,14 @@ class WeekSummary(models.Model):
 
     def __unicode__(self):
         return u"{}".format(self.summary)
+
+    class Meta:
+        permissions = (
+        ("analysi_weekly_summary", u"主管:查看员工每周周报分析"),
+        # ("change_task_status", "Can change the status of tasks"),
+        # ("close_task", "Can remove a task by setting its status as closed"),
+        )
+        
 
 class SaleActiveType(models.Model):
     active_type_name = models.CharField(max_length=100, verbose_name='活动类型名称')
@@ -126,10 +140,10 @@ class SaleTarget(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     # creator =  models.ForeignKey(User, verbose_name='创建人')
-    sale_target_owner_id = models.IntegerField(verbose_name='目标所属人')
+    sale_target_owner = models.ForeignKey(User,verbose_name='目标所属人')
 
     def __unicode__(self):
-        return u"{}".format(self.sale_target_owner_id+"--"+self.natural_week)
+        return u"{0}--{1}--{2}".format(self.natural_week,self.phase_name,self.sale_target_owner)
 
 
 class SaleEvent(models.Model):

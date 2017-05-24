@@ -50,6 +50,8 @@ class User(AbstractUser):     #继承AbstractUser
     department = models.ForeignKey(Department, blank=True, null=True, on_delete=models.SET_NULL,verbose_name='部门')
     position = models.ForeignKey(Position, blank=True, null=True, on_delete=models.SET_NULL,verbose_name='职位')
 
+    def __unicode__(self):
+        return u"{}".format(self.chinese_name)
 
 
 

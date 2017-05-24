@@ -13,9 +13,9 @@
   
           <el-col :span="6">
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-                            <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-                            </el-option>
-                        </el-select>
+              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
@@ -30,8 +30,9 @@
           <th>星期 </th>
           <th>项目名称 </th>
           <th>类型 </th>
+          <th>耗时 </th>
           <th>事件描述 </th>
-          <th>持续时间 </th>
+          <th>工作时间 </th>
           <th>上游汇报人</th>
           <th>下游对接人 </th>
           <th>完成百分比 </th>
@@ -55,6 +56,13 @@
             <table class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.event_type_name}}</td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table class=" table-responsive table-bordered" width="100%" height="100%">
+              <tr v-for="child in item.other_row">
+                <td>{{child.duration_time}}</td>
               </tr>
             </table>
           </td>
@@ -104,7 +112,7 @@
     </div>
     <br>
     </br>
-
+  
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
   
@@ -118,11 +126,11 @@
     </el-col>
   
     <el-card class="box-card">
-       <template v-if='summary'>
-      <div slot="header" class="clearfix">
-        <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
-        <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
-      </div>
+      <template v-if='summary'>
+        <div slot="header" class="clearfix">
+          <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
+          <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+        </div>
         <div class="text item">
           <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-col :span="8">
@@ -180,24 +188,24 @@ export default {
     },
 
     filter: function (params) {
-      this.weekly_dict=[];
-      this.summary=[];
+      this.weekly_dict = [];
+      this.summary = [];
       this.get_weekly();
       this.get_summary();
       this.get_users();
     },
     get_users: function (params) {
-            var self = this;
-            this.$axios.get('/accounts/get_username/')
-                .then(function (response) {
-                    self.user_list = eval(response.data.content);
-                }
-                );
-        },
+      var self = this;
+      this.$axios.get('/accounts/get_username/')
+        .then(function (response) {
+          self.user_list = eval(response.data.content);
+        }
+        );
+    },
     get_weekly: function (params) {
       var self = this;
 
-      this.$axios.get('/analysis/display_weekly/', {
+      this.$axios.get('/analysis/analysisi_devevent/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
@@ -213,7 +221,7 @@ export default {
     get_summary: function (params) {
       var self = this;
 
-      this.$axios.get('/works/get_weekly_summary/', {
+      this.$axios.get('/analysis/analysis_weekly_summary/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
@@ -231,7 +239,7 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
-        this.get_users()
+      this.get_users()
       // this.get_weekly()
       // this.get_summary()
     })

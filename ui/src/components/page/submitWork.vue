@@ -10,7 +10,7 @@
                     </el-form-item>
                 </el-col>
                 <span class="demonstration">筛选项目</span>
-                <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
+                <el-select v-model="filters.project_id" clearable filterable placeholder="项目名">
                     <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
                     </el-option>
                 </el-select>
@@ -170,7 +170,7 @@ export default {
     data() {
         return {
             filters: {
-                project_name: '',
+                project_id: '',
                 filter_date: '',
                 start_date: '',
                 end_date: '',
@@ -300,7 +300,7 @@ export default {
             this.$axios.get('/works/get_dev_events/', {
                 params: {
                     filter_date: self.filters.filterDate,
-                    project_name: self.filters.project_name
+                    project_id: self.filters.project_id
                 }
             })
                 .then(function (response) {
