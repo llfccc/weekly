@@ -3,17 +3,19 @@
   <div>
   
     <div>
+                  <el-form :inline="true" :model="filters">
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
           <span class="demonstration">筛选时间</span>
           <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
           </el-date-picker>
           <el-form-item>
-            <el-button type="primary" v-on:click="filter">筛选</el-button>
+            <el-button type="primary" @click="filter">筛选</el-button>
+
           </el-form-item>
         </el-form>
       </el-col>
-  
+                  </el-form>
     </div>
     <br>
     </br>
@@ -253,7 +255,6 @@ export default {
         ]
       })
     },
-
     filterDateChange(val) {
       var self = this;
       self.filters.filterDate = val;
@@ -266,7 +267,7 @@ export default {
     },
     get_department_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_department/', {
+      this.$axios.get('/analysis/analysis_sale_department/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
@@ -284,7 +285,7 @@ export default {
     },
     get_personal_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_worker/', {
+      this.$axios.get('/analysis/analysis_sale_worker/', {
         params: {
           filter_date: self.filters.filterDate,
           employee_name: self.filters.employee_name,
@@ -303,7 +304,7 @@ export default {
     },
     get_project_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_project/', {
+      this.$axios.get('/analysis/analysis_sale_project/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
@@ -321,7 +322,7 @@ export default {
     },
     get_load: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_load/', {
+      this.$axios.get('/analysis/analysis_sale_load/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,

@@ -1,10 +1,11 @@
 # coding=utf-8
 # 返回出口函数
+import datetime
 import json
 import logging
 import sys
 import string, random
-import datetime
+
 from hashlib import md5
 from django.http import HttpResponse
 from django.forms.models import model_to_dict

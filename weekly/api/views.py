@@ -135,7 +135,7 @@ class Test(LoginRequiredMixin,View):
         print request.user.get_all_permissions()
         if request.user.has_perm('api.view_devproject'):
             print("yese")
-        return HttpResponse("ok")
+        return HttpResponse(request.user.get_all_permissions())
 
 
 class GetSaleEvents(LoginRequiredMixin,View):

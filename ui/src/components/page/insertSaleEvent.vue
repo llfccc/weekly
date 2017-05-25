@@ -384,12 +384,10 @@ export default {
                         type: 'error'
                     });
                 }
-
             });
             // this.addCustomerForm = Object.assign({},addCustomerForm);
             this.addCustomerVisible = false;
             this.get_customers();
-
         },
 
         addWork: function () {
@@ -397,9 +395,7 @@ export default {
 
             let str = 'visit_date=' + self.addEventForm.visit_date + '&cus_con_post=' + self.addEventForm.cus_con_post + '&cus_con_mdn=' + self.addEventForm.cus_con_mdn + '&cus_con_tel_num=' + self.addEventForm.cus_con_tel_num + '&cus_con_wechart=' + self.addEventForm.cus_con_wechart + '&communicate_record=' + self.addEventForm.communicate_record + '&sale_event_remark=' + self.addEventForm.sale_event_remark + '&sale_event_owner_id=' + self.addEventForm.sale_event_owner_id + '&active_type_id=' + self.addEventForm.active_type_id + '&sale_customer_id=' + self.addEventForm.sale_customer_id + '&sale_phase_id=' + self.addEventForm.sale_phase_id;
             this.$axios.post('/works/insert_sale_event/', str).then(function (response) {
-
                 if (response.data.code == 0) {
-
                     self.get_sale_event()
                     self.$message({
                         message: response.data.msg,

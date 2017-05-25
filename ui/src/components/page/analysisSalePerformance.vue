@@ -12,8 +12,8 @@
             <span class="demonstration">筛选时间</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
-          </el-col>  
-
+          </el-col>
+  
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
   
@@ -47,7 +47,7 @@
           <th> 实际</th>
           <th> 目标</th>
           <!--<th> 实际</th>
-            <th> 目标</th>-->
+              <th> 目标</th>-->
         </tr>
         <tr v-for="item in sale_performance_list">
           <td> {{item.chinese_name}}</td>
@@ -64,7 +64,7 @@
           <td> {{item.F}}</td>
           <td> {{item.target_F}}</td>
           <!--<td> {{item.G}}</td>
-            <td> {{item.target_G}}</td>-->
+              <td> {{item.target_G}}</td>-->
         </tr>
       </table>
       <table id="table"></table>
@@ -110,13 +110,17 @@ export default {
 
     filter: function (params) {
       this.sale_performance_list = [];
-      this.get_sale_performance();
+      this.analysis_sale_performance();
       // this.get_summary();
     },
-    get_sale_performance: function (params) {
+    lastWeek: function(params) {
+    },
+    nextWeek: function(params) {
+    },
+    analysis_sale_performance: function (params) {
       var self = this;
       console.log(self.filters.naturalWeek)
-      this.$axios.get('/analysis/get_sale_performance/', {
+      this.$axios.get('/analysis/analysis_sale_performance/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,

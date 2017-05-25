@@ -56,11 +56,11 @@ module.exports = {
                     '/analysis': 'analysis'
                 }
             },
-            '/admin': {
+            '/xadmin': {
                 target: 'http://localhost:8000',
                 changeOrigin: true,
                 pathRewrite: {
-                    '/admin': 'admin'
+                    '/xadmin': 'xadmin'
                 }
             },
         },

@@ -61,7 +61,7 @@ class AnanlysisDepartment(View):
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        department_name = getParams.get('department_name', '')
+        department_name = request.user.department.department_name
         print(getParams)
         if not department_name:
             department_name=u"空部门"
@@ -88,7 +88,7 @@ class AnanlysisProject(View):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         project_name = getParams.get('project_name', '')
-        department_name = getParams.get('department_name', '')
+        department_name = request.user.department.department_name
         if  not project_name:
             project_name='空项目'
 
@@ -118,7 +118,7 @@ class AnanlysisLoad(View):
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        department_name = getParams.get('department_name', '')
+        department_name = request.user.department.department_name
         # project_name= getParams.get('project_name', '')
   
         # 创建查询条件       
@@ -150,7 +150,7 @@ class AnalysisDevEvent(View):
         employee_name= getParams.get('employee_name', '')
         # project_id = getParams.get('project_id', '')
         #error，此处需要修改强制条件为主管所属部门
-        department_name = getParams.get('department_name', '技术服务中心')
+        department_name = request.user.department.department_name
         
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
@@ -211,7 +211,7 @@ class AnalysisDevEvent(View):
 
 class DisplaySaleEvent(View):
     '''
-    查询销售周报
+    主管查询销售周报汇总
     '''
 
     def get(self, request):
@@ -219,8 +219,8 @@ class DisplaySaleEvent(View):
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
         # project_name = getParams.get('project_name', '')
-        department_name = getParams.get('department_name', '')
-        
+        department_name = request.user.department.department_name
+        print(getParams)
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
         # print(filter_date)
@@ -236,14 +236,14 @@ class DisplaySaleEvent(View):
             result_dict={}
             for key,value in row.items():
                 result_dict[key]=value
-            result_dict['which_day']=day_of_week(row['visit_date'])
+            result_dict['which_day']=day_of_week(str(row['visit_date']))
             result_list.append(result_dict)
 
         content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class GetSalePerformace(View):
+class AnalysisSalePerformace(View):
     '''
     查询销售职员工作类型占比
     '''
@@ -251,18 +251,15 @@ class GetSalePerformace(View):
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
-        # employee_name= getParams.get('employee_name', '')
-        # project_name = getParams.get('project_name', '')
-        department_name = getParams.get('department_name', '')
-        
+        department_name = request.user.department.department_name
+        print(department_name)
         natural_week=''
         if filter_date:
             natural_week = filter_date[:7]
             filter_date='-'.join(getfirstday(filter_date))
 
         target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget where natural_week='{0}'".format(natural_week)
-        # 创建查询条件        
-        # employee_filter={'employee_name':employee_name}
+
         plain_sql=filter_sale_event_sql(filter_date=filter_date,department_name=department_name)
 
         #统计分析
@@ -289,11 +286,9 @@ class GetSalePerformace(View):
             sum(case when target_phase_name = 'E' then target else 0 end) as "target_E",
             sum(case when target_phase_name = 'F' then target else 0 end) as "target_F"       
             from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
-        print(pivot_sql)
 
         data = fetch_data(pivot_sql)
         content = dict_to_json(data)
-        # print(content)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 

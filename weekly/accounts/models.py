@@ -52,7 +52,12 @@ class User(AbstractUser):     #继承AbstractUser
 
     def __unicode__(self):
         return u"{}".format(self.chinese_name)
-
+    class Meta:
+        permissions = (
+            ("get_chinesename", "自定义：查看中文用户"),
+            # ("update_department", "可以修改部门"),
+            # ("del_department", "可以删除部门"),
+        )
 
 
 

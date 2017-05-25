@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'^login/', LoginHandler.as_view()),
     # url(r'^register/', RegisterHandler.as_view()),
     url(r'^logout/', LogoutHandler.as_view()),
-    url(r'^get_username/', permission_required('api.view_devevent')(GetUsername.as_view())),
+    url(r'^get_username/', permission_required('accounts.get_chinesename')(GetUsername.as_view())),
 ]
