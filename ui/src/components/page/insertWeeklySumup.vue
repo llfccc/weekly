@@ -1,5 +1,14 @@
 <template>
     <div>
+    
+        <el-col :span="8">
+            <span class="demonstration">筛选时间</span>
+            <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
+            </el-date-picker>
+        </el-col>
+        <el-col :span="8">
+            <el-button type="primary" v-on:click="filter">筛选</el-button>
+        </el-col>
         <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-table :data="summary_list" border style="width: 100%">
             <el-table-column prop="id" style="display:none" label="id" width="150" sortable>
@@ -67,8 +76,7 @@ export default {
             filters: {
                 project_name: '',
                 filter_date: '',
-                start_date: '',
-                end_date: '',
+                naturalWeek: '',
             },
             addLoading: false,
             insertForm: {
@@ -87,16 +95,22 @@ export default {
 
     },
     methods: {
+
         dateChange1(val) {
             var self = this;
-            self.insertForm.naturalWeek = val
+            self.filters.naturalWeek = val
+        },
+        filter: function (params) {
+            this.summary_list = [];
+            this.get_summary();
+
         },
         get_summary: function (params) {
             var self = this;
             this.$axios.get('/works/get_weekly_summary/', {
                 params: {
-                    filterDate: self.filters.filterDate,
-                    // project_name: self.filters.project_name
+                    filter_date: self.filters.naturalWeek,
+                    //   employee_name: self.filters.employee_name,
                 }
             })
                 .then(function (response) {
@@ -160,6 +174,7 @@ export default {
             this.editFormVisible = true;
             this.editForm = Object.assign({}, row);
         },
-    }
+    },
+
 }
 </script>

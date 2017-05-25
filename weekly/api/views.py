@@ -106,7 +106,12 @@ class InsertWork(LoginRequiredMixin,View):
         result = {}            
         for t in insert_field:
             result[t] = data.get(t,'')
-
+        
+        if result['fin_percentage'].isdigit():
+            if not (int(result['fin_percentage'])>0 and int(result['fin_percentage'])<=100):
+                return my_response(code=1, msg=u"数字范围取值错误", content=content)
+        else:
+            return my_response(code=1, msg=u"百分比需要填写数字", content=content)
         if user_id!=0:
             result['dev_event_owner_id'] = user_id
         else:
@@ -284,9 +289,8 @@ class GetWeeklySummary(LoginRequiredMixin,View):
         else:
             filter_date='2017-21'
 
-        # user_id=get_user_id(request)
+        user_id=get_user_id(request)
 
-        user_id=chinesename_to_userid(employee_name)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
