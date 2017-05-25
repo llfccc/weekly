@@ -37,8 +37,8 @@ export default new Router({
                     component: resolve => require(['../components/page/VueTable.vue'], resolve) // vue-datasource组件
                 },
                 {
-                    path: '/insertWeeklySumup',
-                    component: resolve => require(['../components/page/insertWeeklySumup.vue'], resolve) // vue-datasource组件
+                    path: '/insertWeekSummary',
+                    component: resolve => require(['../components/page/insertWeekSummary.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/analysisWeeklyGraph',

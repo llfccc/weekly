@@ -8,7 +8,7 @@
                 <template slot="title">
                     <i class="el-icon-menu"></i>办公周报</template>
                 <el-menu-item index="insertWork">添加工作</el-menu-item>
-                <el-menu-item index="insertWeeklySumup">添加总结</el-menu-item>
+                <el-menu-item index="insertWeekSummary">添加总结</el-menu-item>
     
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>

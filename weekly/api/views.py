@@ -128,29 +128,6 @@ class InsertWork(LoginRequiredMixin,View):
         return response
 
 
-class DelWork(LoginRequiredMixin,View):
-    '''
-    删除工作记录
-    '''
-    def post(self, request):
-        user_id=get_user_id(request)
-        data = request.POST
-        print(data)
-        delID = data.get("delID")
-        del_event = DevEvent.objects.get(id=delID)
-        print(del_event.id)
-        if del_event.dev_event_owner_id==user_id:
-            del_event_id=del_event.delete()
-        else:
-            response = my_response(code=1, msg=u"你不是该记录的所有人")
-
-        if del_event_id[0] == 0:
-            response = my_response(code=1, msg=u"删除失败，可能已经不存在")
-        else:
-            content = {"id": del_event_id[0]}
-            response = my_response(code=0, msg=u"删除成功", content=content)
-        return response
-
 
 class Test(LoginRequiredMixin,View):
     def get(self, request):
@@ -274,28 +251,28 @@ class GetSalePhases(LoginRequiredMixin,View):
 
 class GetWeeklySummary(LoginRequiredMixin,View):
     '''
-    查询所有项目属性
+    员工查询自己的周总结
     '''
 
     def get(self, request):
         getParams = request.GET        
-        employee_name= getParams.get('employee_name', '').strip()
-        filter_date = getParams.get('filter_date', '')
+        # employee_name= getParams.get('employee_name', '').strip()
+        natural_week = getParams.get('natural_week', '')
         # department_name =u'销售部'
         #验证日期是否符合 2017-01的格式
-        __match=re.compile('^\d{4}-\d{2}').match(filter_date)
+        __match=re.compile('^\d{4}-\d{2}').match(natural_week)
         if __match:
-            filter_date=__match.group()
+            natural_week=__match.group()
         else:
-            filter_date='2017-21'
+            natural_week='2017-21'
 
         user_id=get_user_id(request)
 
-        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
+        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=natural_week).all()
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
-        print(content)
+   
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -311,10 +288,11 @@ class InsertSummary(LoginRequiredMixin,View):
 
         natural_week=result['natural_week'][:7]
         __match=re.compile('^\d{4}-\d{2}').match(natural_week)
+
         if __match:
             result['natural_week']=__match.group()
         else:
-            return  my_response(code=1, msg=u"自然周填写格式错误", content=content)
+            return  my_response(code=1, msg=u"自然周填写格式错误", content='')
         result['summary_owner_id'] = user_id
         content = {"id": 0}
         if result:
@@ -379,7 +357,7 @@ class InsertSaleEvent(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)       
         data = request.POST
-        print(data)
+
         
         insert_field = ["visit_date", "cus_con_post", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark", "sale_phase_id",
                 "active_type_id", "sale_customer_id"]
@@ -401,30 +379,60 @@ class InsertSaleEvent(LoginRequiredMixin,View):
                 response = my_response(code=1, msg=u"error", content=content)
         return response
 
-class DelSaleEvent(LoginRequiredMixin,View):
-    def post(self, request):
-        data = request.POST
 
+
+class DelDevEvent(LoginRequiredMixin,View):
+    '''
+    删除员工自己的工作记录 LoginRequiredMixin,
+    '''
+
+    def get(self, request):
+        user_id=get_user_id(request) 
+        data = request.GET
         delID = data.get("delID")
-        del_event_id = SaleEvent.objects.filter(id=delID).delete()
-        print(del_event_id[0])
-        if del_event_id[0] == 0:
-            response = my_response(code=1, msg=u"删除失败")
-        else:
-            content = {"id": del_event_id[0]}
+        del_queryset = DevEvent.objects.filter(id=delID).first()
+        if not del_queryset:
+            return  my_response(code=1, msg=u"删除失败，可能已经不存在")
+        if  del_queryset.dev_event_owner_id==user_id:
+            deleted_id=del_queryset.delete()
+            content = {"id": deleted_id}
             response = my_response(code=0, msg=u"删除成功", content=content)
+        else:
+            response = my_response(code=1, msg=u"你不是该记录的所有人")
+        return response
+
+
+class DelSaleEvent(LoginRequiredMixin,View):
+    '''
+    员工删除自己的拜访记录
+    '''
+    def get(self, request):
+        user_id=get_user_id(request) 
+        data = request.GET
+        delID = data.get("delID")
+        del_queryset = SaleEvent.objects.filter(id=delID).first()
+        if not del_queryset:
+            return  my_response(code=1, msg=u"删除失败，可能已经不存在")
+        if  del_queryset.sale_event_owner_id==user_id:
+            deleted_id=del_queryset.delete()
+            content = {"id": deleted_id}
+            response = my_response(code=0, msg=u"删除成功", content=content)
+        else:
+            response = my_response(code=1, msg=u"你不是该记录的所有人")
         return response
 
 class DelSummary(LoginRequiredMixin,View):
-    def post(self, request):
-        data = request.POST
-
+    def get(self, request):
+        user_id=get_user_id(request) 
+        data = request.GET
         delID = data.get("delID")
-        del_event_id = WeekSummary.objects.filter(id=delID).delete()
-        print(del_event_id[0])
-        if del_event_id[0] == 0:
-            response = my_response(code=1, msg=u"删除失败")
-        else:
-            content = {"id": del_event_id[0]}
+        del_queryset = WeekSummary.objects.filter(id=delID).first()
+        if not del_queryset:
+            return  my_response(code=1, msg=u"删除失败，可能已经不存在")
+        if  del_queryset.summary_owner_id==user_id:
+            deleted_id=del_queryset.delete()
+            content = {"id": deleted_id}
             response = my_response(code=0, msg=u"删除成功", content=content)
+        else:
+            response = my_response(code=1, msg=u"你不是该记录的所有人")
         return response
