@@ -70,15 +70,17 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
 
     start_date, end_date=default_date(filter_date)
     where_condition = u"sale.visit_date>='{0}' and sale.visit_date<='{1}' ".format(start_date, end_date)
-
+    
     #筛选记录所属人
     if user_id:     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
-    if customer_id:
-        where_condition += "and customer.id = '{0}' ".format(customer_id)
     else:               
         user_id=chinesename_to_userid(employee_name)     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
+    if customer_id:
+
+        where_condition += "and customer.id = '{0}' ".format(customer_id)
+
     if employee_name:
         owner_id=chinesename_to_userid(employee_name)
         where_condition += "and sale_event_owner_id = '{0}' ".format(owner_id)

@@ -27,7 +27,7 @@
                 <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
                 </el-date-picker>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="get_data">查询</el-button>
+                    <el-button type="primary" v-on:click="filter">查询</el-button>
                 </el-form-item>
             </el-form>
 
@@ -312,10 +312,10 @@ export default {
     },
     created() {
         // 组件创建完后获取数据，这里和1.0不一样，改成了这个样子
-        this.get_data()
+        this.get_sale_event()
         this.get_customers()
         this.get_sale_phases()
-        this.get_event_types()
+
         this.get_sale_event_types()
     },
     methods: {
@@ -328,7 +328,7 @@ export default {
             self.addEventForm.visit_date = val
         },
         filter(val){
-            this.get_data();
+            this.get_sale_event();
         },
         get_sale_event_types: function (params) {
             var self = this;
@@ -347,7 +347,7 @@ export default {
                 }
                 );
         },
-        get_data: function (params) {
+        get_sale_event: function (params) {
             var self = this;
             this.$axios.get('/works/get_saleevents/', {
                 params: {
@@ -365,15 +365,6 @@ export default {
             this.$axios.get('/works/get_customers/')
                 .then(function (response) {
                     self.customer_list = eval(response.data.content);
-                }
-                );
-        },
-        get_event_types: function (params) {
-            var self = this;
-            this.$axios.get('/works/get_event_types/')
-                .then(function (response) {
-                    self.event_type_list = eval(response.data.content);
-
                 }
                 );
         },
@@ -409,7 +400,7 @@ export default {
 
                 if (response.data.code == 0) {
 
-                    self.get_data()
+                    self.get_sale_event()
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
@@ -420,23 +411,22 @@ export default {
                         type: 'error'
                     });
                 }
-
             });
             //this.$refs['addForm'].resetFields();
             this.addEventVisible = false;
-            this.get_data();
-
+            this.get_sale_event();
         },
 
         handleDelete: function (index, row) {
             var self = this;
-            let delID = row.sale_event_id;
-            console.log(delID);
-            let str = 'delID=' + delID
-            this.$axios.post('/works/del_sale_event/', str)
+            this.$axios.get('/works/del_sale_event/', {
+                params: {
+                    delID: row.sale_event_id,
+                }
+            })
                 .then(function (response) {
                     if (response.data.code == 0) {
-                        self.get_data()
+ 
                         self.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'
@@ -447,7 +437,7 @@ export default {
                             type: 'error'
                         });
                     }
-                    console.log(response)
+                    self.get_sale_event();
                 }
                 );
 
