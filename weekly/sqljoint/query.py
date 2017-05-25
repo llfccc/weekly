@@ -71,6 +71,20 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
     start_date, end_date=default_date(filter_date)
     where_condition = u"sale.visit_date>='{0}' and sale.visit_date<='{1}' ".format(start_date, end_date)
     
+
+        #筛选部门中所有人员
+    print(department_name)
+    if department_name:
+        department_id=departmentname_to_departmentid(department_name)
+        user_queryset=User.objects.filter(department_id=department_id).all()
+        user_ids=tuple([i.id for i in user_queryset])           
+        if user_ids:
+            #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
+            if len(user_ids)==1:
+                where_condition += "and sale_event_owner_id =  {0} ".format(user_ids[0])
+            else:
+                where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
+
     #筛选记录所属人
     if user_id:     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
@@ -103,6 +117,48 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
         where {1} ".format(select_param,where_condition)
 
     return plain_sql
+
+
+def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
+    '''
+    先查出部门内所有人的目标，再连接实际情况，再行转列显示出对比表
+    '''
+    if department_name:
+        department_id=departmentname_to_departmentid(department_name)
+        user_queryset=User.objects.filter(department_id=department_id).all()
+        user_ids=tuple([i.id for i in user_queryset])           
+        if user_ids:
+            #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
+            if len(user_ids)==1:
+                where_condition = "and sale_target_owner_id =  {0} ".format(user_ids[0])
+            else:
+                where_condition = "and sale_target_owner_id in  {0} ".format(user_ids)
+    target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget\
+        where natural_week='{0}' {1}  ".format(natural_week,where_condition)
+
+    #统计销售员一周拜访次数
+    group_sql = u'select child.user_id,child.chinese_name,child.phase_name,count(child.phase_name) as phase_count \
+        from ({0}) as child group by child.phase_name,child.chinese_name,child.user_id '.format(filter_sql)
+    union_sql=u'''select  a_user.chinese_name,phase_name,phase_count,target_phase_name,target \
+                    from ({1}) as target  \
+                    left join ({0}) as group_count on \
+                    target.sale_target_owner_id=group_count.user_id and target.target_phase_name=group_count.phase_name
+                    left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(group_sql,target_sql)
+    pivot_sql=u'''select chinese_name,   
+            sum(case when phase_name = 'A' then phase_count else 0 end) as "A",  
+            sum(case when phase_name = 'B' then phase_count else 0 end) as "B",  
+            sum(case when phase_name = 'C' then phase_count else 0 end) as "C",
+            sum(case when phase_name = 'D' then phase_count else 0 end) as "D",
+            sum(case when phase_name = 'E' then phase_count else 0 end) as "E",
+            sum(case when phase_name = 'F' then phase_count else 0 end) as "F",
+            sum(case when target_phase_name = 'A' then target else 0 end) as "target_A",  
+            sum(case when target_phase_name = 'B' then target else 0 end) as "target_B",  
+            sum(case when target_phase_name = 'C' then target else 0 end) as "target_C",
+            sum(case when target_phase_name = 'D' then target else 0 end) as "target_D",
+            sum(case when target_phase_name = 'E' then target else 0 end) as "target_E",
+            sum(case when target_phase_name = 'F' then target else 0 end) as "target_F"       
+            from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
+    return pivot_sql
 
 def chinesename_to_userid(employee_name=''):
     user_queryset=User.objects.filter(chinese_name=employee_name)
