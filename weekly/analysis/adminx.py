@@ -4,6 +4,7 @@ import xadmin
 from django.contrib import admin
 from accounts.models import  Department
 from api.models import SaleTarget,SalePhase
+from accounts.models import Position
 
 # Register your models here.
 class SaleTargetAdmin(object):
@@ -15,3 +16,4 @@ class SaleTargetAdmin(object):
 xadmin.site.register(Department)
 xadmin.site.register(SaleTarget,SaleTargetAdmin)
 xadmin.site.register(SalePhase)
+xadmin.site.register(Position)

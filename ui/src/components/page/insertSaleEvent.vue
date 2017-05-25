@@ -376,12 +376,13 @@ export default {
                     // self.work_list.push(self.form);
                     self.$message({
                         message: response.data.msg,
-                        type: 'success'
+                        type: '新增拜访记录成功'
                     });
+                    this.get_customers();
                 } else {
                     self.$message({
                         message: response.data.msg,
-                        type: 'error'
+                        type: '新增失败'
                     });
                 }
             });

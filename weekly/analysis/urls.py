@@ -17,5 +17,5 @@ urlpatterns = [
     url(r'display_sale_event/', permission_required('api.display_sale_event')(DisplaySaleEvent.as_view()), name="analysis_display_sale_event"),
     url(r'analysis_devevent/', permission_required('api.analysis_devevent')(AnalysisDevEvent.as_view()), name="api_DelWork"),
 
-    url(r'analysis_weekly_summary/', permission_required('api.analysis_weekly_summary')(AnalysisWeeklySummary.as_view()), name="api_get_works"),
+    url(r'analysis_week_summary/', permission_required('api.analysis_weekly_summary')(AnalysisWeeklySummary.as_view()), name="api_get_works"),
 ]

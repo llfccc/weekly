@@ -14,8 +14,10 @@
 # admin.site.register(UserProfile, UserProfileAdmin)
 
 #coding:utf-8
-from django.contrib import admin
+# from django.contrib import admin
+# from accounts.models import Position
 
-# Register your models here.
-from accounts.models import User
-admin.site.register(User)
+# # Register your models here.
+# from accounts.models import User
+# admin.site.register(User)
+# admin.site.register(Position)

@@ -149,7 +149,7 @@ export default {
     },
     get_summary: function (params) {
       var self = this;
-      this.$axios.get('/works/get_weekly_summary/', {
+      this.$axios.get('/analysis/analysis_week_summary/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,

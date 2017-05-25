@@ -29,8 +29,8 @@
             <el-submenu index="5">
                 <template slot="title">
                     <i class="el-icon-star-on"></i>销售报表</template>
-                <el-menu-item index="analysisSaleEvent">分析销售</el-menu-item>
-                <el-menu-item index="analysisSalePerformance">销售业绩</el-menu-item>
+                <el-menu-item index="analysisSaleEvent">拜访分析</el-menu-item>
+                <el-menu-item index="analysisSalePerformance">拜访业绩</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>

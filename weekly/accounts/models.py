@@ -27,9 +27,9 @@ class Department(models.Model):
 
 class Position(models.Model):
     '''
-    用户部门表
+    职位表
     '''
-    position_name = models.CharField(max_length=100, verbose_name='活动类型名称')
+    position_name = models.CharField(max_length=100, verbose_name='职位名称')
     position_remark = models.CharField(max_length=64, null=True,blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
 

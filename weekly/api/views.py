@@ -172,7 +172,7 @@ class InsertCustomer(LoginRequiredMixin,View):
         customer_exist=SaleCustomer.objects.filter(full_name=result['full_name']).all()
         print(customer_exist)
         if customer_exist:
-            response = my_response(code=1, msg=u"公司全称已存在")
+            response = my_response(code=1, msg=u"客户已存在")
             return response
         result['sale_customer_owner_id'] = user_id
         

@@ -77,7 +77,7 @@ class WeekSummary(models.Model):
     class Meta:
         permissions = (
         ("analysis_weekly_summary", u"所有主管:查看员工每周周报总结"),
-        # ("change_task_status", "Can change the status of tasks"),
+        ("get_weekly_summary", "普通员工：查看自己的总结"),
         # ("close_task", "Can remove a task by setting its status as closed"),
         )
         

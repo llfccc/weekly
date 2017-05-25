@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'del_devevent/', permission_required('api.delete_devevent')(DelDevEvent.as_view()), name="api_DelWork"),
 
     url(r'get_event_excel/', permission_required('api.export_excel')(GetEventExcel.as_view()), name="api_get_works"),
-    url(r'get_weekly_summary/',permission_required('api.view_weeksummary')(GetWeeklySummary.as_view()), name="api_get_works"),
+    url(r'get_weekly_summary/',permission_required('api.get_weekly_summary')(GetWeeklySummary.as_view()), name="api_get_works"),
     url(r'get_sale_phases/', permission_required('api.view_salephase')(GetSalePhases.as_view()), name="api_get_works"),
     url(r'insert_sale_event/', permission_required('api.add_saleevent')(InsertSaleEvent.as_view()), name="api_get_works"),
     url(r'insert_summary/', permission_required('api.add_weeksummary')(InsertSummary.as_view()), name="api_InsertWork"),
