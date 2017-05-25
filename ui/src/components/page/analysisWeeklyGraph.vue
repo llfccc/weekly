@@ -1,21 +1,36 @@
 <template>
-  <!--为echarts准备一个具备大小的容器dom-->
   <div>
-  
     <div>
-                  <el-form :inline="true" :model="filters">
-      <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-        <el-form :inline="true" :model="filters">
-          <span class="demonstration">筛选时间</span>
-          <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-          </el-date-picker>
+      <el-form :inline="true" :model="filters">
+  
+        <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
-            <el-button type="primary" @click="filter">筛选</el-button>
-
+            <span class="demonstration">筛选时间</span>
+            <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+            </el-date-picker>
           </el-form-item>
-        </el-form>
-      </el-col>
-                  </el-form>
+        </el-col>
+        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
+          <el-form-item>
+            <span class="demonstration">筛选项目</span>
+            <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
+              <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.project_name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
+          <el-form-item>
+  
+            <span class="demonstration">筛选员工</span>
+            <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="filter">筛选</el-button>
+          </el-form-item>
+        </el-col>
+      </el-form>
     </div>
     <br>
     </br>
@@ -26,15 +41,14 @@
     </el-row>
     <el-row :gutter="24">
       <el-col :span="8">
-        <el-input v-model="filters.project_name" placeholder="工作项目"></el-input>
-        <div id="project" style="width: 300px;height: 300px;"> </div>
-      </el-col>
-      <el-col :span="8">
-        <el-input v-model="filters.department_name" placeholder="部门"></el-input>
         <div id="department" style="width: 300px;height: 300px;"> </div>
+  
       </el-col>
       <el-col :span="8">
-        <el-input v-model="filters.employee_name" placeholder="员工姓名"></el-input>
+        <div id="project" style="width: 300px;height: 300px;"> </div>
+  
+      </el-col>
+      <el-col :span="8">
         <div id="personal" style="width: 400px;height: 300px;"> </div>
       </el-col>
     </el-row>
@@ -46,10 +60,13 @@ export default {
   name: '',
   data() {
     return {
+      user_list: [],
+      project_list: [],
       filters: {
         project_name: '',
         employee_name: '',
-        department_name: '技术服务中心',
+        project_id: '',
+        project_name: '',
         filter_date: '',
         // start_date: '',
         // end_date: '',
@@ -105,11 +122,28 @@ export default {
     }
   },
   methods: {
+    get_users: function (params) {
+      var self = this;
+      this.$axios.get('/accounts/get_username/')
+        .then(function (response) {
+          self.user_list = eval(response.data.content);
+        }
+        );
+    },
+    get_projects: function (params) {
+      var self = this;
+      this.$axios.get('/works/get_projects/')
+        .then(function (response) {
+          self.project_list = eval(response.data.content);
+
+        }
+        );
+    },
     drawDepartPie(id) {
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
         title: {
-          text: '部门时间类型',
+          text: '部门耗时类型分布',
           subtext: '',
           x: 'center'
         },
@@ -124,7 +158,7 @@ export default {
         },
         series: [
           {
-            name: '访问来源',
+            name: '时间占比（H） ',
             type: 'pie',
             radius: '55%',
             center: ['50%', '60%'],
@@ -141,10 +175,11 @@ export default {
       })
     },
     drawPersonPie(id) {
+      var self=this;
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
         title: {
-          text: '个人时间类型',
+          text: '"'+self.filters.employee_name+'"'+'--耗时分布',
           subtext: '',
           x: 'center'
         },
@@ -159,7 +194,7 @@ export default {
         },
         series: [
           {
-            name: '占比',
+            name: '时间占比（H） ',
             type: 'pie',
             radius: '55%',
             center: ['50%', '60%'],
@@ -176,8 +211,12 @@ export default {
       })
     },
     drawProject(id) {
+      var self=this;
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
+        title: {
+          text: '"'+self.filters.project_name+'"'+'项目--耗时分布'
+        },
         color: ['#3398DB'],
         tooltip: {
           trigger: 'axis',
@@ -218,6 +257,9 @@ export default {
     drawLoad(id) {
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
+        title: {
+          text: '部门人员负载图'
+        },
         color: ['#3398DB'],
         tooltip: {
           trigger: 'axis',
@@ -247,7 +289,7 @@ export default {
         ],
         series: [
           {
-            name: '每周平均工作时间',
+            name: '平均每周工作时间（H）',
             type: 'bar',
             barWidth: '60%',
             data: this.echartsLoad.y_data
@@ -267,7 +309,7 @@ export default {
     },
     get_department_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_sale_department/', {
+      this.$axios.get('/analysis/analysis_department/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
@@ -285,7 +327,7 @@ export default {
     },
     get_personal_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_sale_worker/', {
+      this.$axios.get('/analysis/analysis_worker/', {
         params: {
           filter_date: self.filters.filterDate,
           employee_name: self.filters.employee_name,
@@ -304,12 +346,12 @@ export default {
     },
     get_project_data: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_sale_project/', {
+      this.$axios.get('/analysis/analysis_project/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
           project_name: self.filters.project_name,
-          department_name: '技术服务中心',
+          // department_name: '技术服务中心',
         }
       })
         .then(function (response) {
@@ -322,12 +364,12 @@ export default {
     },
     get_load: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_sale_load/', {
+      this.$axios.get('/analysis/analysis_load/', {
         params: {
           filter_date: self.filters.filterDate,
           // employee_name: self.filters.employee_name,
           // project_name: self.filters.project_name,
-           department_name: '技术服务中心',
+          department_name: '技术服务中心',
         }
       })
         .then(function (response) {
@@ -345,7 +387,9 @@ export default {
     this.$nextTick(function () {
       this.get_department_data()
       this.get_project_data()
-      this.get_load()
+      this.get_load();
+      this.get_users();
+      this.get_projects();
     })
   }
 }

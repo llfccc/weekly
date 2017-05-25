@@ -17,7 +17,7 @@ def default_date(filter_date):
     return (start_date,end_date)
 
 
-def filter_dev_event_sql(filter_date='',project_name='',project_id='',department_name='',employee_name='',user_id=''):
+def filter_dev_event_sql(filter_date='',project_name='',project_id='',department_id='',department_name='',employee_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
