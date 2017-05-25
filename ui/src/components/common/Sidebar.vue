@@ -7,7 +7,7 @@
             <el-submenu index="2">
                 <template slot="title">
                     <i class="el-icon-menu"></i>办公周报</template>
-                <el-menu-item index="submitWork">添加工作</el-menu-item>
+                <el-menu-item index="insertWork">添加工作</el-menu-item>
                 <el-menu-item index="insertWeeklySumup">添加总结</el-menu-item>
     
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
@@ -21,7 +21,7 @@
             <el-submenu index="4">
                 <template slot="title">
                     <i class="el-icon-menu"></i>销售拜访</template>
-                <el-menu-item index="submitEvent">添加拜访</el-menu-item>
+                <el-menu-item index="insertEvent">添加拜访</el-menu-item>
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
 

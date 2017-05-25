@@ -77,7 +77,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addWork" :loading="addLoading">提交</el-button>
+                <el-button type="primary" @click.native="insertWork" :loading="addLoading">提交</el-button>
             </div>
     
         </el-dialog>
@@ -116,7 +116,8 @@
         </el-table>
         <p>不选日期则取最近一星期的内容</p>
         <p>
-            <a href='/works/get_event_excel/'>下载excel</a>
+             <!--<el-button type="primary" @click="handleAdd">下载excel</el-button>-->
+            <a href='/works/get_event_excel/'>下载excel(缺参数)</a>
         </p>
         <!--编辑界面-->
         <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
@@ -158,7 +159,7 @@
                     </el-form>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="addFormVisible = false">取消</el-button>
-                        <el-button type="primary" @click.native="addWork" :loading="addLoading">提交修改</el-button>
+                        <el-button type="primary" @click.native="insertWork" :loading="addLoading">提交修改</el-button>
                     </div>    
                 </el-dialog>-->
     
@@ -327,7 +328,7 @@ export default {
                 }
                 );
         },
-        addWork: function () {
+        insertWork: function () {
             var self = this;
             //后期改用此种方法合成json
             //                    function transToJson(data) {
@@ -343,7 +344,7 @@ export default {
 
             let str = 'event_date=' + self.insertForm.event_date + '&start_time=' + self.insertForm.start_time + '&end_time=' + self.insertForm.end_time + '&description=' + self.insertForm.description + '&fin_percentage=' + self.insertForm.fin_percentage + '&up_reporter_id=' + self.insertForm.up_reporter_id + '&down_reporter_ids=' + self.insertForm.down_reporter_ids + '&dev_event_remark=' + self.insertForm.dev_event_remark + '&dev_event_project_id=' + self.insertForm.dev_event_project_id + '&dev_event_type_id=' + self.insertForm.dev_event_type_id;
             this.$axios.post('/works/insert_work/', str).then(function (response) {
-
+                console.log(response.data)
                 if (response.data.code == 0) {
                     self.get_data()
                     self.$message({
@@ -401,6 +402,20 @@ export default {
             //     birth: '',
             //     addr: ''
             // };
+        },
+        get_event_excel: function () {
+            var self = this;
+            this.$axios.get('/works/get_event_excel /', {
+                params: {
+                    filter_date: self.filters.filterDate,
+                    project_id: self.filters.project_id
+                }
+            })
+                .then(function (response) {
+                    self.work_list = eval(response.data.content);
+                    console.log(self.work_list);
+                }
+                );
         },
     },
 }

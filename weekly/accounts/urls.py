@@ -1,9 +1,11 @@
 from django.conf.urls import url
 from accounts.views import LoginHandler, RegisterHandler, LogoutHandler,GetUsername
+from django.contrib.auth.decorators import login_required, permission_required
+
 
 urlpatterns = [
     url(r'^login/', LoginHandler.as_view()),
-    url(r'^register/', RegisterHandler.as_view()),
+    # url(r'^register/', RegisterHandler.as_view()),
     url(r'^logout/', LogoutHandler.as_view()),
-    url(r'^get_username/', GetUsername.as_view()),
+    url(r'^get_username/', permission_required('api.view_devevent')(GetUsername.as_view())),
 ]

@@ -7,15 +7,15 @@ import pandas as pd
 import datetime
 from collections import defaultdict
 from django.views.generic import View
-from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.tools import fetch_data,getfirstday,day_of_week
+from django.db.models import Q
+from django.http import HttpResponse, FileResponse, Http404
+from django.core.cache import cache
 from api.models import DevEvent, DevProject, DevEventType
 from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
 from api.models import WeekSummary
 from accounts.models import User,Department
-from django.db.models import Q
-from django.http import HttpResponse, FileResponse, Http404
-from django.core.cache import cache
+from utils.tools import my_response, queryset_to_dict, dict_to_json
+from utils.tools import fetch_data,getfirstday,day_of_week
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 from django.contrib.auth.decorators import login_required, permission_required
@@ -177,7 +177,7 @@ class AnalysisDevEvent(View):
             duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
             data_list=['project_name','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
-            field_data['duration_time']=duration_time
+            field_data['duration_time']=int(duration_time)
             field_data['event_date']=event_date
             field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
             field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
@@ -193,7 +193,7 @@ class AnalysisDevEvent(View):
             '''
             if not result[value['event_date']]:
                 #初始化时间合计
-                result[value['event_date']]={'total_time':value['duration_time']}
+                result[value['event_date']]={'total_time':0}
                 result[value['event_date']]['other_row']=[]
                 #计算周几
                 result[value['event_date']]['which_day']= day_of_week(value['event_date']) 

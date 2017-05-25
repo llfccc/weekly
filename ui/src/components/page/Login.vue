@@ -49,7 +49,7 @@
                         if (res.data.code=='0'){
                             var sid=res.data.content;
                         localStorage.setItem('sid',sid);
-                            self.$router.push('/submitWork');
+                            self.$router.push('/insertWork');
                         }else {
                         console.log('密码或者用户名错误');
                         return false;

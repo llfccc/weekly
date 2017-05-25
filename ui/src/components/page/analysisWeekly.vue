@@ -24,7 +24,7 @@
         </el-form>
       </el-col>
   
-      <table class="table table-responsive table-bordered">
+      <table border="1" class="table table-responsive table-bordered">
         <tr>
           <th>日期 </th>
           <th>星期 </th>
@@ -46,28 +46,28 @@
             {{item.which_day}}
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.project_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.event_type_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.duration_time}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.description}}</td>
               </tr>
@@ -79,28 +79,28 @@
   
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.up_reporter_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.down_reporter_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.fin_percentage}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table class=" table-responsive table-bordered" width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.dev_event_remark}}</td>
               </tr>

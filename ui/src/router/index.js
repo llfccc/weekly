@@ -25,12 +25,12 @@ export default new Router({
                     component: resolve => require(['../components/page/DownloadExcel.vue'], resolve)
                 },
                 {
-                    path: '/submitWork',
-                    component: resolve => require(['../components/page/submitWork.vue'], resolve)
+                    path: '/insertWork',
+                    component: resolve => require(['../components/page/insertWork.vue'], resolve)
                 },
                 {
-                    path: '/submitEvent',
-                    component: resolve => require(['../components/page/submitEvent.vue'], resolve)
+                    path: '/insertEvent',
+                    component: resolve => require(['../components/page/insertEvent.vue'], resolve)
                 },
                 {
                     path: '/vuetable',
