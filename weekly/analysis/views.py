@@ -151,10 +151,10 @@ class AnalysisDevEvent(View):
         # project_id = getParams.get('project_id', '')
         #error，此处需要修改强制条件为主管所属部门
         department_name = request.user.department.department_name
-        
+
         if filter_date:
             filter_date='-'.join(getfirstday(filter_date))
-  
+        print(filter_date)
         # 创建查询条件
         if employee_name:          
             plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',department_name=department_name,employee_name=employee_name)

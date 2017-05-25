@@ -205,7 +205,7 @@ export default {
     get_weekly: function (params) {
       var self = this;
 
-      this.$axios.get('/analysis/analysisi_devevent/', {
+      this.$axios.get('/analysis/analysis_devevent/', {
         params: {
           filter_date: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,

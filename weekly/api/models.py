@@ -59,8 +59,7 @@ class DevEvent(models.Model):
     class Meta:
         permissions = (
         ("export_excel", u"导出本人的事件为excel"),
-        ("analysisi_devevent", "主管：分析周报事件"),
-        # ("close_task", "Can remove a task by setting its status as closed"),
+        ("analysis_devevent", "技术主管：分析周报事件"),
         )
 
 
@@ -77,7 +76,7 @@ class WeekSummary(models.Model):
 
     class Meta:
         permissions = (
-        ("analysis_weekly_summary", u"主管:查看员工每周周报总结"),
+        ("analysis_weekly_summary", u"所有主管:查看员工每周周报总结"),
         # ("change_task_status", "Can change the status of tasks"),
         # ("close_task", "Can remove a task by setting its status as closed"),
         )
@@ -169,6 +168,6 @@ class SaleEvent(models.Model):
         
     class Meta:
         permissions = (
-            ("analysis_sale_event", u"主管:分析销售拜访事件"),
-            ("display_sale_event", u"主管:查询销售拜访事件"),        
+            ("analysis_sale_event", u"销售主管:分析销售拜访事件"),
+            ("display_sale_event", u"销售主管:查询销售拜访事件"),        
         )
