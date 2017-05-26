@@ -51,6 +51,9 @@
       <el-col :span="8">
         <div id="personal" style="width: 400px;height: 300px;"> </div>
       </el-col>
+      <el-col :span="24">
+        <div id="position" style="width: 900px;height: 450px;"> </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -119,6 +122,12 @@ export default {
         x_data: [],
         y_data: []
       },
+      echartsPosition: {
+        charts: '',
+        x_data: [],
+        y_data: [],
+        y_change_data:[],
+      },
     }
   },
   methods: {
@@ -175,11 +184,11 @@ export default {
       })
     },
     drawPersonPie(id) {
-      var self=this;
+      var self = this;
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
         title: {
-          text: '"'+self.filters.employee_name+'"'+'--耗时分布',
+          text: '"' + self.filters.employee_name + '"' + '--耗时分布',
           subtext: '',
           x: 'center'
         },
@@ -211,11 +220,11 @@ export default {
       })
     },
     drawProject(id) {
-      var self=this;
+      var self = this;
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
         title: {
-          text: '"'+self.filters.project_name+'"'+'项目--耗时分布'
+          text: '"' + self.filters.project_name + '"' + '项目--耗时分布'
         },
         color: ['#3398DB'],
         tooltip: {
@@ -297,6 +306,113 @@ export default {
         ]
       })
     },
+    drawPosition(id) {
+      this.charts = echarts.init(document.getElementById(id))
+      this.charts.setOption(
+        {
+          title: {
+            text: '项目各岗位耗时瀑布图',
+            // subtext: 'From ExcelHome',
+            // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: function (params) {
+              var tar = params[1];
+              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            splitLine: { show: false },
+            data: this.echartsPosition.x_data
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: '辅助',
+              type: 'bar',
+              stack: '总量',
+              itemStyle: {
+                normal: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                },
+                emphasis: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                }
+              },
+              data: this.echartsPosition.y_change_data
+            },
+            {
+              name: '生活费',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'inside'
+                }
+              },
+              data: this.echartsPosition.y_data
+            }
+          ]
+        }
+
+// {
+//         title: {
+//           text: '项目各岗位耗时瀑布图'
+//         },
+//         color: ['#3398DB'],
+//         tooltip: {
+//           trigger: 'axis',
+//           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+//             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+//           }
+//         },
+//         grid: {
+//           left: '3%',
+//           right: '4%',
+//           bottom: '3%',
+//           containLabel: true
+//         },
+//         xAxis: [
+//           {
+//             type: 'category',
+//             data: this.echartsPosition.x_data,
+//             axisTick: {
+//               alignWithLabel: true
+//             }
+//           }
+//         ],
+//         yAxis: [
+//           {
+//             type: 'value'
+//           }
+//         ],
+//         series: [
+//           {
+//             name: '平均每周工作时间（H）',
+//             type: 'bar',
+//             barWidth: '60%',
+//             data: this.echartsPosition.y_data
+//           }
+//         ]
+//       }
+)
+    },
     filterDateChange(val) {
       var self = this;
       self.filters.filterDate = val;
@@ -306,6 +422,7 @@ export default {
       this.analysis_employee();
       this.analysis_project();
       this.analysis_load();
+      this.analysis_position();
     },
     analysis_department: function (params) {
       var self = this;
@@ -337,10 +454,10 @@ export default {
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
-          self.echartsPerson.opinionData = responseContent.type_count
-          self.echartsPerson.opinion = responseContent.type_list
-
-          self.drawPersonPie('personal');
+          self.echartsPosition.x_data = responseContent.x_data
+          self.echartsPosition.y_data = responseContent.y_data
+          self.echartsPosition.y_change_data = responseContent.y_change_data
+          self.drawPosition('position');
         }
         );
     },
@@ -377,6 +494,7 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.echartsProject.x_data = responseContent.x_data
           self.echartsProject.y_data = responseContent.y_data
+
           self.drawProject('project')
         }
         );
@@ -407,10 +525,9 @@ export default {
       this.get_users();
       this.get_projects();
 
-      this.analysis_project()
-      this.analysis_department()
+      this.analysis_department();
       this.analysis_load();
-
+      this.analysis_position();
 
     })
   }
