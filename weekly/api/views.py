@@ -68,7 +68,7 @@ class GetProjects(LoginRequiredMixin,View):
     '''
 
     def get(self, request):
-        data = DevProject.objects.filter(project_is_closed=False).all()
+        data = DevProject.objects.filter(closed_status=0).all()
         result_field = ["id", "creater_id", "status", "dev_project_remark", "project_name", "create_time"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
@@ -82,7 +82,7 @@ class GetEventTypes(LoginRequiredMixin,View):
     '''
 
     def get(self, request):
-        data = DevEventType.objects.filter(devEventType_is_closed=False).all()
+        data = DevEventType.objects.filter(closed_status=0).all()
         result_field = ["id", "creator_id", "event_type_name", "dev_event_type_remark", "create_time"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
@@ -200,7 +200,7 @@ class GetCustomers(LoginRequiredMixin,View):
 
 class GetSaleActiveTypes(LoginRequiredMixin,View):
     def get(self, request):
-        data = SaleActiveType.objects.all()
+        data = SaleActiveType.objects.filter(closed_status=0).all()
         result_field = ["id", "active_type_name", "sale_active_type_remark", "create_time"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
@@ -210,7 +210,7 @@ class GetSaleActiveTypes(LoginRequiredMixin,View):
 
 class GetSalePhases(LoginRequiredMixin,View):
     def get(self, request):
-        data = SalePhase.objects.all()
+        data = SalePhase.objects.filter(closed_status=0).all()
         result_field = ["id", "phase_name", "description","phase_count","sale_phase_remark" , "create_time"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
@@ -347,7 +347,7 @@ class GetEventExcel(LoginRequiredMixin,View):
         response = FileResponse(output.read())
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
-            'output.xlsx')
+            u'导出.xlsx')
         return response
 
 class InsertSaleEvent(LoginRequiredMixin,View):

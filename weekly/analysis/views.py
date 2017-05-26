@@ -234,7 +234,7 @@ class DisplaySaleEvent(View):
 
 class AnalysisSalePerformace(View):
     '''
-    查询销售职员工作类型占比
+    主管查询销售职员目标与实际情况
     '''
 
     def get(self, request):
@@ -251,6 +251,8 @@ class AnalysisSalePerformace(View):
         pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)
         
         data = fetch_data(pivot_sql)
+        print(data)
+        print len(data)
         content = dict_to_json(data)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

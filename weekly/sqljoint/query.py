@@ -70,10 +70,8 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
 
     start_date, end_date=default_date(filter_date)
     where_condition = u"sale.visit_date>='{0}' and sale.visit_date<='{1}' ".format(start_date, end_date)
-    
 
-        #筛选部门中所有人员
-    print(department_name)
+    #筛选部门中所有人员
     if department_name:
         department_id=departmentname_to_departmentid(department_name)
         user_queryset=User.objects.filter(department_id=department_id).all()
@@ -88,27 +86,15 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
     #筛选记录所属人
     if user_id:     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
-    else:               
-        user_id=chinesename_to_userid(employee_name)     
-        where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
-    if customer_id:
 
+    if customer_id:
         where_condition += "and customer.id = '{0}' ".format(customer_id)
+
 
     if employee_name:
         owner_id=chinesename_to_userid(employee_name)
         where_condition += "and sale_event_owner_id = '{0}' ".format(owner_id)
-    #根据部门名称筛选人
-    department_id=departmentname_to_departmentid(department_name)
-    user_queryset=User.objects.filter(department_id=department_id).all()
-    user_ids=tuple([i.id for i in user_queryset])           
-    if user_ids:
-        #如果user_ids只有1个数，则python会因为元祖在后面加一个“，”，导致sql无法执行
-        if len(user_ids)==1:
-            where_condition += "and sale_event_owner_id =  {0} ".format(user_ids[0])
-        else:
-            where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
-            
+
     plain_sql = u"SELECT {0} FROM api_saleevent as sale\
         left join api_saleactivetype as type on sale.active_type_id = type.id \
         left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
@@ -139,9 +125,10 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
     #统计销售员一周拜访次数
     group_sql = u'select child.user_id,child.chinese_name,child.phase_name,count(child.phase_name) as phase_count \
         from ({0}) as child group by child.phase_name,child.chinese_name,child.user_id '.format(filter_sql)
+
+    print group_sql
     union_sql=u'''select  a_user.chinese_name,phase_name,phase_count,target_phase_name,target \
-                    from ({1}) as target  \
-                    left join ({0}) as group_count on \
+                    from ({1}) as target left join ({0}) as group_count on \
                     target.sale_target_owner_id=group_count.user_id and target.target_phase_name=group_count.phase_name
                     left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(group_sql,target_sql)
     pivot_sql=u'''select chinese_name,   

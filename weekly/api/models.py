@@ -8,25 +8,23 @@ from accounts.models import User
 
 
 class DevProject(models.Model):
+    available_choice=((0,"启用"),(1,"禁用"))
     project_name = models.CharField(max_length=100, verbose_name='项目名称')
-
-    status = models.CharField(max_length=64, verbose_name='项目状态：00，关闭；01，启动')
+    closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
+    create_time = models.DateTimeField(auto_now_add=True)
+    project_creator= models.ForeignKey(User,verbose_name='创建人')
     dev_project_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='备注')
-    project_is_closed = models.BooleanField(default=False,verbose_name="true代表关闭")
-    create_time = models.DateTimeField(auto_now_add=True)
-
-    creator_id = models.IntegerField(null=True, verbose_name='创建人')
-
     def __unicode__(self):
         return u"{}".format(self.project_name)
 
 
 class DevEventType(models.Model):
+    available_choice=((0,"启用"),(1,"禁用"))
     event_type_name = models.CharField(max_length=100, verbose_name='事件类型名称')
     dev_event_type_remark = models.CharField(max_length=64, null=True,
                                              blank=True, verbose_name='备注')
-    devEventType_is_closed = models.BooleanField(default=False,verbose_name="true代表关闭")
+    closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
     create_time = models.DateTimeField(auto_now_add=True)
 
     # creator =  models.ForeignKey(User, verbose_name='创建人')
@@ -83,10 +81,13 @@ class WeekSummary(models.Model):
         
 
 class SaleActiveType(models.Model):
+    available_choice=((0,"启用"),(1,"禁用"))
+
     active_type_name = models.CharField(max_length=100, verbose_name='活动类型名称')
     sale_active_type_remark = models.CharField(max_length=64, null=True,
                                                blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
+    closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
 
     def __unicode__(self):
         return u"{}".format(self.active_type_name)
@@ -107,6 +108,9 @@ class SaleCustomer(models.Model):
                                             blank=True, verbose_name='客户备注')
     sale_customer_owner_id = models.IntegerField( verbose_name='客户添加人')
     create_time = models.DateTimeField(auto_now_add=True)
+    available_choice=((0,"启用"),(1,"禁用"))
+    closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
+
 
     def __unicode__(self):
         return u"{}".format(self.full_name)
@@ -121,6 +125,8 @@ class SalePhase(models.Model):
     sale_phase_remark = models.CharField(max_length=64, null=True,
                                          blank=True, verbose_name='备注')
     create_time = models.DateTimeField(auto_now_add=True)
+    available_choice=((0,"启用"),(1,"禁用"))
+    closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
 
     # creator =models.ForeignKey(User, verbose_name='创建人')
 
