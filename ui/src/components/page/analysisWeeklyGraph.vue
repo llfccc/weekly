@@ -302,12 +302,12 @@ export default {
       self.filters.filterDate = val;
     },
     filter: function (params) {
-      this.get_department_data();
-      this.get_personal_data();
-      this.get_project_data();
-      this.get_load();
+      this.analysis_department();
+      this.analysis_employee();
+      this.analysis_project();
+      this.analysis_load();
     },
-    get_department_data: function (params) {
+    analysis_department: function (params) {
       var self = this;
       this.$axios.get('/analysis/analysis_department/', {
         params: {
@@ -325,9 +325,28 @@ export default {
         }
         );
     },
-    get_personal_data: function (params) {
+    analysis_position: function (params) {
       var self = this;
-      this.$axios.get('/analysis/analysis_worker/', {
+      this.$axios.get('/analysis/analysis_position/', {
+        params: {
+          filter_date: self.filters.filterDate,
+          project_name: self.filters.project_name,
+          // project_name: self.filters.project_name,
+          // department_name: self.filters.department_name,
+        }
+      })
+        .then(function (response) {
+          var responseContent = JSON.parse(response.data.content);
+          self.echartsPerson.opinionData = responseContent.type_count
+          self.echartsPerson.opinion = responseContent.type_list
+
+          self.drawPersonPie('personal');
+        }
+        );
+    },
+    analysis_employee: function (params) {
+      var self = this;
+      this.$axios.get('/analysis/analysis_employee/', {
         params: {
           filter_date: self.filters.filterDate,
           employee_name: self.filters.employee_name,
@@ -344,7 +363,7 @@ export default {
         }
         );
     },
-    get_project_data: function (params) {
+    analysis_project: function (params) {
       var self = this;
       this.$axios.get('/analysis/analysis_project/', {
         params: {
@@ -362,7 +381,7 @@ export default {
         }
         );
     },
-    get_load: function (params) {
+    analysis_load: function (params) {
       var self = this;
       this.$axios.get('/analysis/analysis_load/', {
         params: {
@@ -385,11 +404,14 @@ export default {
   //调用 
   mounted() {
     this.$nextTick(function () {
-      this.get_department_data()
-      this.get_project_data()
-      this.get_load();
       this.get_users();
       this.get_projects();
+
+      this.analysis_project()
+      this.analysis_department()
+      this.analysis_load();
+
+
     })
   }
 }

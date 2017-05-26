@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import xadmin
 from django.contrib import admin
 from accounts.models import  Department
-from api.models import SaleTarget,SalePhase,DevProject
+from api.models import SaleTarget,SalePhase,DevProject,SaleActiveType
 from accounts.models import Position
 
 # Register your models here.
@@ -16,5 +16,6 @@ class SaleTargetAdmin(object):
 xadmin.site.register(Department)
 xadmin.site.register(SaleTarget,SaleTargetAdmin)
 xadmin.site.register(SalePhase)
+xadmin.site.register(SaleActiveType)
 xadmin.site.register(Position)
 xadmin.site.register(DevProject)

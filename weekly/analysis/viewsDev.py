@@ -22,20 +22,20 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AnanlysisWorker(View):
+class AnanlysisEmployee(View):
     '''
-    查询职员工作类型占比
+    查询特定职员工作类型占比
     '''
 
     def get(self, request):
         getParams = request.GET        
         filter_date = getParams.get('filter_date', '')
         employee_name= getParams.get('employee_name', '')
-        # department_name= getParams.get('department_name', '')
+
         if not employee_name:
             employee_name=u'空姓名'
         #error
-        department_name=u'技术服务中心'
+        department_name = request.user.department.department_name
         # 创建查询条件        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,employee_name=employee_name,project_id='',project_name='',department_name='',user_id='')
         #统计分析
@@ -199,64 +199,6 @@ class AnalysisDevEvent(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class DisplaySaleEvent(View):
-    '''
-    主管查询销售周报汇总
-    '''
-
-    def get(self, request):
-        getParams = request.GET        
-        filter_date = getParams.get('filter_date', '')
-        employee_name= getParams.get('employee_name', '')
-        # project_name = getParams.get('project_name', '')
-        department_name = request.user.department.department_name
-        if filter_date:
-            filter_date='-'.join(getfirstday(filter_date))
-        # print(filter_date)
-        # 创建查询条件        
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,employee_name=employee_name,department_name='')
-        #统计分析
-        # group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
-
-        data = fetch_data(plain_sql)
-        result_list=[]
-
-        for row in data:
-            result_dict={}
-            for key,value in row.items():
-                result_dict[key]=value
-            result_dict['which_day']=day_of_week(str(row['visit_date']))
-            result_list.append(result_dict)
-
-        content = dict_to_json(result_list)
-        response = my_response(code=0, msg=u"查询成功", content=content)
-        return response
-
-class AnalysisSalePerformace(View):
-    '''
-    主管查询销售职员目标与实际情况
-    '''
-
-    def get(self, request):
-        getParams = request.GET        
-        filter_date = getParams.get('filter_date', '')
-        department_name = request.user.department.department_name
-  
-        natural_week=''
-        if filter_date:
-            natural_week = filter_date[:7]
-            filter_date='-'.join(getfirstday(filter_date))
-        filter_sql=filter_sale_event_sql(filter_date=filter_date,department_name=department_name)
-        # 联合目标和实际记录
-        pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)
-        
-        data = fetch_data(pivot_sql)
-        print(data)
-        print len(data)
-        content = dict_to_json(data)
-        response = my_response(code=0, msg=u"查询成功", content=content)
-        return response
-
 
 class AnalysisWeeklySummary(LoginRequiredMixin,View):
     '''
@@ -280,5 +222,34 @@ class AnalysisWeeklySummary(LoginRequiredMixin,View):
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+
+class AnalysisPosition(View):
+    '''
+    查询某项目各岗位耗时
+    '''
+
+    def get(self, request):
+        getParams = request.GET        
+        filter_date = getParams.get('filter_date', '')
+        project_name = getParams.get('project_name', '')
+
+        if not project_name:
+            employee_name=u'空项目'
+        #error
+        department_name = request.user.department.department_name
+        # 创建查询条件        
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,project_id='',employee_name='',department_name='',user_id='')
+        #统计分析
+        group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+
+        row = fetch_data(group_sql)
+        #转换数据为echarts能接受的格式
+        type_list=[i['event_type_name'] for i in row]
+        type_count=[{'name':i['event_type_name'],'value':i['date_diff']} for i in row]
+
+        content = dict_to_json({'type_list':type_list,'type_count':type_count})
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
