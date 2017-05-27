@@ -45,9 +45,9 @@ class DevEvent(models.Model):
         null=True, blank=True, verbose_name="备注")
     dev_event_create_time = models.DateTimeField(auto_now_add=True)
 
-    dev_event_owner_id = models.IntegerField(null=True, verbose_name='事件所属人')
-    dev_event_project_id = models.IntegerField(null=True, verbose_name='所属项目')
-    dev_event_type_id = models.IntegerField(null=True, verbose_name='事件类型')
+    dev_event_owner = models.ForeignKey(User, verbose_name='事件所属人')
+    dev_event_project_id = models.IntegerField(blank=True,null=True, verbose_name='所属项目')
+    dev_event_type = models.ForeignKey(DevEventType, verbose_name='事件类型')
 
     def __unicode__(self):
         return u"{}".format(self.description)

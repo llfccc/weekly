@@ -52,11 +52,12 @@
     
                 </el-form-item>
                 <el-form-item label="进度：">
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="insertForm.fin_percentage">进度
+                    <el-col :span="10">
+                          <el-input-number  id="fin_percentage"  v-model="insertForm.fin_percentage" :step="1" :min="1" :max="100">进度</el-input-number>
+                        <!--<el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="">-->
                         </el-input>
                     </el-col>
-                    <el-col :span="16">
+                    <el-col :span="14">
                         <el-select v-model="insertForm.up_reporter_id" clearable filterable placeholder="上游汇报人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
@@ -65,7 +66,7 @@
                          </el-form-item>
                     <el-form-item label="下游：">
                     <el-col :span="24">
-                        <el-select v-model="insertForm.down_reporter_ids" multiple clearable filterable placeholder="下游交接人">
+                        <el-select v-model="insertForm.down_reporter_ids"  multiple clearable filterable placeholder="下游交接人">
                             <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.id">
                             </el-option>
                         </el-select>

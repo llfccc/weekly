@@ -41,10 +41,10 @@ class GetDevEvent(LoginRequiredMixin,View):
         getParams = request.GET
         project_id = getParams.get('project_id', '')
         filter_date = getParams.get('filter_date', '')
-
+        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
-        
+        print("8888x*8888")
         #限定返回给前端的字段
         result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
         result_list=[]
@@ -56,7 +56,7 @@ class GetDevEvent(LoginRequiredMixin,View):
             for key in result_field:
                 row_dict[key]=row.get(key,'')
             result_list.append(row_dict)
-   
+        print("8888x*8888")
         content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -97,7 +97,7 @@ class InsertWork(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)        
         data = request.POST
-
+        print(data)
         insert_field = ["description", "event_date", "start_time", "end_time", "fin_percentage", "up_reporter_id",
                         "down_reporter_ids", "dev_event_remark", "dev_event_project_id", "dev_event_type_id"]
 
@@ -105,7 +105,9 @@ class InsertWork(LoginRequiredMixin,View):
         content = {"id": 0}    
         result = {}            
         for t in insert_field:
-            result[t] = data.get(t,'')
+            value=data.get(t,'')
+            if value:
+                result[t] = value
         
         if result['fin_percentage'].isdigit():
             if not (int(result['fin_percentage'])>0 and int(result['fin_percentage'])<=100):
@@ -116,15 +118,18 @@ class InsertWork(LoginRequiredMixin,View):
             result['dev_event_owner_id'] = user_id
         else:
             return my_response(code=1, msg=u"未登录", content=content)
-
+        print(result)
         if result:
             inset_process = DevEvent(**result)
-            try:
-                inset_process.save()
-                content = {"id": inset_process.id}
-                response = my_response(code=0, msg=u"success", content=content)
-            except:
-                response = my_response(code=1, msg=u"插入数据失败", content=content)
+            inset_process.save()
+            content = {"id": inset_process.id}
+            response = my_response(code=0, msg=u"success", content=content) 
+            # try:
+            #     inset_process.save()
+            #     content = {"id": inset_process.id}
+            #     response = my_response(code=0, msg=u"success", content=content)
+            # except:
+            #     response = my_response(code=1, msg=u"插入数据失败", content=content)
         return response
 
 
