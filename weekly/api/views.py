@@ -27,8 +27,8 @@ from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 
 
 # Create your views here.
-def email_check(request):
-    return request.user.email.endswith('@live.cn')
+# def email_check(request):
+#     return request.user.email.endswith('@live.cn')
 
 class GetDevEvent(LoginRequiredMixin,View):
     '''
@@ -44,7 +44,7 @@ class GetDevEvent(LoginRequiredMixin,View):
         
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
-        print("8888x*8888")
+
         #限定返回给前端的字段
         result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
         result_list=[]
@@ -56,7 +56,7 @@ class GetDevEvent(LoginRequiredMixin,View):
             for key in result_field:
                 row_dict[key]=row.get(key,'')
             result_list.append(row_dict)
-        print("8888x*8888")
+
         content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
@@ -90,14 +90,14 @@ class GetEventTypes(LoginRequiredMixin,View):
         return response
 
 
-class InsertWork(LoginRequiredMixin,View):
+class InsertDevWork(LoginRequiredMixin,View):
     '''
     插入工作记录
     '''
     def post(self, request):
         user_id=get_user_id(request)        
         data = request.POST
-        print(data)
+
         insert_field = ["description", "event_date", "start_time", "end_time", "fin_percentage", "up_reporter_id",
                         "down_reporter_ids", "dev_event_remark", "dev_event_project_id", "dev_event_type_id"]
 
@@ -118,18 +118,14 @@ class InsertWork(LoginRequiredMixin,View):
             result['dev_event_owner_id'] = user_id
         else:
             return my_response(code=1, msg=u"未登录", content=content)
-        print(result)
-        if result:
-            inset_process = DevEvent(**result)
-            inset_process.save()
-            content = {"id": inset_process.id}
-            response = my_response(code=0, msg=u"success", content=content) 
-            # try:
-            #     inset_process.save()
-            #     content = {"id": inset_process.id}
-            #     response = my_response(code=0, msg=u"success", content=content)
-            # except:
-            #     response = my_response(code=1, msg=u"插入数据失败", content=content)
+
+        try:
+            insert_process = DevEvent(**result)
+            insert_process.save()
+            content = {"id": insert_process.id}
+            response = my_response(code=0, msg=u"success", content=content)
+        except:
+            response = my_response(code=1, msg=u"插入数据失败", content=content)
         return response
 
 
@@ -182,10 +178,10 @@ class InsertCustomer(LoginRequiredMixin,View):
         result['sale_customer_owner_id'] = user_id
         
         if result:
-            inset_process = SaleCustomer(**result)
+            insert_process = SaleCustomer(**result)
             try:
-                inset_process.save()
-                content = {"id": inset_process.id}
+                insert_process.save()
+                content = {"id": insert_process.id}
                 response = my_response(code=0, msg=u'恭喜你，新增成功', content=content)
             except:
                 response = my_response(code=1, msg=u'插入失败', content=content)
@@ -266,11 +262,12 @@ class GetWeeklySummary(LoginRequiredMixin,View):
         if __match:
             natural_week=__match.group()
         else:
-            natural_week='2017-21'
+            natural_week= -1
 
         user_id=get_user_id(request)
 
-        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=natural_week).all()
+        data = WeekSummary.objects.filter(summary_owner=user_id).filter(natural_week=natural_week).all()
+
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
@@ -298,10 +295,10 @@ class InsertSummary(LoginRequiredMixin,View):
         result['summary_owner_id'] = user_id
         content = {"id": 0}
         if result:
-            inset_process = WeekSummary(**result)
+            insert_process = WeekSummary(**result)
             try:
-                inset_process.save()
-                content = {"id": inset_process.id}
+                insert_process.save()
+                content = {"id": insert_process.id}
                 response = my_response(code=0, msg=u"success", content=content)
             except:
                 response = my_response(code=1, msg=u"error", content=content)
@@ -371,11 +368,11 @@ class InsertSaleEvent(LoginRequiredMixin,View):
 
         content = {"id": 0}
         if result:
-            inset_process = SaleEvent(**result)
-            inset_process.save()
+            insert_process = SaleEvent(**result)
+            insert_process.save()
             try:
-                inset_process.save()
-                content = {"id": inset_process.id}
+                insert_process.save()
+                content = {"id": insert_process.id}
                 response = my_response(code=0, msg=u"success", content=content)
             except:
                 response = my_response(code=1, msg=u"error", content=content)
@@ -424,6 +421,9 @@ class DelSaleEvent(LoginRequiredMixin,View):
         return response
 
 class DelSummary(LoginRequiredMixin,View):
+    '''
+    删除个人总结
+    '''
     def get(self, request):
         user_id=get_user_id(request) 
         data = request.GET

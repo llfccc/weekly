@@ -67,7 +67,7 @@ class WeekSummary(models.Model):
     self_evaluation = models.CharField(max_length=500, verbose_name='自我评价')
     plan = models.CharField(max_length=500, verbose_name='计划')
     create_time = models.DateTimeField(auto_now_add=True)
-    summary_owner_id = models.IntegerField(verbose_name='事件所属人')
+    summary_owner = models.ForeignKey(User, verbose_name='事件所属人')
 
     def __unicode__(self):
         return u"{}".format(self.summary)
@@ -75,7 +75,7 @@ class WeekSummary(models.Model):
     class Meta:
         permissions = (
         ("analysis_weekly_summary", u"所有主管:查看员工每周周报总结"),
-        ("get_weekly_summary", "普通员工：查看自己的总结"),
+        
         # ("close_task", "Can remove a task by setting its status as closed"),
         )
         
@@ -106,7 +106,8 @@ class SaleCustomer(models.Model):
         max_length=100, verbose_name='主要联系人电话号码')
     sale_customer_remark = models.CharField(max_length=64, null=True,
                                             blank=True, verbose_name='客户备注')
-    sale_customer_owner_id = models.IntegerField( verbose_name='客户添加人')
+    sale_customer_owner = models.ForeignKey(User, verbose_name='客户添加人')
+
     create_time = models.DateTimeField(auto_now_add=True)
     available_choice=((0,"启用"),(1,"禁用"))
     closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
@@ -164,10 +165,10 @@ class SaleEvent(models.Model):
         null=True, blank=True, verbose_name="备注")
     create_time = models.DateTimeField(auto_now_add=True)
 
-    sale_event_owner_id = models.IntegerField(null=True, verbose_name='拜访人')
-    active_type_id = models.IntegerField(null=True, verbose_name='拜访类型')
-    sale_customer_id = models.IntegerField(null=True, verbose_name='客户ID')
-    sale_phase_id = models.IntegerField(null=True, verbose_name='拜访阶段')
+    sale_event_owner = models.ForeignKey(User, verbose_name='拜访人')
+    active_type = models.ForeignKey(SaleActiveType, verbose_name='拜访类型')
+    sale_customer = models.ForeignKey(SaleCustomer, verbose_name='客户ID')
+    sale_phase = models.ForeignKey(SalePhase, verbose_name='拜访阶段')
 
     def __unicode__(self):
         return u"{}".format(self.visit_date)

@@ -525,9 +525,9 @@ export default {
       this.get_users();
       this.get_projects();
 
-      this.analysis_department();
-      this.analysis_load();
-      this.analysis_position();
+      // this.analysis_department();
+      // this.analysis_load();
+      // this.analysis_position();
 
     })
   }

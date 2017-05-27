@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AnanlysisEmployee(View):
+class AnanlysisEmployee(LoginRequiredMixin,View):
     '''
     查询特定职员工作类型占比
     '''
@@ -51,7 +51,7 @@ class AnanlysisEmployee(View):
         return response
 
 
-class AnanlysisDepartment(View):
+class AnanlysisDepartment(LoginRequiredMixin,View):
     '''
     查询职员工作类型占比
     '''
@@ -75,7 +75,7 @@ class AnanlysisDepartment(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class AnanlysisProject(View):
+class AnanlysisProject(LoginRequiredMixin,View):
     '''
     查询某项目工作耗时占比
     '''
@@ -104,7 +104,7 @@ class AnanlysisProject(View):
         return response
 
 
-class AnanlysisLoad(View):
+class AnanlysisLoad(LoginRequiredMixin,View):
     '''
     查询整个部门职员工作类型占比
     '''
@@ -131,7 +131,7 @@ class AnanlysisLoad(View):
         return response
 
 
-class AnalysisDevEvent(View):
+class AnalysisDevEvent(LoginRequiredMixin,View):
     '''
     查询非销售职员工每日工作事件
     '''
@@ -226,7 +226,7 @@ class AnalysisWeeklySummary(LoginRequiredMixin,View):
         return response
 
 
-class AnalysisPosition(View):
+class AnalysisPosition(LoginRequiredMixin,View):
     '''
     查询某项目各岗位耗时
     '''
