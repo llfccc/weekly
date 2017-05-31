@@ -12,7 +12,7 @@ class DevProject(models.Model):
     project_name = models.CharField(max_length=100, verbose_name='项目名称')
     closed_status=models.IntegerField(choices=available_choice,default=0,verbose_name="1代表关闭")   #当前项目是否启用
     create_time = models.DateTimeField(auto_now_add=True)
-    project_creator= models.ForeignKey(User,verbose_name='创建人')
+    project_creator= models.ForeignKey(User,blank=True, null=True, on_delete=models.SET_NULL,verbose_name='创建人')
     dev_project_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='备注')
     def __unicode__(self):

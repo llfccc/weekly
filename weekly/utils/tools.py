@@ -86,6 +86,15 @@ def getMondaySunday():
     return (Monday,Sunday)
 
 
+def get_day_of_week():
+    '''
+    获取当前日期的周数
+    '''
+    today = datetime.date.today()
+    day_of_tuple=today.isocalendar()  #返回类似(2017, 22, 3)
+    result=str(day_of_tuple[0])+"-"+str(day_of_tuple[1])
+    return (result)
+
 
 def fetch_data(sql):
     '''
@@ -119,7 +128,7 @@ def get_user_id(request):
     return user_id
 
 
-def getfirstday(weekflag):     
+def get_first_day(weekflag):     
     '''
     根据周数获得每周的起始和结束日期,传入的值例如“2017-01-5周”
     '''

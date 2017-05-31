@@ -15,7 +15,7 @@ from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleAct
 from api.models import WeekSummary
 from accounts.models import User,Department
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.tools import fetch_data,getfirstday,day_of_week
+from utils.tools import fetch_data,get_first_day,day_of_week
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql,pivot_target_actual_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 from django.contrib.auth.decorators import login_required, permission_required
@@ -144,7 +144,7 @@ class AnalysisDevEvent(LoginRequiredMixin,View):
         department_name = request.user.department.department_name
 
         if filter_date:
-            filter_date='-'.join(getfirstday(filter_date))
+            filter_date='-'.join(get_first_day(filter_date))
         # 创建查询条件
         if employee_name:          
             plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',department_name=department_name,employee_name=employee_name)

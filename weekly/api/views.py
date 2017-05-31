@@ -19,7 +19,7 @@ from accounts.models import User
 # from django.contrib.auth.decorators import login_required  
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from utils.export_excel import ReportExcel
-from utils.tools import fetch_data,get_user_id,getfirstday
+from utils.tools import fetch_data,get_user_id,get_first_day,get_day_of_week
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 
@@ -262,8 +262,8 @@ class GetWeeklySummary(LoginRequiredMixin,View):
         if __match:
             natural_week=__match.group()
         else:
-            natural_week= -1
-
+            natural_week= get_day_of_week()
+        print(natural_week)
         user_id=get_user_id(request)
 
         data = WeekSummary.objects.filter(summary_owner=user_id).filter(natural_week=natural_week).all()
