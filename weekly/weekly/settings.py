@@ -98,7 +98,7 @@ DATABASES = {
 
         'PASSWORD': 'test',
 
-        'HOST': '127.0.0.1',  # 数据库IP地址
+        'HOST': 'localhost',  # 数据库IP地址
 
         'PORT': '5432',
 
@@ -153,3 +153,23 @@ CACHES = {
 }
 # 自定义user，Substituting a custom User model
 AUTH_USER_MODEL = 'accounts.User'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+
+ 'django.contrib.auth.context_processors.auth',
+
+ 'django.core.context_processors.auth'
+
+ 'django.core.context_processors.debug',
+
+ 'django.core.context_processors.media',
+
+ 'django.core.context_processors.static',
+
+ 'django.core.context_processors.tz',
+
+ 'django.contrib.messages.context_processors.messages',
+
+ 'learn_models.context_processors.test',
+
+)

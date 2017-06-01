@@ -27,10 +27,19 @@ xversion.register_models()
 
 xadmin.autodiscover()
 
+from django.conf.urls import include,url
+from django.contrib import admin
+from weekly.views import home
+
+
+
 urlpatterns = [
+    url(r'^$', home),
     url(r'xadmin/', include(xadmin.site.urls)),
     url(r'works/', include('api.urls')),
     url(r'analysis/', include('analysis.urls')),
     url(r'accounts/', include('accounts.urls')),
     # url(r'^$', schema_view)
 ]
+
+
