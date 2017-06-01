@@ -243,7 +243,7 @@ class AnalysisPosition(LoginRequiredMixin,View):
         # 创建查询条件        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,project_id='',employee_name='',department_name=department_name,user_id='')
         #统计分析
-        group_sql = u'select position_id, ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600/5)::numeric,3)   as date_diff  from ({0}) as child group by position_id order by date_diff desc'.format(plain_sql)
+        group_sql = u'select position_id, ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,3)   as date_diff  from ({0}) as child group by position_id order by date_diff desc'.format(plain_sql)
         #加上职位的中文名称
         position_sql=u'select * from ({0}) as group_sql left join accounts_position as pos on pos.id=group_sql.position_id'.format(group_sql)
         row = fetch_data(position_sql)   

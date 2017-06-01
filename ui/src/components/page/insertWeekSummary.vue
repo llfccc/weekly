@@ -10,16 +10,16 @@
             <el-button type="primary" v-on:click="filter">筛选</el-button>
         </el-col>
         <el-button type="primary" @click="handleAdd">新增</el-button>
-        <el-table :data="summary_list" border style="width: 100%">
-            <el-table-column prop="id" style="display:none" label="id" width="150" sortable>
+        <el-table :data="summary_list"   >
+            <!--<el-table-column prop="id" style="display:none" label="id" width="150" sortable>
+            </el-table-column>-->
+            <el-table-column prop="natural_week" label="自然周数" width="200" fixed sortable>
             </el-table-column>
-            <el-table-column prop="natural_week" label="自然周数" width="150" fixed sortable>
+            <el-table-column prop="summary" label="总结"  sortable>
             </el-table-column>
-            <el-table-column prop="summary" label="总结" width="150" sortable>
+            <el-table-column prop="self_evaluation" label="自我评价" sortable>
             </el-table-column>
-            <el-table-column prop="self_evaluation" label="自我评价" width="150" sortable>
-            </el-table-column>
-            <el-table-column prop="plan" label="计划" width="150" sortable>
+            <el-table-column prop="plan" label="计划" sortable>
             </el-table-column>
             <el-table-column label="操作" width="180" fixed="right">
                 <template scope="scope">
@@ -33,7 +33,7 @@
             <el-form ref="insertForm" :model="insertForm" label-width="90px">
                 <el-form-item label="周数:">
                     <div class="block">
-                        <span class="demonstration">周</span>
+                        <span class="demonstration"></span>
                         <el-date-picker v-model="insertForm.filter_date" type="week" format="yyyy-WW 周" @change="insertDateChange" placeholder="选择周">
                         </el-date-picker>
                     </div>

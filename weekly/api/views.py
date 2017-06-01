@@ -263,7 +263,7 @@ class GetWeeklySummary(LoginRequiredMixin,View):
             natural_week=__match.group()
         else:
             natural_week= get_day_of_week()
-        print(natural_week)
+
         user_id=get_user_id(request)
 
         data = WeekSummary.objects.filter(summary_owner=user_id).filter(natural_week=natural_week).all()

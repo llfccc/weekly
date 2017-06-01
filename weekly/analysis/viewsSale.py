@@ -35,9 +35,11 @@ class DisplaySaleEvent(View):
         department_name = request.user.department.department_name
         if filter_date:
             filter_date='-'.join(get_first_day(filter_date))
+        user_id=chinesename_to_userid(employee_name)
+
         # print(filter_date)
         # 创建查询条件        
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,employee_name=employee_name,department_name='')
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,department_name='')
         #统计分析
         # group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
@@ -74,8 +76,7 @@ class AnalysisSalePerformace(View):
         pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)
         
         data = fetch_data(pivot_sql)
-        print(data)
-        print len(data)
+
         content = dict_to_json(data)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

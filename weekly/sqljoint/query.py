@@ -84,7 +84,7 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
                 where_condition += "and sale_event_owner_id in  {0} ".format(user_ids)
 
     #筛选记录所属人
-    if user_id:     
+    if  user_id:     
         where_condition += "and sale_event_owner_id = '{0}' ".format(user_id)
 
     if customer_id:
@@ -152,7 +152,7 @@ def chinesename_to_userid(employee_name=''):
     if user_queryset:
         user_id=user_queryset.first().id
     else:
-        user_id=0     
+        user_id=-1     
     return user_id
 
 def departmentname_to_departmentid(department_name=''):      
@@ -160,7 +160,7 @@ def departmentname_to_departmentid(department_name=''):
     if department_queryset:
         department_id=department_queryset.first().id
     else:
-        department_id=0
+        department_id=-1
     return department_id
 
 def userid_to_chinesename(source_ids):
