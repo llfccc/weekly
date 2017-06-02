@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',    #跨域
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     #'utils.permission_middleware.PrintCheck',
@@ -139,8 +140,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
-
+STATIC_URL = '/adminStatic/'
+STATIC_ROOT = '/home/working/weekly/static/'
 
 CACHES = {
     "default": {
@@ -154,6 +155,8 @@ CACHES = {
 # 自定义user，Substituting a custom User model
 AUTH_USER_MODEL = 'accounts.User'
 
+#跨域问题
+CORS_ORIGIN_ALLOW_ALL = True
 # TEMPLATE_CONTEXT_PROCESSORS = (
 
 #  'django.contrib.auth.context_processors.auth',

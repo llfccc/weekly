@@ -28,41 +28,17 @@ module.exports = {
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
         proxyTable: {
-            '/api': {
-                target: 'http://jsonplaceholder.typicode.com',
-                changeOrigin: true,
-                pathRewrite: {
-                    '/api': ''
+            '/api':{
+                target:'http://jsonplaceholder.typicode.com',
+                changeOrigin:true,
+                pathRewrite:{
+                    '/api':''
                 }
             },
-            '/works': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-                pathRewrite: {
-                    '/works': 'works'
-                }
-            },
-            '/accounts': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-                pathRewrite: {
-                    '/accounts': 'accounts'
-                }
-            },
-            '/analysis': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-                pathRewrite: {
-                    '/analysis': 'analysis'
-                }
-            },
-            '/xadmin': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-                pathRewrite: {
-                    '/xadmin': 'xadmin'
-                }
-            },
+            '/ms':{
+                target: 'https://www.easy-mock.com/mock/592501a391470c0ac1fab128',
+                changeOrigin: true
+            }
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README
