@@ -23,13 +23,10 @@ systemctl enable supervisor
 systemctl start supervisor 
 
 
-
 #4.安装nodejs 和cnpm
 yum install -y nodejs
 
 npm install cnpm -g
-
-
 
 #3.安装
 pip install virtualenv
@@ -46,5 +43,10 @@ yum -y install postgresql postgresql-libs postgresql-server
 postgresql-setup initdb
 systemctl enable postgresql
 systemctl start postgresql
+
+#配置pg
+#略过
+
+#
 #清理yum
 yum clean all
