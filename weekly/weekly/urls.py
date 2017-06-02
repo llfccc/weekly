@@ -19,13 +19,13 @@ from django.contrib import admin
 # from rest_framework_swagger.views import get_swagger_view
 # schema_view = get_swagger_view(title='Pastebin API')
 
-from xadmin.plugins import xversion
-import xadmin
+# from xadmin.plugins import xversion
+# import xadmin
 
 #version模块自动注册需要版本控制的 Model
-xversion.register_models()
+# xversion.register_models()
 
-xadmin.autodiscover()
+# xadmin.autodiscover()
 
 from django.conf.urls import include,url
 from django.contrib import admin
@@ -35,7 +35,7 @@ from weekly.views import home
 
 urlpatterns = [
     url(r'^$', home),
-    url(r'xadmin/', include(xadmin.site.urls)),
+    url(r'admin/',admin.site.urls),
     url(r'works/', include('api.urls')),
     url(r'analysis/', include('analysis.urls')),
     url(r'accounts/', include('accounts.urls')),

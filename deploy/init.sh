@@ -13,6 +13,16 @@ yum -y install epel-release wget
 yum -y install python-pip
 pip install --upgrade pip
 
+#安装nginx
+yum install -y redis emacs  nginx   supervisor 
+systemctl enable nginx.service
+systemctl start nginx.service
+systemctl enable redis
+systemctl start redis
+systemctl enable supervisor 
+systemctl start supervisor 
+
+
 
 #4.安装nodejs 和cnpm
 yum install -y nodejs

@@ -28,10 +28,14 @@ class LoginHandler(View):
                 sid = get_random()
                 auth.login(request, user)
                 user_object=User.objects.get(username=username)
-                chinese_name=user_object.chinese_name
-                position_id=user_object.position.id
-                department_id=user_object.department.id
-     
+                try:
+                    chinese_name=user_object.chinese_name
+                    position_id=user_object.position.id
+                    department_id=user_object.department.id
+                except:
+                    chinese_name=''
+                    position_id=''
+                    department_id=''
                 user_id=user_object.id
 
                 content = {"username": username, "chinese_name": chinese_name,\

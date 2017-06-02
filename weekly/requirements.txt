@@ -6,3 +6,4 @@ django-reversion
 xadmin
 psycopg2
 pandas
+django-redis

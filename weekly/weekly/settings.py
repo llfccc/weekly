@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*', '']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'accounts',
     #'rest_framework_swagger',
     'djcelery',
-    'xadmin',
-    'crispy_forms',
-    'reversion',
+    # 'xadmin',
+    # 'crispy_forms',
+    # 'reversion',
 ]
 
 MIDDLEWARE = [
@@ -154,22 +154,22 @@ CACHES = {
 # 自定义user，Substituting a custom User model
 AUTH_USER_MODEL = 'accounts.User'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+# TEMPLATE_CONTEXT_PROCESSORS = (
 
- 'django.contrib.auth.context_processors.auth',
+#  'django.contrib.auth.context_processors.auth',
 
- 'django.core.context_processors.auth'
+#  'django.core.context_processors.auth'
 
- 'django.core.context_processors.debug',
+#  'django.core.context_processors.debug',
 
- 'django.core.context_processors.media',
+#  'django.core.context_processors.media',
 
- 'django.core.context_processors.static',
+#  'django.core.context_processors.static',
 
- 'django.core.context_processors.tz',
+#  'django.core.context_processors.tz',
 
- 'django.contrib.messages.context_processors.messages',
+#  'django.contrib.messages.context_processors.messages',
 
- 'learn_models.context_processors.test',
+#  'learn_models.context_processors.test',
 
-)
+# )
