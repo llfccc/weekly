@@ -94,11 +94,11 @@ DATABASES = {
 
         'NAME': 'test',  # 数据库名字
 
-        'USER': 'test',  # 登录用户名
+        'USER': 'postgres',  # 登录用户名
 
-        'PASSWORD': 'test',
+        'PASSWORD': 'lanzhong',
 
-        'HOST': 'localhost',  # 数据库IP地址
+        'HOST': '127.0.0.1',  # 数据库IP地址
 
         'PORT': '5432',
 
