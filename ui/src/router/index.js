@@ -8,11 +8,11 @@ export default new Router({
             path: '/',
             redirect: '/login'
         },
-        {
-            path: '/register',
-            name: 'Register',
-            component: Register
-        },
+        // {
+        //     path: '/register',
+        //     name: 'Register',
+        //     component: Register
+        // },
         {
             path: '/readme',
             component: resolve => require(['../components/common/Home.vue'], resolve),

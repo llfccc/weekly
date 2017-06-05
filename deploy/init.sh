@@ -45,6 +45,11 @@ systemctl enable postgresql
 systemctl start postgresql
 
 #配置pg
+
+#配置uwsgi
+#因为虚拟环境，需把wsgi复制到manage.py同路径，并在wsgi中加入 
+# import sys
+# sys.path.append('/py2/lib/python2.7/site-packages') 
 #略过
 
 #
