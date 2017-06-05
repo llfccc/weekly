@@ -52,6 +52,9 @@ systemctl start postgresql
 # sys.path.append('/py2/lib/python2.7/site-packages') 
 #略过
 
-#
+#配置cupervisord
+\cp -rf /home/working/weekly/deploy/supervisord.d /etc/
+\cp -rf /home/working/weekly/deploy/supervisord.conf /etc/
+killall -9 supervisord
 #清理yum
 yum clean all
