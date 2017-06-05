@@ -19,9 +19,6 @@ yum groupinstall -y "Development tools"
 yum -y install python-pip 
 pip install --upgrade pip
 
-#安装nginx
-yum install -y nginx  
-systemctl enable nginx
 
 
 
@@ -31,7 +28,6 @@ systemctl enable nginx
 #3.安装django flask sqlalchemy numpy 
 
 pip install numpy pandas uwsgi supervisor    -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
-
 pip install -r /home/working/weekly/weekly/requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 
 #安装redis 和postgresql
@@ -45,14 +41,13 @@ yum -y install postgresql postgresql-libs postgresql-server
 postgresql-setup initdb
 systemctl enable postgresql
 systemctl start postgresql
-
 #配置pg
-su - postgres
-psql
-ALTER USER postgres WITH PASSWORD 'lanzhong';
-CREATE DATABASE test;
-\q
-exit
+# su - postgres
+# psql
+# ALTER USER postgres WITH PASSWORD 'lanzhong';
+# CREATE DATABASE test;
+# \q
+# exit
 
 #手动修改pg认证方式 
 #vim /var/lib/pgsql/data/pg_hba.conf
@@ -70,13 +65,16 @@ systemctl restart postgresql
 #略过
 
 
+#安装nginx
+yum install -y nginx  
+systemctl enable nginx
+
 #配置nginx
 mkdir  /etc/nginx/vhost.d
 \cp -rf /home/working/weekly/deploy/nginx.conf /etc/nginx/nginx.conf
 \cp -rf /home/working/weekly/deploy/vhost80.conf /etc/nginx/vhost.d/
 systemctl stop nginx 
-systemctl start nginx 
-
+systemctl start nginx
 
 #配置cupervisord
 \cp -rf /home/working/weekly/deploy/supervisord.d /etc/
@@ -87,5 +85,8 @@ systemctl enable supervisord
 killall -9 supervisord
 systemctl start supervisord 
 supervisorctl reload
+
+mkdir /home/log
+touch  /home/log/uwsgi.log
 #清理yum
 yum clean all
