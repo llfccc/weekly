@@ -10,7 +10,7 @@
             <article>
                 <h1>工作记录系统</h1>
                 <h2>前言</h2>
-                <p>基于vue.js,使用vue-cli脚手架快速生成项目目录，引用Element UI组件库，找了个模板修改而成</p>
+                <p>基于vue.js,使用vue-cli脚手架快速生成项目目录，Element UI作为UI库。</p>
                 <h2>功能</h2>
                 通过在页面上登记工作内容，保存到数据库；同时可以导出excel下载
                 <br>

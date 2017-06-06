@@ -42,7 +42,7 @@ export default {
             };
             if (command == 'admin') {
                 // localStorage.removeItem('ms_username')
-                this.$router.push('/xadmin');
+                this.$router.push('/admin');
             }
         }
     }

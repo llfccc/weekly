@@ -3,34 +3,34 @@
         <h1 class="logo">登记拜访</h1>
         <!--工具条-->
         <!--<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="filters">
-                <el-form-item>
-                    <el-input v-model="filters.name" placeholder="姓名"></el-input>
-                </el-form-item>
+                <el-form :inline="true" :model="filters">
+                    <el-form-item>
+                        <el-input v-model="filters.name" placeholder="姓名"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>-->
+        <el-form :inline="true" :model="filters">
+            <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
                 <el-form-item>
                     <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
                 </el-form-item>
-            </el-form>
-        </el-col>-->
-    <el-form :inline="true" :model="filters">
-                <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
-  <el-form-item>
-                    <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
-                </el-form-item>
-                </el-col>
-                <span class="demonstration">筛选客户</span>
-                <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
-                     <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
-                        </el-option>
-                </el-select>
-                <span class="demonstration">筛选时间</span>
-                <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-                </el-date-picker>
-                <el-form-item>
-                    <el-button type="primary" v-on:click="filter">查询</el-button>
-                </el-form-item>
-            </el-form>
-
+            </el-col>
+            <span class="demonstration">筛选客户</span>
+            <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
+                <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
+                </el-option>
+            </el-select>
+            <span class="demonstration">筛选时间</span>
+            <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+            </el-date-picker>
+            <el-form-item>
+                <el-button type="primary" v-on:click="filter">查询</el-button>
+            </el-form-item>
+        </el-form>
+    
         <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false">
     
             <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
@@ -146,13 +146,13 @@
             </el-table-column>
             <el-table-column prop="visit_date" label="拜访时间" width="150" fixed='left' sortable>
             </el-table-column>
-            <el-table-column prop="short_name" label="客户简称" width="150"  sortable>
+            <el-table-column prop="short_name" label="客户简称" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="phase_name" label="拜访阶段" width="150"  sortable>
+            <el-table-column prop="phase_name" label="拜访阶段" width="150" sortable>
             </el-table-column>
             <el-table-column prop="cus_con_post" label="客户职位" width="150" sortable>
             </el-table-column>
-
+    
             <el-table-column prop="cus_con_mdn" label="手机号码" width="150" sortable>
             </el-table-column>
             <el-table-column prop="cus_con_tel_num" label="客户联系方式" width="190" sortable>
@@ -225,7 +225,7 @@ export default {
         return {
             filters: {
                 customer_id: '',
-                filter_date:'',
+                filter_date: '',
 
             },
             pickerOptions2: {
@@ -327,7 +327,7 @@ export default {
             var self = this;
             self.addEventForm.visit_date = val
         },
-        filter(val){
+        filter(val) {
             this.get_sale_event();
         },
         get_sale_event_types: function (params) {
@@ -423,7 +423,7 @@ export default {
             })
                 .then(function (response) {
                     if (response.data.code == 0) {
- 
+
                         self.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'

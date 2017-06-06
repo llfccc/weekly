@@ -25,7 +25,7 @@
             return {
                 ruleForm: {
                     username: 'admin',
-                    password: 'lanzhong1'
+                    password: 'lanzhong'
                 },
                 rules: {
                     username: [

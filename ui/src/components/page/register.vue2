@@ -82,7 +82,7 @@ export default {
 
 </script>
 
-<style >
+/*<style >
 /*custom font*/
 
 @import url(http://fonts.googleapis.com/css?family=Montserrat);
@@ -257,4 +257,4 @@ body {
 	background: #27AE60;
 	color: white;
 }
-</style>
+</style>*/
