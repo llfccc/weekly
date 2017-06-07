@@ -131,7 +131,76 @@ class AnanlysisLoad(LoginRequiredMixin,View):
         return response
 
 
-class AnalysisDevEvent(LoginRequiredMixin,View):
+# class AnalysisDevEvent2(LoginRequiredMixin,View):
+#     '''
+#     查询非销售职员工每日工作事件
+#     '''
+
+#     def get(self, request):
+#         getParams = request.GET        
+#         filter_date = getParams.get('filter_date', '')
+#         employee_name= getParams.get('employee_name', '')
+
+#         department_name = request.user.department.department_name
+
+#         if filter_date:
+#             filter_date='-'.join(get_first_day(filter_date))
+#         # 创建查询条件
+#         if employee_name:          
+#             plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',department_name=department_name,employee_name=employee_name)
+#         else:
+#             return  my_response(code=1, msg=u"缺少雇员姓名条件")
+         
+#         #统计分析
+#         group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+
+#         data = fetch_data(plain_sql)
+#         #先变换数据
+#         alternation_list=[]
+#         event_date_list=[]   #保存所有不重复的日期
+#         for key,value in enumerate(data): 
+#             '''
+#             获取所有日期字段保存为list，并将需要的字段放入alternation_list备用
+#             '''          
+#             event_date=value.get('event_date').strftime("%Y-%m-%d")
+#             event_date_list.append(event_date)  
+#             duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
+#             data_list=['project_name','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
+#             field_data={key:value.get(key) for key in data_list}
+#             field_data['duration_time']=int(duration_time)
+#             field_data['event_date']=event_date
+#             field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
+#             field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
+#             alternation_list.append(field_data)
+
+#         event_date_list=list(set(event_date_list))      
+#         event_date_list.sort(reverse=True)
+
+#         result=dict.fromkeys(event_date_list)
+#         for value in alternation_list:
+#             '''
+#             统计每天的耗时
+#             '''
+#             if not result[value['event_date']]:
+#                 #初始化时间合计
+#                 result[value['event_date']]={'total_time':0}
+#                 result[value['event_date']]['other_row']=[]
+#                 #计算周几
+#                 result[value['event_date']]['which_day']= day_of_week(value['event_date']) 
+#             if result[value['event_date']] and 'total_time' in result[value['event_date']]:            
+#                 result[value['event_date']]['total_time']+=value['duration_time']
+#             result[value['event_date']]['other_row'].append(value)
+
+#         finalResult=[]
+#         for index,value in enumerate(event_date_list):
+#             finalResult.append({'event_date':value,'total_time':round(result[value]['total_time'],2),'which_day':result[value]['which_day'],'other_row':result[value]['other_row']})
+       
+#         content = dict_to_json(finalResult)
+#         response = my_response(code=0, msg=u"查询成功", content=content)
+#         return response
+
+
+class AnalysisDevEvent(View):
     '''
     查询非销售职员工每日工作事件
     '''
@@ -169,37 +238,15 @@ class AnalysisDevEvent(LoginRequiredMixin,View):
             field_data={key:value.get(key) for key in data_list}
             field_data['duration_time']=int(duration_time)
             field_data['event_date']=event_date
+            field_data['which_day']=day_of_week(field_data['event_date']) 
             field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
             field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
             alternation_list.append(field_data)
-
-        event_date_list=list(set(event_date_list))      
-        event_date_list.sort(reverse=True)
-
-        result=dict.fromkeys(event_date_list)
-        for value in alternation_list:
-            '''
-            统计每天的耗时
-            '''
-            if not result[value['event_date']]:
-                #初始化时间合计
-                result[value['event_date']]={'total_time':0}
-                result[value['event_date']]['other_row']=[]
-                #计算周几
-                result[value['event_date']]['which_day']= day_of_week(value['event_date']) 
-            if result[value['event_date']] and 'total_time' in result[value['event_date']]:            
-                result[value['event_date']]['total_time']+=value['duration_time']
-            result[value['event_date']]['other_row'].append(value)
-
-        finalResult=[]
-        for index,value in enumerate(event_date_list):
-            finalResult.append({'event_date':value,'total_time':round(result[value]['total_time'],2),'which_day':result[value]['which_day'],'other_row':result[value]['other_row']})
-       
-        content = dict_to_json(finalResult)
+        content = dict_to_json(alternation_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-
+        
 class AnalysisWeeklySummary(LoginRequiredMixin,View):
     '''
     查询所有项目属性

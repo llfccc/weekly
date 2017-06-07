@@ -1,17 +1,17 @@
 <template>
   <!--为echarts准备一个具备大小的容器dom-->
   <div>
-  
+    <h1 class="title" style="align:center;">查看员工周报</h1>
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
-          <el-col :span="8">
-            <span class="demonstration">筛选时间</span>
+          <el-col :span="4">
+            <span class="demonstration">条件:</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
   
-          <el-col :span="6">
+          <el-col :span="4">
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
               <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
               </el-option>
@@ -23,8 +23,12 @@
   
         </el-form>
       </el-col>
+      </br>
+      </br>
+      </br>
+      </br>
   
-      <table border="1" class="table table-responsive table-bordered">
+      <table border="1" class="table table-responsive table-bordered" width="100%" v-show="weekly_dict">
         <tr>
           <th>日期 </th>
           <th>星期 </th>
@@ -46,28 +50,28 @@
             {{item.which_day}}
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.project_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.event_type_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.duration_time}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.description}}</td>
               </tr>
@@ -79,28 +83,28 @@
   
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.up_reporter_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.down_reporter_name}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.fin_percentage}}</td>
               </tr>
             </table>
           </td>
           <td>
-            <table border="1" class=" table-responsive table-bordered"   width="100%" height="100%">
+            <table border="1" class=" table-responsive table-bordered" width="100%" height="100%">
               <tr v-for="child in item.other_row">
                 <td>{{child.dev_event_remark}}</td>
               </tr>
@@ -125,7 +129,7 @@
       </el-col>
     </el-col>
   
-    <el-card class="box-card">
+    <el-card class="box-card"  v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
           <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
@@ -178,7 +182,7 @@ export default {
         naturalWeek: '',
       },
       summary: '',
-      user_list: [],
+      user_list: '',
     }
   },
   methods: {
@@ -247,9 +251,8 @@ export default {
 }
 </script>
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.title {
+  text-align: center;
+  margin: 5px 0 40px 0;
 }
 </style>

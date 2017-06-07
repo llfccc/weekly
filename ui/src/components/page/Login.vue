@@ -59,7 +59,7 @@ export default {
                                     localStorage.setItem(position[i], true);
                                 }
                             }
-                            console.log(localStorage);
+               
                             if (premission.toString().indexOf("技术主管组") > -1) {
                                 self.$router.push('/analysisWeekly');
 

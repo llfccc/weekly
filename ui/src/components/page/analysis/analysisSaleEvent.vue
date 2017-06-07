@@ -1,7 +1,7 @@
 <template>
   <!--为echarts准备一个具备大小的容器dom-->
   <div>
-  
+    <h1 class="title" style="align:center;">周拜访分析</h1>
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
@@ -23,7 +23,12 @@
   
         </el-form>
       </el-col>
-  
+      </br>
+    </br>
+    </br>
+    </br>
+
+
       <el-table :data="sale_event_list" stripe style="width: 100%">
         <el-table-column prop="visit_date" label="日期" width="180">
         </el-table-column>
@@ -39,14 +44,16 @@
         </el-table-column>
         <el-table-column prop="sale_event_remark" label="备注">
         </el-table-column>
-      </el-table> 
-   
+      </el-table>
+  
     </div>
-    <br>
     </br>
+    </br>
+    </br>
+
   
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-col :span="8">  
+      <el-col :span="8">
       </el-col>
       <el-col :span="8">
   
@@ -56,7 +63,7 @@
       </el-col>
     </el-col>
   
-    <el-card class="box-card">
+    <el-card class="box-card" v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
           <span style="line-height: 36px;">工作总结-----{{summary.natural_week}}周</span>
@@ -173,12 +180,11 @@ export default {
   }
 }
 
-
 </script>
+
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.title {
+  text-align: center;
+  margin: 5px 0 40px 0;
 }
 </style>

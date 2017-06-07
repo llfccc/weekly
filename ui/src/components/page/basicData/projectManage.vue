@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="filters row">
+        <!--<div class="filters row">
             <div class="form-group col-sm-3">
                 <label for="search-element">Product name</label>
                 <input v-model="searchKey" class="form-control" id="search-element" requred/>
@@ -52,7 +52,7 @@
     <router-link to="'/'" class="btn btn-default">Cancel</router-link>
   </form>
 </section>
-</template>
+</template>-->
     </div>
 </template>
 <script>

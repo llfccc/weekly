@@ -1,5 +1,7 @@
 <template>
   <div>
+        <h1 class="title" style="align:center;">周报分析</h1>
+
     <div>
       <el-form :inline="true" :model="filters">
   
@@ -534,9 +536,8 @@ export default {
 }
 </script>
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.title {
+  text-align: center;
+  margin: 5px 0 40px 0;
 }
 </style>

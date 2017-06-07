@@ -1,23 +1,12 @@
 <template>
     <div>
-        <h1 class="logo">登记拜访</h1>
-        <!--工具条-->
-        <!--<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-                <el-form :inline="true" :model="filters">
-                    <el-form-item>
-                        <el-input v-model="filters.name" placeholder="姓名"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-col>-->
+
+        <h1 class="title"  style="align:center;">登记拜访</h1>
+</br>
+
+</br>
         <el-form :inline="true" :model="filters">
-            <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
-                <el-form-item>
-                    <el-button type="primary" @click="handleAddVisit">新增拜访</el-button>
-                </el-form-item>
-            </el-col>
+          <el-col :span="12" class="toolbar" style="padding-bottom: 0px;">
             <span class="demonstration">筛选客户</span>
             <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
                 <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
@@ -29,8 +18,18 @@
             <el-form-item>
                 <el-button type="primary" v-on:click="filter">查询</el-button>
             </el-form-item>
+                    </el-col>
+                        <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">                            
+                <el-form-item>
+                    <el-button type="success" @click="handleAddVisit">新增拜访</el-button>
+                </el-form-item>
+            </el-col>
         </el-form>
-    
+    </br>
+</br>
+</br>
+
+
         <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false">
     
             <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
@@ -466,3 +465,14 @@ export default {
     },
 }
 </script>
+<style scoped>
+.title {
+    margin: 0 auto;
+    text-align: center;
+    margin: 5px 0
+}
+
+.filter {
+    margin-top:40px
+}
+</style>

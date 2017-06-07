@@ -132,18 +132,19 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
                     target.sale_target_owner_id=group_count.user_id and target.target_phase_name=group_count.phase_name
                     left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(group_sql,target_sql)
     pivot_sql=u'''select chinese_name,   
-            sum(case when phase_name = 'A' then phase_count else 0 end) as "A",  
+ 
             sum(case when phase_name = 'B' then phase_count else 0 end) as "B",  
             sum(case when phase_name = 'C' then phase_count else 0 end) as "C",
             sum(case when phase_name = 'D' then phase_count else 0 end) as "D",
             sum(case when phase_name = 'E' then phase_count else 0 end) as "E",
             sum(case when phase_name = 'F' then phase_count else 0 end) as "F",
-            sum(case when target_phase_name = 'A' then target else 0 end) as "target_A",  
+            sum(case when phase_name = 'G' then phase_count else 0 end) as "G", 
             sum(case when target_phase_name = 'B' then target else 0 end) as "target_B",  
             sum(case when target_phase_name = 'C' then target else 0 end) as "target_C",
             sum(case when target_phase_name = 'D' then target else 0 end) as "target_D",
             sum(case when target_phase_name = 'E' then target else 0 end) as "target_E",
-            sum(case when target_phase_name = 'F' then target else 0 end) as "target_F"       
+            sum(case when target_phase_name = 'F' then target else 0 end) as "target_F",
+            sum(case when target_phase_name = 'G' then target else 0 end) as "target_G"       
             from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
     return pivot_sql
 

@@ -46,9 +46,10 @@
             <el-submenu index="6"  v-show="permission.sale_mang_perm">
                 <template slot="title">
                     <i class="el-icon-setting"></i>基础数据</template>
-                <el-menu-item index="projectManage">项目管理</el-menu-item>
+                    <el-menu-item index="projectManage"><a href="http://192.168.19.12/admin">数据管理</a></el-menu-item>
+                <!--<el-menu-item index="projectManage">项目管理</el-menu-item>
                 <el-menu-item index="saleTarget">销售目标管理</el-menu-item>
-                <el-menu-item index="saleCustmoer">客户管理</el-menu-item>
+                <el-menu-item index="saleCustmoer">客户管理</el-menu-item>-->
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
@@ -74,7 +75,7 @@ export default {
            self.permission.tech_mang_perm=localStorage.getItem('技术主管组');
            self.permission.sale_perm=localStorage.getItem('销售员工组');
            self.permission.sale_mang_perm=localStorage.getItem('销售主管组');
-           console.log(self.permission.tech_mang_perm)
+
        },
     computed: {
         onRoutes() {

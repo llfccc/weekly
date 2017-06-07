@@ -8,7 +8,7 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <!--<el-dropdown-item command="admin">后台管理</el-dropdown-item>-->
-                    <el-dropdown-item ><a  href="/admin">后台管理</a></el-dropdown-item>
+                    <!--<el-dropdown-item ><a  href="/admin">后台管理</a></el-dropdown-item>-->
 
                     <el-dropdown-item command="loginout">退出</el-dropdown-item>
                 </el-dropdown-menu>
@@ -51,6 +51,7 @@ export default {
 }
 </script>
 <style scoped>
+
 .header {
     position: relative;
     box-sizing: border-box;
@@ -62,6 +63,7 @@ export default {
 }
 
 .header .logo {
+    
     float: left;
     width: 250px;
     text-align: center;

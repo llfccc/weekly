@@ -1,15 +1,21 @@
 <template>
     <div>
-    
-        <el-col :span="8">
+            <h1 class="title" >添加总结</h1>
+
+        <el-col :span="4">
             <span class="demonstration">筛选时间</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="filterDateChange" placeholder="选择周">
             </el-date-picker>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="2">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
         </el-col>
-        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button type="success" @click="handleAdd">新增</el-button>
+
+            </br>
+    </br>
+    </br>
+
         <el-table :data="summary_list">
             <!--<el-table-column prop="id" style="display:none" label="id" width="150" sortable>
                 </el-table-column>-->
@@ -213,3 +219,9 @@ export default {
 
 }
 </script>
+<style scoped>
+.title {
+    text-align: center;
+    margin: 5px 0 40px 0;
+}
+</style>

@@ -42,11 +42,11 @@ export default new Router({
                 },
                 {
                     path: '/analysisWeeklyGraph',
-                    component: resolve => require(['../components/page/analysisWeeklyGraph.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/analysis/analysisWeeklyGraph.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/analysisWeekly',
-                    component: resolve => require(['../components/page/analysisWeekly.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/analysis/analysisWeekly.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/projectManage',
@@ -54,11 +54,11 @@ export default new Router({
                 },
                 {
                     path: '/analysisSaleEvent',
-                    component: resolve => require(['../components/page/analysisSaleEvent.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/analysis/analysisSaleEvent.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/analysisSalePerformance',
-                    component: resolve => require(['../components/page/analysisSalePerformance.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/analysis/analysisSalePerformance.vue'], resolve) // vue-datasource组件
                 },
 
                 {
