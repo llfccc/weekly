@@ -1,13 +1,15 @@
 <template>
     <div class="header">
-        <div class="logo">数据周报管理系统</div>
+        <div class="logo">周报管理系统</div>
         <div class="user-info">
             <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
                     <img class="user-logo" src="../../../static/img/img.jpg"> {{username}}
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="admin">后台管理</el-dropdown-item>
+                    <!--<el-dropdown-item command="admin">后台管理</el-dropdown-item>-->
+                    <el-dropdown-item ><a  href="/admin">后台管理</a></el-dropdown-item>
+
                     <el-dropdown-item command="loginout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -19,7 +21,7 @@
 export default {
     data() {
         return {
-            name: 'linxin'
+            name: '异常用户'
         }
     },
     computed: {
@@ -31,17 +33,17 @@ export default {
     methods: {
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('ms_username')
+                 localStorage.clear();
                 this.$axios.get('/accounts/logout/')
                     .then(function (response) {
-                        var r = eval(response.data.content);
+                        var r = response.data.msg;
                         console.log(r);
                     }
                     );
                 this.$router.push('/login');
             };
             if (command == 'admin') {
-                // localStorage.removeItem('ms_username')
+                 localStorage.clear();
                 this.$router.push('/admin');
             }
         }

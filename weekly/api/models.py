@@ -17,6 +17,10 @@ class DevProject(models.Model):
                                           blank=True, verbose_name='备注')
     def __unicode__(self):
         return u"{}".format(self.project_name)
+    class Meta:  
+
+        verbose_name_plural = '项目'  
+        # verbose_name_plural = '信息统计' 
 
 
 class DevEventType(models.Model):
@@ -30,6 +34,9 @@ class DevEventType(models.Model):
     # creator =  models.ForeignKey(User, verbose_name='创建人')
     def __unicode__(self):
         return u"{}".format(self.event_type_name)
+    class Meta:  
+
+        verbose_name_plural = '事件类型'  
 
 
 class DevEvent(models.Model):
@@ -59,7 +66,8 @@ class DevEvent(models.Model):
         ("export_excel", u"导出本人的事件为excel"),
         ("analysis_devevent", "技术主管：分析周报事件"),
         )
-
+    class Meta:  
+        verbose_name_plural = '周报事件' 
 
 class WeekSummary(models.Model):
     natural_week = models.CharField(max_length=64, verbose_name='自然周')
@@ -78,7 +86,8 @@ class WeekSummary(models.Model):
         
         # ("close_task", "Can remove a task by setting its status as closed"),
         )
-        
+    class Meta:  
+        verbose_name_plural = '周报总结'         
 
 class SaleActiveType(models.Model):
     available_choice=((0,"启用"),(1,"禁用"))
@@ -91,7 +100,9 @@ class SaleActiveType(models.Model):
 
     def __unicode__(self):
         return u"{}".format(self.active_type_name)
+    class Meta:  
 
+        verbose_name_plural = '活动类型'  
 
 class SaleCustomer(models.Model):
     '''
@@ -115,7 +126,8 @@ class SaleCustomer(models.Model):
 
     def __unicode__(self):
         return u"{}".format(self.full_name)
-
+    class Meta:  
+        verbose_name_plural = '客户信息'  
 
 class SalePhase(models.Model):
     phase_name = models.CharField(
@@ -133,7 +145,9 @@ class SalePhase(models.Model):
 
     def __unicode__(self):
         return u"{}".format(self.phase_name)
+    class Meta:  
 
+        verbose_name_plural = '销售阶段'  
 
 class SaleTarget(models.Model):
     natural_week = models.CharField(max_length=64, verbose_name='自然周')
@@ -150,6 +164,9 @@ class SaleTarget(models.Model):
 
     def __unicode__(self):
         return u"{0}--{1}--{2}".format(self.natural_week,self.phase_name,self.sale_target_owner)
+
+    class Meta:  
+        verbose_name_plural = '销售目标'  
 
 
 class SaleEvent(models.Model):
@@ -178,3 +195,5 @@ class SaleEvent(models.Model):
             ("analysis_sale_event", u"销售主管:分析销售拜访事件"),
             ("display_sale_event", u"销售主管:查询销售拜访事件"),        
         )
+    class Meta:  
+        verbose_name_plural = '销售事件' 

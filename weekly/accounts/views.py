@@ -10,6 +10,7 @@ from django.core.cache import cache
 from utils.tools import my_response, queryset_to_dict, dict_to_json
 from sqljoint.query import departmentname_to_departmentid
 from django.contrib import auth
+from utils.tools import fetch_data
 # Create your views here.
 
 class LoginHandler(View):
@@ -37,10 +38,15 @@ class LoginHandler(View):
                     position_id=''
                     department_id=''
                 user_id=user_object.id
+                userGroup_sql="select * from accounts_user_groups as ug join auth_group as auth on auth.id=ug.group_id where ug.user_id={0}".format(user_id)
 
+                row = fetch_data(userGroup_sql)
+                group_list=[v.get("name") for v in row]
+                
+                print(group_list)
                 content = {"username": username, "chinese_name": chinese_name,\
                            "position_id": position_id, "user_id": user_id,\
-                           "department_id":department_id}
+                           "department_id":department_id,"group_list":group_list}
 
                 response = my_response(code=0, msg="登录成功！", content=content)
                 # login(request, user)
@@ -79,7 +85,7 @@ class LogoutHandler(View):
     def get(self, request):
         # username = request.get("username")
         auth.logout(request)
-        response = my_response(code=0, msg="用户登出成功.")
+        response = my_response(code=0, msg="用户登出成功",content="")
         response.set_cookie("sid", "", expires=0)
         return response
 

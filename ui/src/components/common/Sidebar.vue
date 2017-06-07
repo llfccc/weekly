@@ -6,18 +6,18 @@
             </el-menu-item>
             <el-submenu index="2">
                 <template slot="title">
-                    <i class="el-icon-menu"></i>新增周报</template>
-                <el-menu-item index="insertDevWork">添加工作</el-menu-item>
-                <el-menu-item index="insertSaleEvent">添加拜访</el-menu-item>
+                    <i class="el-icon-menu"></i>周报管理</template>
+                <el-menu-item   index="insertDevWork" v-show="permission.tech_perm">添加事件</el-menu-item>
+                <el-menu-item  index="insertSaleEvent" v-show="permission.sale_perm">添加拜访</el-menu-item>
                 <el-menu-item index="insertWeekSummary">添加总结</el-menu-item>
     
                 <!--<el-menu-item index="downloadExcel">导出Excel</el-menu-item>-->
             </el-submenu>
-            <el-submenu index="3">
+            <el-submenu index="3" v-show="permission.tech_mang_perm">
                 <template slot="title">
-                    <i class="el-icon-star-on"></i>办公报表</template>
-                <el-menu-item index="analysisWeekly">分析周报</el-menu-item>
-                <el-menu-item index="analysisWeeklyGraph">可视周报</el-menu-item>
+                    <i class="el-icon-star-on"></i>周报分析</template>
+                <el-menu-item index="analysisWeekly">员工周报</el-menu-item>
+                <el-menu-item index="analysisWeeklyGraph">周报分析</el-menu-item>
             </el-submenu>
             <!--<el-submenu index="4">
                     <template slot="title">
@@ -26,9 +26,9 @@
                     <el-menu-item index="downloadExcel">导出Excel</el-menu-item>
                 </el-submenu>-->
     
-            <el-submenu index="5">
+            <el-submenu index="5" v-show="permission.sale_mang_perm">
                 <template slot="title">
-                    <i class="el-icon-star-on"></i>销售报表</template>
+                    <i class="el-icon-star-on"></i>销售分析</template>
                 <el-menu-item index="analysisSaleEvent">拜访分析</el-menu-item>
                 <el-menu-item index="analysisSalePerformance">拜访业绩</el-menu-item>
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
@@ -43,7 +43,7 @@
                     <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
             <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>
-            <el-submenu index="6">
+            <el-submenu index="6"  v-show="permission.sale_mang_perm">
                 <template slot="title">
                     <i class="el-icon-setting"></i>基础数据</template>
                 <el-menu-item index="projectManage">项目管理</el-menu-item>
@@ -58,12 +58,31 @@
 
 <script>
 export default {
+       data() {
+        return {
+            permission: {
+                tech_perm: false,
+                tech_mang_perm: false,
+                sale_perm: false,
+                sale_mang_perm: false,
+            },
+        }
+       },
+       created(){
+           const self = this;
+           self.permission.tech_perm=localStorage.getItem('技术员工组');
+           self.permission.tech_mang_perm=localStorage.getItem('技术主管组');
+           self.permission.sale_perm=localStorage.getItem('销售员工组');
+           self.permission.sale_mang_perm=localStorage.getItem('销售主管组');
+           console.log(self.permission.tech_mang_perm)
+       },
     computed: {
         onRoutes() {
             return this.$route.path.replace('/', '');
         }
     }
 }
+console.log(localStorage.getItem('sid'));
 </script>
 
 <style scoped>

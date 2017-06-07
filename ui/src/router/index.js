@@ -50,7 +50,7 @@ export default new Router({
                 },
                 {
                     path: '/projectManage',
-                    component: resolve => require(['../components/page/projectManage.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/basicData/projectManage.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/analysisSaleEvent',
@@ -63,11 +63,11 @@ export default new Router({
 
                 {
                     path: '/saleTarget',
-                    component: resolve => require(['../components/page/saleTarget.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/basicData/saleTarget.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/saleCustmoer',
-                    component: resolve => require(['../components/page/saleCustmoer.vue'], resolve) // vue-datasource组件
+                    component: resolve => require(['../components/page/basicData/saleCustmoer.vue'], resolve) // vue-datasource组件
                 },
                 {
                     path: '/baseform',

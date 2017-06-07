@@ -10,12 +10,12 @@
             <el-button type="primary" v-on:click="filter">筛选</el-button>
         </el-col>
         <el-button type="primary" @click="handleAdd">新增</el-button>
-        <el-table :data="summary_list"   >
+        <el-table :data="summary_list">
             <!--<el-table-column prop="id" style="display:none" label="id" width="150" sortable>
-            </el-table-column>-->
+                </el-table-column>-->
             <el-table-column prop="natural_week" label="自然周数" width="200" fixed sortable>
             </el-table-column>
-            <el-table-column prop="summary" label="总结"  sortable>
+            <el-table-column prop="summary" label="总结" sortable>
             </el-table-column>
             <el-table-column prop="self_evaluation" label="自我评价" sortable>
             </el-table-column>
@@ -54,7 +54,7 @@
                         总结
                     </el-input>
                 </el-form-item>
-
+    
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -64,6 +64,37 @@
                 <p>**每个内容最多500字符 </p>
             </div>
         </el-dialog>
+    
+        <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+            <el-form ref="insertForm" :model="insertForm" label-width="90px">
+                <el-form-item label="周数:">
+                    <div class="block">
+                        <span class="demonstration"></span>
+                        <el-date-picker v-model="insertForm.filter_date" type="week" format="yyyy-WW 周" @change="insertDateChange" placeholder="选择周">
+                        </el-date-picker>
+                    </div>
+    
+                </el-form-item>
+                <el-form-item label="总结：">
+                    <el-input type="textarea" class="form-control" id="summary" placeholder="总结" v-model="insertForm.summary">
+                        总结
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="自我评价：">
+                    <el-input type="textarea" class="form-control" id="self_evaluation" placeholder="自我评价" v-model="insertForm.self_evaluation">
+                        总结
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="计划：">
+                    <el-input type="textarea" class="form-control" id="plan" placeholder="计划" v-model="insertForm.plan">
+                        总结
+                    </el-input>
+                </el-form-item>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="editFormVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+                </div>
+        </el-dialog>-->
     </div>
 </template>
 <script>

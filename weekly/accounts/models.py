@@ -24,7 +24,8 @@ class Department(models.Model):
             # ("update_department", "可以修改部门"),
             # ("del_department", "可以删除部门"),
         )
-
+    class Meta:  
+        verbose_name_plural = '部门'  
 class Position(models.Model):
     '''
     职位表
@@ -42,6 +43,8 @@ class Position(models.Model):
     #         # ("update_department", "可以修改部门"),
     #         # ("del_department", "可以删除部门"),
     #     )
+    class Meta:  
+        verbose_name_plural = '职位'  
 
 class User(AbstractUser):     #继承AbstractUser
     describition = models.TextField(null=True,blank=True,verbose_name='描述说明（非必须）')
@@ -58,6 +61,8 @@ class User(AbstractUser):     #继承AbstractUser
             # ("update_department", "可以修改部门"),
             # ("del_department", "可以删除部门"),
         )
+    class Meta:  
+        verbose_name_plural = '用户'  
 
 
 

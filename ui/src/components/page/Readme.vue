@@ -8,12 +8,12 @@
         <div class="ms-doc">
             <h3>README.md</h3>
             <article>
-                <h1>工作记录系统</h1>
+                <h1>周报管理系统</h1>
                 <h2>前言</h2>
-                <p>基于vue.js,使用vue-cli脚手架快速生成项目目录，Element UI作为UI库。</p>
+                <p>基于vue.js,Element UI作为UI库。</p>
                 <h2>功能</h2>
                 通过在页面上登记工作内容，保存到数据库；同时可以导出excel下载
-                <br>
+                <!--<br>
                 <el-checkbox disabled checked>Element UI</el-checkbox>
                 <br>
                 <el-checkbox disabled checked>登录/注销</el-checkbox>
@@ -25,7 +25,7 @@
                 <el-checkbox disabled checked>图表</el-checkbox>
                 <br>
                 <el-checkbox disabled checked>导出excel下载</el-checkbox>
-                <br>
+                <br>-->
                 <!--<el-checkbox disabled checked>富文本编辑器</el-checkbox>-->
                 <!--<br>-->
                 <!--<el-checkbox disabled checked>markdown编辑器</el-checkbox>-->
