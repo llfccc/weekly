@@ -57,7 +57,7 @@ class GetDevEvent(LoginRequiredMixin,View):
             event_date=value.get('event_date').strftime("%Y-%m-%d")
             event_date_list.append(event_date)  
             duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
-            data_list=['project_name','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
+            data_list=['project_name',"start_time","end_time",'event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
             field_data['duration_time']=int(duration_time)
             field_data['event_date']=event_date
@@ -304,15 +304,17 @@ class InsertSummary(LoginRequiredMixin,View):
         else:
             return  my_response(code=1, msg=u"自然周填写格式错误", content='')
         result['summary_owner_id'] = user_id
-        content = {"id": 0}
+        
+        print(result)
         if result:
+            content = {"id": 0}
             insert_process = WeekSummary(**result)
             try:
                 insert_process.save()
                 content = {"id": insert_process.id}
-                response = my_response(code=0, msg=u"success", content=content)
+                response = my_response(code=0, msg=u"插入成功", content=content)
             except:
-                response = my_response(code=1, msg=u"error", content=content)
+                response = my_response(code=1, msg=u"插入失败", content=content)
         return response
 
 class GetEventExcel(LoginRequiredMixin,View):

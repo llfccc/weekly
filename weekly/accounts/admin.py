@@ -53,6 +53,10 @@ class CustomUserAdmin(UserAdmin):
     #                                       }),
                                 #   )
         # return super(CustomUserAdmin, self).changelist_view(request, extra_context)
+class MyAdminSite(admin.AdminSite):
+    site_header = '周报管理系统后台'
+
+admin_site = MyAdminSite()
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Position)

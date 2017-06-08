@@ -1,0 +1,95 @@
+[33mcommit 4b950ac7539d57916990c0185fb6cc1fcab31c9f[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 16:22:16 2017 +0800
+
+    替换user为myuser
+
+[33mcommit 9cf4d5130be316a048ec181a37c21daa51ba1d32[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 15:53:31 2017 +0800
+
+    修正查看周报内容缺失时间
+
+[33mcommit b6fe6aa92fda3f0bec5e19aa9bbf58812c57d8aa[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 15:10:39 2017 +0800
+
+    完成员工查看周报页
+
+[33mcommit 69ead7f14d77a1d37a6149e3ce8039748f38f21c[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 14:29:52 2017 +0800
+
+    添加普通员工查看周报页
+
+[33mcommit 87e36e2cd8c1c2f271e5ee339e752bebced39fd6[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 13:54:47 2017 +0800
+
+    修复插入空客户的bug
+
+[33mcommit 720a600d31bf4b7a2203f69090c1e7d02f913800[m
+Author: llfccc <llfccc@live.cn>
+Date:   Thu Jun 8 10:16:23 2017 +0800
+
+    美化界面及筛选本部门员工名
+
+[33mcommit a8e98065550c8b0c13d9bd42051ac4b776d4dd3a[m
+Author: llfccc <llfccc@live.cn>
+Date:   Wed Jun 7 16:53:22 2017 +0800
+
+    美化前端表格及样式
+
+[33mcommit 5bcd4a3a42b5b804baedc27de4d9f59c8bcb2d4f[m
+Author: llfccc <llfccc@live.cn>
+Date:   Wed Jun 7 10:10:39 2017 +0800
+
+    添加前端菜单权限
+
+[33mcommit c34fc4271f90f0eeb52d7a54a3ea6f37c8cf127c[m
+Author: llfccc <llfccc@live.cn>
+Date:   Tue Jun 6 13:33:17 2017 +0800
+
+    修复bug
+
+[33mcommit e7a95009b6c3910b0a59f08b94663500b62ae3ce[m
+Author: llfccc <llfccc@live.cn>
+Date:   Tue Jun 6 09:31:44 2017 +0800
+
+    完成linux环境配置
+
+[33mcommit 70c7cbbb72edc0c48e3d8f5c03d83cf3d44640c4[m
+Author: llfccc <llfccc@live.cn>
+Date:   Mon Jun 5 17:51:13 2017 +0800
+
+    添加日志路径
+
+[33mcommit 181a97ed7307a18992f56a476ebe003f8c78a54b[m
+Author: llfccc <llfccc@live.cn>
+Date:   Mon Jun 5 16:39:02 2017 +0800
+
+    配置supervisor
+
+[33mcommit a061b7d81ddff473de7357ec94ef7fa2820d697c[m
+Author: llfccc <llfccc@live.cn>
+Date:   Mon Jun 5 10:37:05 2017 +0800
+
+    配置supervisord
+
+[33mcommit 0548faedef908c4cec5f0bc4b323424f2057c961[m
+Author: llfccc <llfccc@live.cn>
+Date:   Mon Jun 5 10:01:28 2017 +0800
+
+    修改nginx。conf
+
+[33mcommit c3aadb13382f53ff56b884d1a71d6c535fbe2f8a[m
+Author: llfccc <llfccc@live.cn>
+Date:   Fri Jun 2 18:11:57 2017 +0800
+
+    配置nginx
+
+[33mcommit 0881aa97ce5a80812d1281186c1ae5714b4dc262[m
+Author: llfccc <llfccc@live.cn>
+Date:   Fri Jun 2 16:44:54 2017 +0800
+
+    修改static文件夹

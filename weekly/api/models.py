@@ -16,13 +16,14 @@ class DevProject(models.Model):
     dev_project_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='备注')
     def __unicode__(self):
-        return u"{}".format(self.project_name)
-    class Meta:  
-
-        verbose_name_plural = '项目'  
+        return u"{}".format(self.project_name)         
+        
+    class Meta:
+        permissions = (
+        ("view_devproject", u"技术员工：查看项目名称"),
+        )
         # verbose_name_plural = '信息统计' 
-
-
+        verbose_name_plural = '项目' 
 class DevEventType(models.Model):
     available_choice=((0,"启用"),(1,"禁用"))
     event_type_name = models.CharField(max_length=100, verbose_name='事件类型名称')
@@ -34,9 +35,12 @@ class DevEventType(models.Model):
     # creator =  models.ForeignKey(User, verbose_name='创建人')
     def __unicode__(self):
         return u"{}".format(self.event_type_name)
-    class Meta:  
-
-        verbose_name_plural = '事件类型'  
+        
+    class Meta:
+        permissions = (
+        ("view_deveventtype", u"技术员工：查看事件类型"),
+        )
+        verbose_name_plural = '事件类型' 
 
 
 class DevEvent(models.Model):
@@ -63,11 +67,15 @@ class DevEvent(models.Model):
     #     return self.start_time-self.end_time
     class Meta:
         permissions = (
-        ("export_excel", u"导出本人的事件为excel"),
-        ("analysis_devevent", "技术主管：分析周报事件"),
+        ("view_devevent", u"技术员工：查看本人的事件"),
+        ("insert_devevent", "技术员工：新增工作事件"),
+        ("export_excel", u"技术员工：导出本人的事件为excel"),
+        ("analysis_devevent", "技术主管：分析周报事件"),      
+
         )
-    class Meta:  
         verbose_name_plural = '周报事件' 
+
+        
 
 class WeekSummary(models.Model):
     natural_week = models.CharField(max_length=64, verbose_name='自然周')
@@ -82,12 +90,15 @@ class WeekSummary(models.Model):
 
     class Meta:
         permissions = (
+        ("view_weeksummary", u"所有员工:查看员工自己的周报总结"),
+        ("insert_weeksummary", u"所有员工:新增自己的周报总结"),
+        ("markDel_weeksummary", u"所有员工:标记删除自己的周报总结"),
         ("analysis_weekly_summary", u"所有主管:查看员工每周周报总结"),
         
         # ("close_task", "Can remove a task by setting its status as closed"),
         )
-    class Meta:  
-        verbose_name_plural = '周报总结'         
+        verbose_name_plural = '周报总结'    
+
 
 class SaleActiveType(models.Model):
     available_choice=((0,"启用"),(1,"禁用"))
@@ -101,7 +112,9 @@ class SaleActiveType(models.Model):
     def __unicode__(self):
         return u"{}".format(self.active_type_name)
     class Meta:  
-
+        permissions = (
+            ("view_SaleActivateType", u"销售员工:查看销售活动类型"),
+        )
         verbose_name_plural = '活动类型'  
 
 class SaleCustomer(models.Model):
@@ -127,6 +140,9 @@ class SaleCustomer(models.Model):
     def __unicode__(self):
         return u"{}".format(self.full_name)
     class Meta:  
+        permissions = (
+            ("view_SaleCustomer", u"销售员工:查看销售客户"),
+        )
         verbose_name_plural = '客户信息'  
 
 class SalePhase(models.Model):
@@ -146,13 +162,14 @@ class SalePhase(models.Model):
     def __unicode__(self):
         return u"{}".format(self.phase_name)
     class Meta:  
-
+        permissions = (
+            ("view_SalePhase", u"销售员工:查看销售阶段"),
+        )
         verbose_name_plural = '销售阶段'  
 
 class SaleTarget(models.Model):
-    natural_week = models.CharField(max_length=64, verbose_name='自然周')
-    phase_name = models.CharField(
-        max_length=64, verbose_name='阶段名称，例如B,C,D,E,F,G')
+    natural_week = models.CharField(max_length=64, verbose_name='自然周,如 2017-10 ')
+    phase_name = models.ForeignKey(SalePhase,verbose_name='阶段名称')
     target = models.IntegerField(verbose_name='目标')
     phase_count = models.IntegerField(verbose_name='最大拜访次数')
     sale_target_remark = models.CharField(max_length=64, null=True,
@@ -191,9 +208,10 @@ class SaleEvent(models.Model):
         return u"{}".format(self.visit_date)
         
     class Meta:
-        permissions = (
+        permissions = (            
+            ("view_SaleEvent", u"销售员工:查看销售拜访事件"),
+            ("insert_saleevent", u"销售员工:新增销售拜访事件"),
             ("analysis_sale_event", u"销售主管:分析销售拜访事件"),
             ("display_sale_event", u"销售主管:查询销售拜访事件"),        
         )
-    class Meta:  
-        verbose_name_plural = '销售事件' 
+        verbose_name_plural = '销售事件'

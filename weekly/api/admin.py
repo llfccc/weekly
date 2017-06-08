@@ -4,8 +4,8 @@ from api.models import DevEvent,DevEventType,DevProject,WeekSummary,SaleActiveTy
 
 
 class SaleTargetAdmin(admin.ModelAdmin):
-    search_fields = ('natural_week', 'phase_name','target','phase_count')
-    list_display =  ('natural_week', 'phase_name','target','phase_count','sale_target_owner')
+    search_fields = ('sale_target_owner','natural_week', 'phase_name','target','phase_count')
+    list_display =  ('sale_target_owner','natural_week', 'phase_name','target','phase_count')
     list_filter = ('natural_week','sale_target_owner')
     ordering = ('id','natural_week','phase_name',)
 

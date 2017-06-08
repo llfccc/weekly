@@ -20,12 +20,13 @@ class Department(models.Model):
         return u"{}".format(self.department_name)
     class Meta:
         permissions = (
-            ("view_department", "可以查看部门"),
+            ("view_department", "通用：可以查看部门"),
             # ("update_department", "可以修改部门"),
             # ("del_department", "可以删除部门"),
         )
-    class Meta:  
         verbose_name_plural = '部门'  
+
+        
 class Position(models.Model):
     '''
     职位表
@@ -38,13 +39,14 @@ class Position(models.Model):
     def __unicode__(self):
         return u"{}".format(self.position_name)
     # class Meta:
-    #     permissions = (
-    #         ("view_department", "可以查看部门"),
-    #         # ("update_department", "可以修改部门"),
-    #         # ("del_department", "可以删除部门"),
-    #     )
+
     class Meta:  
-        verbose_name_plural = '职位'  
+        verbose_name_plural = '职位'
+        permissions = (
+            ("view_position", "通用：可以查看职位"),
+            # ("update_department", "可以修改部门"),
+            # ("del_department", "可以删除部门"),
+        )  
 
 class User(AbstractUser):     #继承AbstractUser
     describition = models.TextField(null=True,blank=True,verbose_name='描述说明（非必须）')
@@ -58,12 +60,12 @@ class User(AbstractUser):     #继承AbstractUser
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
         permissions = (
-            ("get_chinesename", "自定义：查看中文用户"),
+            ("view_chinesename", "通用：查看用户中文名"),
             # ("update_department", "可以修改部门"),
             # ("del_department", "可以删除部门"),
         )
-    class Meta:  
-        verbose_name_plural = '用户'  
+        verbose_name_plural = '用户' 
+
 
 
 
