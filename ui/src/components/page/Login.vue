@@ -54,8 +54,7 @@ export default {
                             localStorage.setItem('ms_username',res.data.content.chinese_name);       
                             localStorage.setItem('department_id',res.data.content.department_id);         
                             var position = new Array("技术主管组", "销售主管组", "技术员工组", "销售员工组")
-                            for (var i in position) {
-                               
+                            for (var i in position) {                               
                                 if (premission.toString().indexOf(position[i]) > -1) {
                                     localStorage.setItem(position[i], true);
                                 }
