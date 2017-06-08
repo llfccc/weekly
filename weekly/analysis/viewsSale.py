@@ -75,10 +75,8 @@ class AnalysisSalePerformace(View):
         print(natural_week)
         filter_sql=filter_sale_event_sql(filter_date=filter_date,department_name=department_name)
         # 联合目标和实际记录
-        pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)
-        
+        pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)        
         data = fetch_data(pivot_sql)
-
         content = dict_to_json(data)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

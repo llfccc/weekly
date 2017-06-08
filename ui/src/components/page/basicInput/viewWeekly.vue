@@ -60,7 +60,7 @@
       </table>
   
     </div>
-    <br>
+
     </br>
   
     <el-card class="box-card" v-show="summary">
@@ -156,9 +156,9 @@ export default {
     get_weekly: function (params) {
       var self = this;
       var employee_name=localStorage.getItem("ms_username")
-      this.$axios.get('/analysis/analysis_devevent/', {
+      this.$axios.get('/works/get_dev_events/', {
         params: {
-          filter_date: self.filters.naturalWeek,
+          natural_week: self.filters.naturalWeek,
           employee_name: employee_name,
         }
       })
@@ -216,9 +216,9 @@ export default {
     get_summary: function (params) {
       var self = this;
       var employee_name=localStorage.getItem("ms_username")
-      this.$axios.get('/analysis/analysis_week_summary/', {
+      this.$axios.get('/works/get_weekly_summary/', {
         params: {
-          filter_date: self.filters.naturalWeek,
+          natural_week: self.filters.naturalWeek,
           employee_name: employee_name,
         }
       })

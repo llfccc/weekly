@@ -43,8 +43,7 @@ class LoginHandler(View):
 
                 row = fetch_data(userGroup_sql)
                 group_list=[v.get("name") for v in row]
-                
-                print(group_list)
+
                 content = {"username": username, "chinese_name": chinese_name,\
                            "position_id": position_id, "user_id": user_id,\
                            "department_id":department_id,"group_list":group_list}
@@ -70,7 +69,7 @@ class RegisterHandler(View):
             # group_name = data['group_name']
             password = data['password']
             password2 = data['password']
-            print(username)
+
             if not User.objects.all().filter(username=username):
                     user = User.objects.create_user(username, '', password)
                     user.save() 

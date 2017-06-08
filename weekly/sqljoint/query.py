@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from utils.tools import getMondaySunday
+from utils.tools import getMondaySunday,get_first_day
 from accounts.models import User,Department
 
 def default_date(filter_date):
@@ -17,13 +17,16 @@ def default_date(filter_date):
     return (start_date,end_date)
 
 
-def filter_dev_event_sql(filter_date='',project_name='',project_id='',department_id='',department_name='',employee_name='',user_id=''):
+def filter_dev_event_sql(filter_date='',natural_week='',project_name='',project_id='',department_id='',department_name='',employee_name='',user_id=''):
     '''
     给sql加入筛选条件
     '''
     select_param="*,dev.id as dev_event_id" 
     
     start_date, end_date=default_date(filter_date)
+    print()
+    if natural_week:
+        start_date, end_date=get_first_day(natural_week)
     where_condition = u"dev.event_date>='{0}' and dev.event_date<='{1}' ".format(start_date, end_date)
     if project_name:
         where_condition += "and project.project_name like '%{0}%' ".format(project_name)
@@ -55,11 +58,10 @@ def filter_dev_event_sql(filter_date='',project_name='',project_id='',department
         select_param, where_condition)        
     return plain_sql
 
-def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_name='',employee_name=''):
+def filter_sale_event_sql(filter_date='',natural_week='',user_id='',customer_id='',department_name='',employee_name=''):
     '''
     给sql加入筛选条件
     '''
-
     sale_event_field = ["sale.id as sale_event_id", "cus_con_post", "visit_date", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark"]
     active_type_field=['active_type_name']
     sale_customer_field=['customer.id as customer_id','short_name ']
@@ -69,6 +71,8 @@ def filter_sale_event_sql(filter_date='',user_id='',customer_id='',department_na
     select_param = ",".join(all_select_field)
 
     start_date, end_date=default_date(filter_date)
+    if natural_week:
+        start_date, end_date=get_first_day(natural_week)
     where_condition = u"sale.visit_date>='{0}' and sale.visit_date<='{1}' ".format(start_date, end_date)
 
     #筛选部门中所有人员

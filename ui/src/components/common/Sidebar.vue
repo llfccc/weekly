@@ -10,7 +10,8 @@
                 <el-menu-item   index="insertDevWork" v-show="permission.tech_perm">添加事件</el-menu-item>
                 <el-menu-item  index="insertSaleEvent" v-show="permission.sale_perm">添加拜访</el-menu-item>
                 <el-menu-item index="insertWeekSummary">添加总结</el-menu-item>    
-                <el-menu-item index="viewWeekly">查看周报</el-menu-item>
+                <el-menu-item index="viewWeekly" v-show="permission.tech_perm">查看周报</el-menu-item>
+                <el-menu-item index="viewSaleEvent" v-show="permission.sale_perm">查看拜访</el-menu-item>
             </el-submenu>
             <el-submenu index="3" v-show="permission.tech_mang_perm">
                 <template slot="title">

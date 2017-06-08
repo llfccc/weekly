@@ -37,6 +37,11 @@ export default new Router({
             path: '/viewWeekly',
             component: resolve => require(['../components/page/basicInput/viewWeekly.vue'], resolve)
         },
+
+        {
+            path: '/viewSaleEvent',
+            component: resolve => require(['../components/page/basicInput/viewSaleEvent.vue'], resolve)
+        },
         {
             path: '/downloadExcel',
             component: resolve => require(['../components/page/DownloadExcel.vue'], resolve)

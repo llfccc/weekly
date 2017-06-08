@@ -117,9 +117,7 @@ class AnanlysisLoad(LoginRequiredMixin,View):
         # 创建查询条件       
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
         group_sql = u'select chinese_name, ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600/5)::numeric,3)   as date_diff  from ({0}) as child group by chinese_name order by date_diff desc'.format(plain_sql)
-
-        row = fetch_data(group_sql)
-     
+        row = fetch_data(group_sql)    
 
         #转换数据为echarts能接受的格式
         x_data=[i['chinese_name'] for i in row]
@@ -202,7 +200,7 @@ class AnanlysisLoad(LoginRequiredMixin,View):
 
 class AnalysisDevEvent(View):
     '''
-    查询非销售职员工每日工作事件
+    查询技术员工每日工作事件
     '''
 
     def get(self, request):

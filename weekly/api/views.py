@@ -22,7 +22,7 @@ from utils.export_excel import ReportExcel
 from utils.tools import fetch_data,get_user_id,get_first_day,get_day_of_week
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
-
+from utils.tools import fetch_data,get_first_day,day_of_week
 
 
 
@@ -41,23 +41,31 @@ class GetDevEvent(LoginRequiredMixin,View):
         getParams = request.GET
         project_id = getParams.get('project_id', '')
         filter_date = getParams.get('filter_date', '')
-        
-        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
+        natural_week = getParams.get('natural_week', '')
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,natural_week=natural_week,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
 
         #限定返回给前端的字段
-        result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
-        result_list=[]
-        for row in query_result:
-            row_dict={}
-            #由id转换成对应具体的人名
-            row_dict['down_reporter_name']=userid_to_chinesename(row['down_reporter_ids'])
-            row_dict['up_reporter_name']=userid_to_chinesename(row['up_reporter_id'])
-            for key in result_field:
-                row_dict[key]=row.get(key,'')
-            result_list.append(row_dict)
+        # result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
 
-        content = dict_to_json(result_list)
+        alternation_list=[]
+        event_date_list=[]   #保存所有不重复的日期
+        for key,value in enumerate(query_result): 
+            '''
+            获取所有日期字段保存为list，并将需要的字段放入alternation_list备用
+            '''          
+            event_date=value.get('event_date').strftime("%Y-%m-%d")
+            event_date_list.append(event_date)  
+            duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
+            data_list=['project_name','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
+            field_data={key:value.get(key) for key in data_list}
+            field_data['duration_time']=int(duration_time)
+            field_data['event_date']=event_date
+            field_data['which_day']=day_of_week(field_data['event_date']) 
+            field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
+            field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
+            alternation_list.append(field_data)
+        content = dict_to_json(alternation_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -105,7 +113,7 @@ class InsertDevWork(LoginRequiredMixin,View):
         content = {"id": 0}    
         result = {}            
         for t in insert_field:
-            result[t] = data.get(t,None)        
+            result[t] = data.get(t,None).strip()        
         if result['fin_percentage'].isdigit():
             if not (int(result['fin_percentage'])>0 and int(result['fin_percentage'])<=100):
                 return my_response(code=1, msg=u"数字范围取值错误", content=content)
@@ -143,14 +151,23 @@ class GetSaleEvents(LoginRequiredMixin,View):
         user_id=get_user_id(request)        
         getParams = request.GET
        
-        filter_date = getParams.get('filter_date', '')
+        filter_date = getParams.get('filter_date','')
         customer_id= getParams.get('customer_id', '')
+        natural_week = getParams.get('natural_week', '')
         #如果传入了周数，则转成日期段
         # if filter_date:
-        #     filter_date='-'.join(getfirstday(filter_date))     
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,customer_id=customer_id,department_name='')
-        row = fetch_data(plain_sql)     
-        content = dict_to_json(row)
+        #     filter_date='-'.join(getfirstday(filter_date))
+
+        plain_sql=filter_sale_event_sql(filter_date=filter_date,natural_week=natural_week,user_id=user_id,customer_id=customer_id,department_name='')
+        data = fetch_data(plain_sql)
+        result_list=[]
+        for row in data:
+            result_dict={}
+            for key,value in row.items():
+                result_dict[key]=value
+            result_dict['which_day']=day_of_week(str(row['visit_date']))
+            result_list.append(result_dict)     
+        content = dict_to_json(result_list)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -163,7 +180,7 @@ class InsertCustomer(LoginRequiredMixin,View):
                        "sale_customer_remark"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t,None)
+            result[t] = data.get(t,None).strip()
 
         customer_exist=SaleCustomer.objects.filter(full_name=result.get('full_name')).all()
         if customer_exist:
@@ -277,7 +294,7 @@ class InsertSummary(LoginRequiredMixin,View):
         insert_field = ["natural_week", "summary", "self_evaluation", "plan"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t,None)
+            result[t] = data.get(t,None).strip()
 
         natural_week=result['natural_week'][:7]
         __match=re.compile('^\d{4}-\d{2}').match(natural_week)
@@ -356,7 +373,7 @@ class InsertSaleEvent(LoginRequiredMixin,View):
         result = {}
         for t in insert_field:
 
-            result[t] = data.get(t,None)
+            result[t] = data.get(t,None).strip()
         result['sale_event_owner_id'] = user_id
         content = {"id": 0}
         print(result)
