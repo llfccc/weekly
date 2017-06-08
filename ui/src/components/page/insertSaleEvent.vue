@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <h1 class="title"  style="align:center;">登记拜访</h1>
-</br>
+        <!--<h1 class="title"  style="align:center;">登记拜访</h1>
+<!--</br>-->
 
 </br>
         <el-form :inline="true" :model="filters">
-          <el-col :span="12" class="toolbar" style="padding-bottom: 0px;">
+          <el-col :span="16" class="toolbar" style="padding-bottom: 0px;">
             <span class="demonstration">筛选客户</span>
             <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
                 <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">

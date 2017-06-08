@@ -11,6 +11,7 @@ from utils.tools import my_response, queryset_to_dict, dict_to_json
 from sqljoint.query import departmentname_to_departmentid
 from django.contrib import auth
 from utils.tools import fetch_data
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 class LoginHandler(View):
@@ -120,23 +121,23 @@ def logout(req):
     return response
 
 
-class GetUsername(View):
+class GetUsername(LoginRequiredMixin,View):
     '''
     查询所有用户中文名或者根据部门名来筛选
     '''
     def get(self, request):   
         getParams = request.GET
-        department_id = getParams.get('department_id', '')
+        # department_id = getParams.get('department_id', '')
 
-        if department_id:
-            user_queryset=User.objects.filter(department_id=department_id).all()
-        else:
-            user_queryset=User.objects.all()
+        # if department_id:
+        #     user_queryset=User.objects.filter(department_id=department_id).all()
+        # else:
+        user_queryset=User.objects.all()
         user_ids=tuple([i.id for i in user_queryset])           
-        data = User.objects.filter(pk__in=user_ids).all()
-
-        query_field = ["id","username","chinese_name","department_id", "position_id"]
+        data = User.objects.filter(pk__in=user_ids).all()     
+        query_field = ["id","username","chinese_name","department", "position"]
         data_dict = queryset_to_dict(data, query_field)
         content = dict_to_json(data_dict)
+
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

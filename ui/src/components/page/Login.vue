@@ -14,7 +14,7 @@
                 </div>
                 <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名admin 密码lanzhong</p>
                 <p style="font-size:12px;line-height:30px;color:#999;">
-                    <a href="/register">注册新账号</a>
+                    <!--<a href="/register">注册新账号</a>-->
                 </p>
             </el-form>
         </div>
@@ -51,7 +51,8 @@ export default {
                             var login_data = JSON.stringify(res.data.content);
                             var premission = res.data.content.group_list
                             localStorage.setItem('login_data', login_data);
-                            localStorage.setItem('ms_username',res.data.content.chinese_name);              
+                            localStorage.setItem('ms_username',res.data.content.chinese_name);       
+                            localStorage.setItem('department_id',res.data.content.department_id);         
                             var position = new Array("技术主管组", "销售主管组", "技术员工组", "销售员工组")
                             for (var i in position) {
                                

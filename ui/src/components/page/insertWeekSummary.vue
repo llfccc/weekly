@@ -1,13 +1,13 @@
 <template>
     <div>
-            <h1 class="title" >添加总结</h1>
+            <!--<h1 class="title" >添加总结</h1>-->
 
-        <el-col :span="4">
+        <el-col :span="6">
             <span class="demonstration">筛选时间</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="filterDateChange" placeholder="选择周">
             </el-date-picker>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
         </el-col>
         <el-button type="success" @click="handleAdd">新增</el-button>

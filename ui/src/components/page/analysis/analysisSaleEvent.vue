@@ -1,19 +1,21 @@
 <template>
   <!--为echarts准备一个具备大小的容器dom-->
   <div>
-    <h1 class="title" style="align:center;">周拜访分析</h1>
+    <!--<h1 class="title" style="align:center;">周拜访分析</h1>-->
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
-          <el-col :span="8">
-            <span class="demonstration">筛选时间</span>
+          <el-col :span="7">
+            <span class="demonstration">时间：</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
   
-          <el-col :span="4">
+          <el-col :span="6">
+            <span class="demonstration">员工：</span>
+  
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
               </el-option>
             </el-select>
           </el-col>
@@ -24,11 +26,10 @@
         </el-form>
       </el-col>
       </br>
-    </br>
-    </br>
-    </br>
-
-
+      </br>
+      </br>
+      </br>
+  
       <el-table :data="sale_event_list" stripe style="width: 100%">
         <el-table-column prop="visit_date" label="日期" width="180">
         </el-table-column>
@@ -50,7 +51,6 @@
     </br>
     </br>
     </br>
-
   
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
@@ -117,6 +117,19 @@ export default {
       },
       summary: '',
       user_list: [],
+    }
+  },
+  computed: {
+    filter_user_list() {
+      var self = this;
+      let department_id = localStorage.getItem('department_id');
+      var filter_user_list = new Array();
+      for (var i in self.user_list) {
+        if (self.user_list[i].department == department_id) {
+          filter_user_list.push(self.user_list[i])
+        }
+      }
+      return filter_user_list
     }
   },
   methods: {

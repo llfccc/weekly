@@ -1,36 +1,38 @@
 <template>
   <div>
-        <h1 class="title" style="align:center;">周报分析</h1>
-
+    <!--<h1 class="title" style="align:center;">周报分析</h1>-->
+  
     <div>
       <el-form :inline="true" :model="filters">
   
-        <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
+        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
-            <span class="demonstration">筛选时间</span>
+            <span class="demonstration">时间：</span>
             <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
+        <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
-            <span class="demonstration">筛选项目</span>
+            <span class="demonstration">项目：</span>
             <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
               <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.project_name">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
+        <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
-  
-            <span class="demonstration">筛选员工</span>
+            <span class="demonstration">员工：</span>
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
               </el-option>
             </el-select>
-            <el-button type="primary" @click="filter">筛选</el-button>
           </el-form-item>
+        </el-col>
+        <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
+          <el-button type="primary" @click="filter">筛选</el-button>
+  
         </el-col>
       </el-form>
     </div>
@@ -64,13 +66,12 @@ export default {
   name: '',
   data() {
     return {
-      user_list: [],
-      project_list: [],
+      user_list: '',
+      project_list: '',
       filters: {
         project_name: '',
         employee_name: '',
         project_id: '',
-        project_name: '',
         filter_date: '',
         // start_date: '',
         // end_date: '',
@@ -129,6 +130,19 @@ export default {
         y_data: [],
         y_change_data: [],
       },
+    }
+  },
+  computed: {
+    filter_user_list() {
+      var self = this;
+      let department_id = localStorage.getItem('department_id');
+      var filter_user_list = new Array();
+      for (var i in self.user_list) {
+        if (self.user_list[i].department == department_id) {
+          filter_user_list.push(self.user_list[i])
+        }
+      }
+      return filter_user_list
     }
   },
   methods: {
@@ -526,11 +540,6 @@ export default {
     this.$nextTick(function () {
       this.get_users();
       this.get_projects();
-
-      // this.analysis_department();
-      // this.analysis_load();
-      // this.analysis_position();
-
     })
   }
 }

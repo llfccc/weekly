@@ -1,7 +1,7 @@
 <template>
   <!--为echarts准备一个具备大小的容器dom-->
   <div>
-    <h1 class="title" style="align:center;">销售业绩分析</h1>
+    <!--<h1 class="title" style="align:center;">销售业绩分析</h1>-->
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
   

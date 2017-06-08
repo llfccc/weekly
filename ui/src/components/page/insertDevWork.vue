@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div>
+        <!--<div>
             <h1 class="title">工作内容</h1>
-        </div>
+        </div>-->
     
         <div class="filter">
             <el-row>
                 <el-col :span="4" class="toolbar" style="padding-bottom: 0px;">
                 </el-col>
-                <el-col :span="10" class="toolbar" style="padding-bottom: 0px;">
+                <el-col :span="16" class="toolbar" style="padding-bottom: 0px;">
                     <span class="demonstration">筛选项目</span>
                     <el-select v-model="filters.project_id" clearable filterable placeholder="项目名">
                         <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.id">
@@ -308,7 +308,6 @@ export default {
         },
         get_users: function (params) {
             var self = this;
-
             this.$axios.get('/accounts/get_username/')
                 .then(function (response) {
                     self.user_list = eval(response.data.content);
@@ -363,7 +362,7 @@ export default {
             this.$axios.post('/works/insert_devevent/', str).then(function (response) {
 
                 if (response.data.code == 0) {
-                    self.get_data()
+            
                     self.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'
@@ -378,7 +377,7 @@ export default {
             });
             // window.location.reload();
             this.addFormVisible = false;
-            this.get_data();
+            this.get_data()
             // var clean_field = ['description', 'event_time','start_time','end_time','fin_percentage','up_reporter_id','down_reporter_ids','dev_event_remark','dev_event_project_id','project_name','event_type_id']
             // for (var i = 0; i < clean_field.length; i++) {
             //     self.insertForm[clean_field[i]] = '';

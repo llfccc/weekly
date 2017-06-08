@@ -46,7 +46,7 @@
             <el-submenu index="6"  v-show="permission.sale_mang_perm">
                 <template slot="title">
                     <i class="el-icon-setting"></i>基础数据</template>
-                    <el-menu-item index="projectManage"><a href="http://192.168.19.12/admin">数据管理</a></el-menu-item>
+                    <a href="http://192.168.19.12/admin"><el-menu-item index="projectManage">数据管理</el-menu-item></a>
                 <!--<el-menu-item index="projectManage">项目管理</el-menu-item>
                 <el-menu-item index="saleTarget">销售目标管理</el-menu-item>
                 <el-menu-item index="saleCustmoer">客户管理</el-menu-item>-->

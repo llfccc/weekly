@@ -1,19 +1,19 @@
 <template> 
   <div>
-    <div class="hidden">隐藏内容:飞速中文网 </div>
-    <h1 class="title" style="align:center;">查看员工周报</h1>
+
+    <!--<h1 class="title" style="align:center;">查看员工周报</h1>-->
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
-          <el-col :span="4">
+          <el-col :span="6">
             <span class="demonstration">条件:</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
   
-          <el-col :span="4">
+          <el-col :span="6">
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-              <el-option v-for="item in user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+              <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
               </el-option>
             </el-select>
           </el-col>
@@ -46,7 +46,7 @@
           <tr v-for="item in weekly_dict">
             <td  width="9%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.event_date}}</td>
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.which_day}}</td>
-            <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.project_name}}</td>
+            <td width="8%" >{{item.project_name}}</td>
             <td width="10%">{{item.event_type_name}}</td>  
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.total_time}}</td>
             <td width="10%">{{item.description}}</td>  
@@ -117,6 +117,19 @@ export default {
       },
       summary: '',
       user_list: '',
+    }
+  },
+    computed: {
+    filter_user_list() {
+      var self = this;
+      let department_id = localStorage.getItem('department_id');
+      var filter_user_list = new Array();
+      for (var i in self.user_list) {
+        if (self.user_list[i].department == department_id) {
+          filter_user_list.push(self.user_list[i])
+        }
+      }
+      return filter_user_list
     }
   },
   methods: {
