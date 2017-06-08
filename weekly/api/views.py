@@ -105,10 +105,7 @@ class InsertDevWork(LoginRequiredMixin,View):
         content = {"id": 0}    
         result = {}            
         for t in insert_field:
-            value=data.get(t,'')
-            if value:
-                result[t] = value
-        
+            result[t] = data.get(t,None)        
         if result['fin_percentage'].isdigit():
             if not (int(result['fin_percentage'])>0 and int(result['fin_percentage'])<=100):
                 return my_response(code=1, msg=u"数字范围取值错误", content=content)
@@ -118,7 +115,6 @@ class InsertDevWork(LoginRequiredMixin,View):
             result['dev_event_owner_id'] = user_id
         else:
             return my_response(code=1, msg=u"未登录", content=content)
-
         try:
             insert_process = DevEvent(**result)
             insert_process.save()
@@ -127,7 +123,6 @@ class InsertDevWork(LoginRequiredMixin,View):
         except:
             response = my_response(code=1, msg=u"插入数据失败", content=content)
         return response
-
 
 
 class Test(LoginRequiredMixin,View):
@@ -164,24 +159,23 @@ class InsertCustomer(LoginRequiredMixin,View):
         user_id=get_user_id(request)
         content = {"id": 0}
         data = request.POST
-        print(data)
         insert_field = ["full_name", "short_name","contact_post", "contact_name", "contact_mdn", "contact_tel_num",
                        "sale_customer_remark"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t)
-        customer_exist=SaleCustomer.objects.filter(full_name=result['full_name']).all()
-        print(customer_exist)
+            result[t] = data.get(t,None)
+
+        customer_exist=SaleCustomer.objects.filter(full_name=result.get('full_name')).all()
         if customer_exist:
-            response = my_response(code=1, msg=u"客户已存在")
-            return response
-        result['sale_customer_owner_id'] = user_id
-        
+            return my_response(code=1, msg=u"客户已存在")             
+        result['sale_customer_owner_id'] = user_id        
+        print(result)
         if result:
             insert_process = SaleCustomer(**result)
             try:
                 insert_process.save()
                 content = {"id": insert_process.id}
+                print(content)
                 response = my_response(code=0, msg=u'恭喜你，新增成功', content=content)
             except:
                 response = my_response(code=1, msg=u'插入失败', content=content)
@@ -283,7 +277,7 @@ class InsertSummary(LoginRequiredMixin,View):
         insert_field = ["natural_week", "summary", "self_evaluation", "plan"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t)
+            result[t] = data.get(t,None)
 
         natural_week=result['natural_week'][:7]
         __match=re.compile('^\d{4}-\d{2}').match(natural_week)
@@ -356,26 +350,24 @@ class InsertSaleEvent(LoginRequiredMixin,View):
     def post(self, request):
         user_id=get_user_id(request)       
         data = request.POST
-
         
         insert_field = ["visit_date", "cus_con_post", "cus_con_mdn", "cus_con_tel_num", "cus_con_wechart", "communicate_record", "sale_event_remark", "sale_phase_id",
                 "active_type_id", "sale_customer_id"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t)
 
+            result[t] = data.get(t,None)
         result['sale_event_owner_id'] = user_id
-
         content = {"id": 0}
+        print(result)
         if result:
-            insert_process = SaleEvent(**result)
-            insert_process.save()
+            insert_process = SaleEvent(**result) 
             try:
                 insert_process.save()
                 content = {"id": insert_process.id}
-                response = my_response(code=0, msg=u"success", content=content)
+                response = my_response(code=0, msg=u"新增拜访记录成功", content=content)
             except:
-                response = my_response(code=1, msg=u"error", content=content)
+                response = my_response(code=1, msg=u"新增失败，可能漏填项目", content=content)
         return response
 
 
@@ -388,7 +380,7 @@ class DelDevEvent(LoginRequiredMixin,View):
     def get(self, request):
         user_id=get_user_id(request) 
         data = request.GET
-        delID = data.get("delID")
+        delID = data.get("delID",-1)
         del_queryset = DevEvent.objects.filter(id=delID).first()
         if not del_queryset:
             return  my_response(code=1, msg=u"删除失败，可能已经不存在")
@@ -408,7 +400,7 @@ class DelSaleEvent(LoginRequiredMixin,View):
     def get(self, request):
         user_id=get_user_id(request) 
         data = request.GET
-        delID = data.get("delID")
+        delID = data.get("delID",-1)
         del_queryset = SaleEvent.objects.filter(id=delID).first()
         if not del_queryset:
             return  my_response(code=1, msg=u"删除失败，可能已经不存在")
@@ -427,7 +419,7 @@ class DelSummary(LoginRequiredMixin,View):
     def get(self, request):
         user_id=get_user_id(request) 
         data = request.GET
-        delID = data.get("delID")
+        delID = data.get("delID",-1)
         del_queryset = WeekSummary.objects.filter(id=delID).first()
         if not del_queryset:
             return  my_response(code=1, msg=u"删除失败，可能已经不存在")

@@ -1,86 +1,111 @@
 <template>
     <div>
-
+    
         <!--<h1 class="title"  style="align:center;">登记拜访</h1>
-<!--</br>-->
-
-</br>
+                            <!--</br>-->
+    
+        </br>
         <el-form :inline="true" :model="filters">
-          <el-col :span="16" class="toolbar" style="padding-bottom: 0px;">
-            <span class="demonstration">筛选客户</span>
-            <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
-                <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
-                </el-option>
-            </el-select>
-            <span class="demonstration">筛选时间</span>
-            <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-            </el-date-picker>
-            <el-form-item>
-                <el-button type="primary" v-on:click="filter">查询</el-button>
-            </el-form-item>
-                    </el-col>
-                        <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">                            
+            <el-col :span="16" class="toolbar" style="padding-bottom: 0px;">
+                <span class="demonstration">筛选客户</span>
+                <el-select v-model="filters.customer_id" clearable filterable placeholder="客户名">
+                    <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
+                    </el-option>
+                </el-select>
+                <span class="demonstration">筛选时间</span>
+                <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+                </el-date-picker>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="filter">查询</el-button>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8" class="toolbar" style="padding-bottom: 0px;">
                 <el-form-item>
                     <el-button type="success" @click="handleAddVisit">新增拜访</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
-    </br>
-</br>
-</br>
-
-
-        <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false">
-    
+        </br>
+        </br>
+        </br>
+        <el-dialog title="新增客户" v-model="addCustomerVisible" :close-on-click-modal="false" size="tiny">
             <el-form ref="addCustomerForm" :model="addCustomerForm" label-width="90px">
                 <el-form-item label="客户全称">
-                    <el-input type="text" class="form-control" id="full_name" placeholder="客户全称" v-model="addCustomerForm.full_name">客户全称
-                    </el-input>
+                    <el-col :span="24">
+                        <el-input type="text" class="form-control" id="full_name" placeholder="客户全称" v-model="addCustomerForm.full_name">客户全称
+                        </el-input>
+                    </el-col>
+    
                 </el-form-item>
                 <el-form-item label="客户简称">
-                    <el-input type="text" class="form-control" id="short_name" placeholder="客户简称" v-model="addCustomerForm.short_name">客户简称
-                    </el-input>
+                    <el-col :span="24">
+    
+                        <el-input type="text" class="form-control" id="short_name" placeholder="客户简称" v-model="addCustomerForm.short_name">客户简称
+                        </el-input>
+                    </el-col>
                 </el-form-item>
     
                 <el-form-item label="联系人">
-                    <el-input type="text" class="form-control" id="contact_name" placeholder="主要联系人姓名" v-model="addCustomerForm.contact_name">主要联系人姓名
-                    </el-input>
-                    <el-input type="text" class="form-control" id="contact_post" placeholder="主要联系人职位" v-model="addCustomerForm.contact_post">主要联系人职位
-                    </el-input>
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="contact_name" placeholder="主要联系人姓名" v-model="addCustomerForm.contact_name">主要联系人姓名
+                        </el-input>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="contact_post" placeholder="主要联系人职位" v-model="addCustomerForm.contact_post">主要联系人职位
+                        </el-input>
+                    </el-col>
                 </el-form-item>
     
                 <el-form-item label="联系方式">
-                    <el-input type="text" class="form-control" id="contact_tel_num" placeholder="主要联系人电话号码" v-model="addCustomerForm.contact_tel_num">主要联系人电话号码
-                    </el-input>
-                    <el-input type="text" class="form-control" id="contact_mdn" placeholder="主要联系人手机号码" v-model="addCustomerForm.contact_mdn">主要联系人手机号码
-                    </el-input>
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="contact_mdn" placeholder="主要联系人手机号码" v-model="addCustomerForm.contact_mdn">主要联系人手机号码
+                        </el-input>
+                    </el-col>
+    
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="contact_tel_num" placeholder="主要联系人电话号码" v-model="addCustomerForm.contact_tel_num">主要联系人电话号码
+                        </el-input>
+                    </el-col>
+    
                 </el-form-item>
     
-                <el-form-item label="其他：">
-                    <el-input type="textarea" class="form-control" id="sale_customer_remark" placeholder="备注" v-model="addCustomerForm.sale_customer_remark">
-                        备注
-                    </el-input>
+                <el-form-item label="备注：">
+                    <el-col :span="24">
+                        <el-input type="textarea" class="form-control" id="sale_customer_remark" placeholder="备注" v-model="addCustomerForm.sale_customer_remark">
+                            备注
+                        </el-input>
+                    </el-col>
+    
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="addCustomerVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addCustomer" :loading="addLoading">提交</el-button>
-            </div>
-        </el-dialog>
     
+            <div slot="footer" class="dialog-footer">
+                <el-col :span="16">
+                    <el-button @click.native="addCustomerVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="addCustomer" :loading="addLoading">提交</el-button>
+                </el-col>
+                </br>
+                </br>
+                </br>
+            </div>
+    
+        </el-dialog>
         <el-dialog title="新增拜访" v-model="addEventVisible" :close-on-click-modal="false">
-            <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
             <el-form ref="addEventForm" :model="addEventForm" label-width="90px">
+                <!--<el-form-item label="拜访时间">
+      
+                    </el-form-item>-->
                 <el-form-item label="拜访对象">
-                    <el-date-picker v-model="addEventForm.visit_date" type="date" placeholder="拜访时间" @change="dateChange" :picker-options="dateOption">
-                    </el-date-picker>
                     <el-select v-model="addEventForm.sale_customer_id" clearable filterable placeholder="客户名">
                         <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
                         </el-option>
                     </el-select>
-    
+                    <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
                 </el-form-item>
-                <el-form-item label="类型">
+    
+                <el-form-item label="拜访信息">
+                    <el-date-picker v-model="addEventForm.visit_date" type="date" placeholder="拜访时间" @change="dateChange" :picker-options="dateOption">
+                    </el-date-picker>
                     <el-select v-model="addEventForm.active_type_id" clearable filterable placeholder="拜访类型">
                         <el-option v-for="item in sale_event_type_list" :key="item.id" :label="item.active_type_name" :value="item.id">
                         </el-option>
@@ -91,44 +116,35 @@
                     </el-select>
                 </el-form-item>
     
-                <el-form-item label="工作内容">
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="cus_con_post" placeholder="主要联系人电话号码" v-model="addEventForm.cus_con_post">主要联系人电话号码
+                <el-form-item label="客户信息">
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="cus_con_post" placeholder="客户职位" v-model="addEventForm.cus_con_post">主要联系人电话号码
                         </el-input>
                     </el-col>
     
-                    <el-col :span="8">
-    
-                        <el-input type="text" class="form-control" id="cus_con_mdn" placeholder="手机号码" v-model="addEventForm.cus_con_mdn">手机号码
-    
-                        </el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="工作内容">
-                    <el-col :span="8">
-                        <el-input type="text" class="form-control" id="cus_con_tel_num" placeholder="客户联系方式" v-model="addEventForm.cus_con_tel_num">客户联系方式
-                        </el-input>
-    
-                    </el-col>
-                    <el-col :span="8">
-    
-                    </el-col>
-                    <el-col :span="8">
+                    <el-col :span="12">
                         <el-input type="text" class="form-control" id="cus_con_wechart" placeholder="客户的微信号" v-model="addEventForm.cus_con_wechart">客户的微信号
                         </el-input>
-    
                     </el-col>
     
                 </el-form-item>
+                <el-form-item label="联系方式">
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="cus_con_mdn" placeholder="手机号码" v-model="addEventForm.cus_con_mdn">手机号码
+                        </el-input>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-input type="text" class="form-control" id="cus_con_tel_num" placeholder="客户电话号码" v-model="addEventForm.cus_con_tel_num">客户联系方式
+                        </el-input>
+                    </el-col>
     
-                <el-form-item label="其他：">
+                </el-form-item>
+                <el-form-item label="沟通成果：">
                     <el-input type="textarea" class="form-control" id="communicate_record" placeholder="沟通成果" v-model="addEventForm.communicate_record">沟通成果
                     </el-input>
-                    <el-col :span="8">
-                    </el-col>
     
                 </el-form-item>
-                <el-form-item label="其他：">
+                <el-form-item label="备注：">
                     <el-input type="textarea" class="form-control" id="sale_event_remark" placeholder="备注" v-model="addEventForm.sale_event_remark">
                         备注
                     </el-input>
@@ -164,9 +180,9 @@
             <el-table-column prop="sale_event_remark" label="备注" width="150">
             </el-table-column>
     
-            <el-table-column label="操作" width="180" fixed="right">
+            <el-table-column label="操作" width="160" fixed="right">
                 <template scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -314,7 +330,6 @@ export default {
         this.get_sale_event()
         this.get_customers()
         this.get_sale_phases()
-
         this.get_sale_event_types()
     },
     methods: {
@@ -342,7 +357,7 @@ export default {
             this.$axios.get('/works/get_sale_phases/')
                 .then(function (response) {
                     self.sale_phase_list = eval(response.data.content);
-                    console.log(self.sale_phase_list)
+
                 }
                 );
         },
@@ -375,13 +390,13 @@ export default {
                     // self.work_list.push(self.form);
                     self.$message({
                         message: response.data.msg,
-                        type: '新增拜访记录成功'
+                        type: 'success'
                     });
-                    this.get_customers();
+
                 } else {
                     self.$message({
                         message: response.data.msg,
-                        type: '新增失败'
+                        type: 'error'
                     });
                 }
             });
@@ -392,9 +407,9 @@ export default {
 
         addWork: function () {
             var self = this;
-
             let str = 'visit_date=' + self.addEventForm.visit_date + '&cus_con_post=' + self.addEventForm.cus_con_post + '&cus_con_mdn=' + self.addEventForm.cus_con_mdn + '&cus_con_tel_num=' + self.addEventForm.cus_con_tel_num + '&cus_con_wechart=' + self.addEventForm.cus_con_wechart + '&communicate_record=' + self.addEventForm.communicate_record + '&sale_event_remark=' + self.addEventForm.sale_event_remark + '&sale_event_owner_id=' + self.addEventForm.sale_event_owner_id + '&active_type_id=' + self.addEventForm.active_type_id + '&sale_customer_id=' + self.addEventForm.sale_customer_id + '&sale_phase_id=' + self.addEventForm.sale_phase_id;
             this.$axios.post('/works/insert_sale_event/', str).then(function (response) {
+
                 if (response.data.code == 0) {
                     self.get_sale_event()
                     self.$message({
@@ -473,6 +488,6 @@ export default {
 }
 
 .filter {
-    margin-top:40px
+    margin-top: 40px
 }
 </style>

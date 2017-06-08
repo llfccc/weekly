@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'insert_customer/', permission_required('api.add_salecustomer')(InsertCustomer.as_view()), name="api_DelWork"),
     url(r'del_sale_event/', permission_required('api.delete_saleevent')(DelSaleEvent.as_view()), name="api_DelSaleEvent"),  
     url(r'get_saleevents/', permission_required('api.view_saleevent')(GetSaleEvents.as_view()), name="api_get_works"),
-    url(r'insert_customer/', permission_required('api.add_salecustomer')(InsertCustomer.as_view()), name="api_insert_customer"),
     url(r'get_customers/', permission_required('api.view_salecustomer')(GetCustomers.as_view()), name="api_get_works"),
     url(r'get_sale_event_types/', permission_required('api.view_saleactivetype')(GetSaleActiveTypes.as_view()), name="api_get_works"),
 

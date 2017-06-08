@@ -108,11 +108,11 @@ class SaleCustomer(models.Model):
     '''
     客户信息表
     '''
-    full_name = models.CharField(max_length=100, verbose_name='客户全称')
-    short_name = models.CharField(max_length=100, verbose_name='客户简称')
-    contact_post = models.CharField(max_length=100, verbose_name='主要联系人职位')
-    contact_name = models.CharField(max_length=100, verbose_name='主要联系人姓名')
-    contact_mdn = models.CharField(max_length=100, verbose_name='主要联系人手机号码')
+    full_name = models.CharField(null=False,blank=False,max_length=100, verbose_name='客户全称')
+    short_name = models.CharField(null=False,blank=False,max_length=100, verbose_name='客户简称')
+    contact_post = models.CharField(null=False,blank=False,max_length=100, verbose_name='主要联系人职位')
+    contact_name = models.CharField(null=False,blank=False,max_length=100, verbose_name='主要联系人姓名')
+    contact_mdn = models.CharField(null=False,blank=False,max_length=100, verbose_name='主要联系人手机号码')
     contact_tel_num = models.CharField(
         max_length=100, verbose_name='主要联系人电话号码')
     sale_customer_remark = models.CharField(max_length=64, null=True,
@@ -175,7 +175,7 @@ class SaleEvent(models.Model):
     # end_time = models.DateTimeField(verbose_name='结束时间')
     cus_con_mdn = models.CharField(
         max_length=64, default=None, verbose_name='手机号码')
-    cus_con_tel_num = models.CharField(max_length=64, verbose_name='客户联系方式')
+    cus_con_tel_num = models.CharField(max_length=64, verbose_name='客户电话号码')
     cus_con_wechart = models.CharField(max_length=64, verbose_name='客户的微信号')
     communicate_record = models.CharField(max_length=500, verbose_name='沟通成果')
     sale_event_remark = models.TextField(

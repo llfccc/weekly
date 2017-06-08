@@ -361,8 +361,7 @@ export default {
             let str = 'event_date=' + self.insertForm.event_date + '&start_time=' + self.insertForm.start_time + '&end_time=' + self.insertForm.end_time + '&description=' + self.insertForm.description + '&fin_percentage=' + self.insertForm.fin_percentage + '&up_reporter_id=' + self.insertForm.up_reporter_id + '&down_reporter_ids=' + self.insertForm.down_reporter_ids + '&dev_event_remark=' + self.insertForm.dev_event_remark + '&dev_event_project_id=' + self.insertForm.dev_event_project_id + '&dev_event_type_id=' + self.insertForm.dev_event_type_id;
             this.$axios.post('/works/insert_devevent/', str).then(function (response) {
 
-                if (response.data.code == 0) {
-            
+                if (response.data.code == 0) {            
                     self.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'
