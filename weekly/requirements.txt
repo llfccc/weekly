@@ -1,9 +1,6 @@
-six
 django-celery
 django==1.10.7
 xlsxwriter==0.9.6
-django-reversion
-xadmin
 psycopg2
 pandas
 django-redis

@@ -205,16 +205,14 @@ class AnalysisDevEvent(View):
 
     def get(self, request):
         getParams = request.GET        
-        filter_date = getParams.get('filter_date', '')
+        natural_week = getParams.get('natural_week', '')
         employee_name= getParams.get('employee_name', '')
 
         department_name = request.user.department.department_name
 
-        if filter_date:
-            filter_date='-'.join(get_first_day(filter_date))
         # 创建查询条件
         if employee_name:          
-            plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',department_name=department_name,employee_name=employee_name)
+            plain_sql=filter_dev_event_sql(natural_week=natural_week,project_id='',department_name=department_name,employee_name=employee_name)
         else:
             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          

@@ -1,9 +1,8 @@
 # 新建容器
-docker run  -v F:/Docker:/home/working/ -p 192.168.19.12:80:80   --privileged   --name week -d -it  centos /usr/sbin/init 
-docker run  -v F:/Docker:/home/working/ -p 192.168.19.12:80:80 -p 8080:8080 -p 8000:8000   --privileged   --name weekly -d -it  week02 /usr/sbin/init 
+docker run  -v F:/Docker:/home/working/ -p 0.0.0.0:80:80 -p 5431:5432 -p 8081:8080 -p 8001:8000    --privileged   --name weekly -d -it  centos /usr/sbin/init 
 
 #进入容器
-docker exec -it week bash
+docker exec -it weekly bash
 
 #执行shell
 bash /home/working/weekly/deploy/init.sh
@@ -26,13 +25,13 @@ python manage.py loaddata app.json
 # 为运行的container增加多个端口
 stop running container
 docker ps -a
-docker stop test01
-2. commit the container
-docker commit test01 test02
-NOTE: The above, test02 is a new image that I'm constructing from the test01 container.test02 是新的image name
+docker stop weekly
+#2. commit the container,NOTE: The above, test02 is a new image that I'm constructing from the test01 container.test02 是新的image name
+
+docker commit weekly publish
 
 3. re-run from the commited image
-docker run -p 8080:8080 -p 80:80-td test02
+docker run -p 8080:8080 -p 0.0.0.0:80:80-td publish
 
 
 #vue-cli不会热刷新

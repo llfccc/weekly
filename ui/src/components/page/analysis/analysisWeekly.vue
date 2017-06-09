@@ -159,7 +159,7 @@ export default {
 
       this.$axios.get('/analysis/analysis_devevent/', {
         params: {
-          filter_date: self.filters.naturalWeek,
+          natural_week: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
         }
       })

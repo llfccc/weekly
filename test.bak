@@ -1337,7 +1337,6 @@ SELECT pg_catalog.setval('accounts_position_id_seq', 6, true);
 --
 
 COPY accounts_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, describition, chinese_name, department_id, position_id) FROM stdin;
-5	pbkdf2_sha256$30000$8UVc9a1OUUyD$9zHTWgCw7RabNwVPpp1U9pWV0ix5OPvujDIjuw6Op2I=	2017-06-09 14:13:41.116+08	f	jishuzhuguan				t	t	2017-06-06 15:22:00+08	\N	技术主管	1	5
 7	pbkdf2_sha256$30000$CQMgmFI1Wo2i$A1p1dzKW9vKoynCVXviMe/5oA45wiQkC2kPYTtUnzAk=	2017-06-09 09:08:02.376+08	f	houduan				f	t	2017-06-08 18:33:00+08	\N	后端	1	2
 6	pbkdf2_sha256$30000$xzv77ObwQFwS$lI16wsJ2PtOLTJPoccX5qfuMYBrpgaiYt+mLbuZ5TKs=	2017-06-09 09:44:11.756+08	f	xiaoshou				f	t	2017-06-06 15:29:00+08	\N	销售	3	2
 11	pbkdf2_sha256$30000$k93RXojlMJKi$QITpEe/ge8okYyaQ8siMlPbCiIVRt32Fr31QSUg0RH8=	\N	f	ceshi				f	t	2017-06-09 13:40:00+08	\N	测试	1	6
@@ -1345,6 +1344,7 @@ COPY accounts_user (id, password, last_login, is_superuser, username, first_name
 9	pbkdf2_sha256$30000$3fsnB95UsUAH$/z32jBIiiToJQtC6SOTksrmScSLu7mVfdicfmlltW5c=	2017-06-09 10:00:58.376+08	f	xiaoshou2				f	t	2017-06-09 09:22:00+08	\N	销售2	3	2
 1	pbkdf2_sha256$30000$z4A8VA9DRHe3$C8AZD9tG2X+YHjOe1EEJBjlSP0XimlSoYuJ2od74D9M=	2017-06-09 14:35:24.755+08	t	admin			llfccc@live.cn	t	t	2017-05-31 13:09:00+08		管理员	4	2
 3	pbkdf2_sha256$30000$3oOw3NTpt0nA$tzsFkA5cMoDvHNjUs8feId/2AOSgoDjBNsTdTLnIIio=	2017-06-09 14:40:04.02+08	f	xiaoshouzhuguan				t	t	2017-06-01 09:03:00+08		销售主管	3	5
+5	pbkdf2_sha256$30000$8UVc9a1OUUyD$9zHTWgCw7RabNwVPpp1U9pWV0ix5OPvujDIjuw6Op2I=	2017-06-09 16:52:00.513+08	f	jishuzhuguan				t	t	2017-06-06 15:22:00+08	\N	技术主管	1	5
 4	pbkdf2_sha256$30000$KiLOXOW3FF5u$X0PHyHBNtaEQi4ZnwaPU5vu31x6/Ka/iWJhpfWEvQwA=	2017-06-09 09:02:46.746+08	f	etl				f	t	2017-06-01 09:05:00+08		ETL	1	3
 8	pbkdf2_sha256$30000$boSnumLe4jnJ$FDabOJGLe5nANqYmz2O/N2LH5LRVEDzdcGFoUikgLFU=	2017-06-09 10:44:07.437+08	f	qianduan				f	t	2017-06-08 18:33:00+08	\N	前端	1	1
 10	pbkdf2_sha256$30000$W4uxld6bGAcP$/RVJNzhuXvIWcvr1XPkMf7adQy/ikVqKh+oQbYg7GC8=	\N	f	xiaoshou3				f	t	2017-06-09 13:38:00+08	\N	销售3	3	4
@@ -2001,7 +2001,7 @@ uzd84793qigcsqtwm41jdt46q0z7r8gc	OTI4NDBmOTZjMDczNmQ3NGU2YjUwNmViZGY2ZGZhZGE3YWN
 vfyvi33vxhcop4ysnzr1ou21k2vq9gex	MjJjZjkyZWJmZDVmNDc5NzFiMGE1Yjg5NWE5YzE5Y2ViZjA2ZjRjOTp7Il9hdXRoX3VzZXJfaGFzaCI6ImI4OTc4NmMxYTliNGU3YzFjYTY5MGY2Njk2NTg0MTA3ZTg5MzBmNzYiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIn0=	2017-06-22 18:28:43.782+08
 87gdr8u2b2zic2bo5shnj8zs3gz7qc62	MzQ2NGRiNGYwZjEwZDAzYWYwNmE1OGI0ZjJmMzM0MWY4MTlkMDE0NDp7Il9hdXRoX3VzZXJfaGFzaCI6IjU2NjRmMDEyYTU2M2NjYWQ2ZTQ1OTdjOTkzMGE2ZGJmMjQ5ODRiMzIiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxMiJ9	2017-06-23 14:28:08.394+08
 enzcs0os6ku1aw0pxwufdvlzr49bzx18	NzlhZjY3YTlmMGJkOTE4MWU2YzY0ODE0OWI3YjIxYzgwNDFjN2I2Zjp7Il9hdXRoX3VzZXJfaGFzaCI6ImY1MGJjZDNhNDk1ODExOWY5YTNmNWNiNTE4ZjQwYWViMjNlNTQxNjciLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIzIn0=	2017-06-23 14:39:48.076+08
-ftg7brrn2fcuflf91ee7fbixzxfko60a	NzlhZjY3YTlmMGJkOTE4MWU2YzY0ODE0OWI3YjIxYzgwNDFjN2I2Zjp7Il9hdXRoX3VzZXJfaGFzaCI6ImY1MGJjZDNhNDk1ODExOWY5YTNmNWNiNTE4ZjQwYWViMjNlNTQxNjciLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIzIn0=	2017-06-23 14:40:04.08+08
+nr370dawvfu1u8nkhst23cjgqizpsxhl	ZmIwMWMxNjcwMzg2NzIyYjI1MjNkNTUyOTYwNTYyMmMzZjA2ODg3NDp7Il9hdXRoX3VzZXJfaGFzaCI6ImJjZWQ5MTFhY2IxM2YwOTE0N2VmOWU5ZTA0MjFmZjJkNDA3MDU5NTkiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiI1In0=	2017-06-23 16:52:01.169+08
 \.
 
 
