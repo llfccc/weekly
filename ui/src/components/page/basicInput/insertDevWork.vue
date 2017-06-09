@@ -1,8 +1,8 @@
 <template>
     <div>
         <!--<div>
-            <h1 class="title">工作内容</h1>
-        </div>-->
+                <h1 class="title">工作内容</h1>
+            </div>-->
     
         <div class="filter">
             <el-row>
@@ -101,8 +101,7 @@
         </el-dialog>
         <div class="filter">
             <el-table :data="work_list" border style="width: 100%">
-                <!--<el-table-column prop="dev_event_id" style="display:none" label="id" width="150" sortable>
-                                        </el-table-column>-->
+    
                 <el-table-column prop="event_date" label="事件日期" width="150" sortable>
                 </el-table-column>
                 <el-table-column prop="project_name" label="项目名称" width="150" fixed sortable>
@@ -125,7 +124,8 @@
                 </el-table-column>
                 <el-table-column prop="dev_event_remark" label="备注" width="150">
                 </el-table-column>
-    
+                <el-table-column prop="dev_event_id"  label="id" width="150" sortable>
+                </el-table-column>
                 <el-table-column label="操作" width="110" fixed="right">
                     <template scope="scope">
                         <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
@@ -138,55 +138,55 @@
         </br>
         </br>
         <p>不选日期则取最近一星期的内容</p>
-            </br>
-
+        </br>
+    
         <p>
             <!--<el-button type="primary" @click="handleAdd">下载excel</el-button>-->
             <a href='/works/get_event_excel/'>下载excel(缺参数)</a>
         </p>
         <!--编辑界面-->
         <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-                                                                                        <el-form ref="form" :model="editForm" label-width="80px">
-                                                                                            <el-form-item label="工作内容">
-                                                                                                <el-input type="textarea" class="form-control" id="description" placeholder="工作内容" v-model="editForm.description">工作内容
-                                                                                                </el-input>
-                                                                                            </el-form-item>
-                                                                                
-                                                                                            <el-form-item label="工作时间">
-                                                                                
-                                                                                                <el-col :span="11" class="block">
-                                                                                                    <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
-                                                                                                    </el-date-picker>
-                                                                                                </el-col>
-                                                                                                <el-col class="line" :span="2">-</el-col>
-                                                                                                <el-col :span="11" class="block">
-                                                                                                    <el-date-picker v-model="editForm.end_time" type="datetime" placeholder="选择日期时间">
-                                                                                                    </el-date-picker>
-                                                                                                </el-col>
-                                                                                            </el-form-item>
-                                                                                            <el-form-item label="项目情况：">
-                                                                                
-                                                                                                <el-col :span="8">
-                                                                                                    <el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="editForm.up_reporter_id">
-                                                                                                        工作负责人
+                                                                                            <el-form ref="form" :model="editForm" label-width="80px">
+                                                                                                <el-form-item label="工作内容">
+                                                                                                    <el-input type="textarea" class="form-control" id="description" placeholder="工作内容" v-model="editForm.description">工作内容
                                                                                                     </el-input>
-                                                                                                </el-col>
-                                                                                                <el-col :span="8">
-                                                                                                    <el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="editForm.down_reporter_ids">下游汇报人
-                                                                                                    </el-input>
-                                                                                
-                                                                                                </el-col>
-                                                                                                <el-col :span="8">
-                                                                                                    <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="editForm.fin_percentage">进度
-                                                                                                    </el-input>
-                                                                                                </el-col>
-                                                                                            </el-form-item>
-                                                                                        </el-form>
-                                                                                        <div slot="footer" class="dialog-footer">
-                                                                                            <el-button @click.native="addFormVisible = false">取消</el-button>
-                                                                                            <el-button type="primary" @click.native="insertWork" :loading="addLoading">提交修改</el-button>
-                                                                                        </div>    
-                                                                                    </el-dialog>-->
+                                                                                                </el-form-item>
+                                                                                    
+                                                                                                <el-form-item label="工作时间">
+                                                                                    
+                                                                                                    <el-col :span="11" class="block">
+                                                                                                        <el-date-picker v-model="editForm.start_time" type="datetime" placeholder="选择日期时间">
+                                                                                                        </el-date-picker>
+                                                                                                    </el-col>
+                                                                                                    <el-col class="line" :span="2">-</el-col>
+                                                                                                    <el-col :span="11" class="block">
+                                                                                                        <el-date-picker v-model="editForm.end_time" type="datetime" placeholder="选择日期时间">
+                                                                                                        </el-date-picker>
+                                                                                                    </el-col>
+                                                                                                </el-form-item>
+                                                                                                <el-form-item label="项目情况：">
+                                                                                    
+                                                                                                    <el-col :span="8">
+                                                                                                        <el-input type="text" class="form-control" id="up_reporter_id" placeholder="上游汇报人" v-model="editForm.up_reporter_id">
+                                                                                                            工作负责人
+                                                                                                        </el-input>
+                                                                                                    </el-col>
+                                                                                                    <el-col :span="8">
+                                                                                                        <el-input type="text" class="form-control" id="down_reporter_ids" placeholder="下游汇报人" v-model="editForm.down_reporter_ids">下游汇报人
+                                                                                                        </el-input>
+                                                                                    
+                                                                                                    </el-col>
+                                                                                                    <el-col :span="8">
+                                                                                                        <el-input type="text" class="form-control" id="fin_percentage" placeholder="进度" v-model="editForm.fin_percentage">进度
+                                                                                                        </el-input>
+                                                                                                    </el-col>
+                                                                                                </el-form-item>
+                                                                                            </el-form>
+                                                                                            <div slot="footer" class="dialog-footer">
+                                                                                                <el-button @click.native="addFormVisible = false">取消</el-button>
+                                                                                                <el-button type="primary" @click.native="insertWork" :loading="addLoading">提交修改</el-button>
+                                                                                            </div>    
+                                                                                        </el-dialog>-->
     
     </div>
 </template>
@@ -241,8 +241,8 @@ export default {
                 description: '',
                 event_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
                 event_time: '',
-                start_time: '',
-                end_time: '',
+                // start_time: '',
+                // end_time: '',
                 fin_percentage: '',
                 up_reporter_id: '',
                 down_reporter_ids: '',
@@ -250,7 +250,7 @@ export default {
                 dev_event_project_id: '',
                 dev_event_type_id: '',
                 project_name: '',
-                event_type_id: '',
+                // event_type_id: '',
             },
             editForm: {
                 description: '',
@@ -361,7 +361,7 @@ export default {
             let str = 'event_date=' + self.insertForm.event_date + '&start_time=' + self.insertForm.start_time + '&end_time=' + self.insertForm.end_time + '&description=' + self.insertForm.description + '&fin_percentage=' + self.insertForm.fin_percentage + '&up_reporter_id=' + self.insertForm.up_reporter_id + '&down_reporter_ids=' + self.insertForm.down_reporter_ids + '&dev_event_remark=' + self.insertForm.dev_event_remark + '&dev_event_project_id=' + self.insertForm.dev_event_project_id + '&dev_event_type_id=' + self.insertForm.dev_event_type_id;
             this.$axios.post('/works/insert_devevent/', str).then(function (response) {
 
-                if (response.data.code == 0) {            
+                if (response.data.code == 0) {
                     self.$message({
                         message: '恭喜你，新增成功',
                         type: 'success'
@@ -372,15 +372,15 @@ export default {
                         type: 'error'
                     });
                 }
-
             });
             // window.location.reload();
             this.addFormVisible = false;
             this.get_data()
-            // var clean_field = ['description', 'event_time','start_time','end_time','fin_percentage','up_reporter_id','down_reporter_ids','dev_event_remark','dev_event_project_id','project_name','event_type_id']
-            // for (var i = 0; i < clean_field.length; i++) {
-            //     self.insertForm[clean_field[i]] = '';
-            // }
+            var clean_field = ['description', 'event_time','fin_percentage','up_reporter_id','down_reporter_ids','dev_event_remark','dev_event_project_id','project_name','dev_event_type_id']
+            for (var i = 0; i < clean_field.length; i++) {
+                self.insertForm[clean_field[i]] = '';
+            }
+            // delete self.insertForm['event_time'];
             // console.log(this.$data.insertForm);
         },
 
@@ -389,7 +389,6 @@ export default {
             this.$axios.get('/works/del_devevent/', {
                 params: {
                     delID: row.dev_event_id,
-
                 }
             })
                 .then(function (response) {
@@ -434,7 +433,6 @@ export default {
             })
                 .then(function (response) {
                     self.work_list = eval(response.data.content);
-
                 }
                 );
         },

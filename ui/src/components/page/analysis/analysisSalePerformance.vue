@@ -6,12 +6,12 @@
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
   
         <el-form :inline="true" :model="filters">
-          <el-col :span="18">
-            <el-button type="primary" v-on:click="lastWeek">上一周（未完成）</el-button>
+          <el-col :span="8">
+            <!--<el-button type="primary" v-on:click="lastWeek">上一周（未完成）</el-button>-->
             <span class="demonstration">筛选时间</span>
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
-            <el-button type="primary" v-on:click="nextWeek">下一周（未完成）</el-button>
+            <!--<el-button type="primary" v-on:click="nextWeek">下一周（未完成）</el-button>-->
           </el-col>
   
           <el-col :span="6">

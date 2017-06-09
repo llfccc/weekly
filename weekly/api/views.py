@@ -46,7 +46,7 @@ class GetDevEvent(LoginRequiredMixin,View):
         query_result = fetch_data(plain_sql)
 
         #限定返回给前端的字段
-        # result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
+        # result_field = [, "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
 
         alternation_list=[]
         event_date_list=[]   #保存所有不重复的日期
@@ -57,7 +57,7 @@ class GetDevEvent(LoginRequiredMixin,View):
             event_date=value.get('event_date').strftime("%Y-%m-%d")
             event_date_list.append(event_date)  
             duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
-            data_list=['project_name',"start_time","end_time",'event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
+            data_list=["dev_event_id",'project_name',"start_time","end_time",'event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
             field_data['duration_time']=int(duration_time)
             field_data['event_date']=event_date

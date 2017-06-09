@@ -2,7 +2,7 @@
     <div>
     
         <!--<h1 class="title"  style="align:center;">登记拜访</h1>
-                            <!--</br>-->
+                                    <!--</br>-->
     
         </br>
         <el-form :inline="true" :model="filters">
@@ -39,7 +39,6 @@
                 </el-form-item>
                 <el-form-item label="客户简称">
                     <el-col :span="24">
-    
                         <el-input type="text" class="form-control" id="short_name" placeholder="客户简称" v-model="addCustomerForm.short_name">客户简称
                         </el-input>
                     </el-col>
@@ -93,8 +92,8 @@
         <el-dialog title="新增拜访" v-model="addEventVisible" :close-on-click-modal="false">
             <el-form ref="addEventForm" :model="addEventForm" label-width="90px">
                 <!--<el-form-item label="拜访时间">
-      
-                    </el-form-item>-->
+              
+                            </el-form-item>-->
                 <el-form-item label="拜访对象">
                     <el-select v-model="addEventForm.sale_customer_id" clearable filterable placeholder="客户名">
                         <el-option v-for="item in customer_list" :key="item.id" :label="item.short_name" :value="item.id">
@@ -156,9 +155,7 @@
             </div>
         </el-dialog>
     
-        <el-table :data="sale_list" border style="width: 100%">
-            <el-table-column prop="sale_event_id" style="display:none" label="id" width="100" sortable>
-            </el-table-column>
+        <el-table :data="sale_list" border style="width: 100%">    
             <el-table-column prop="visit_date" label="拜访时间" width="150" fixed='left' sortable>
             </el-table-column>
             <el-table-column prop="short_name" label="客户简称" width="150" sortable>
@@ -168,19 +165,20 @@
             <el-table-column prop="cus_con_post" label="客户职位" width="150" sortable>
             </el-table-column>
     
-            <el-table-column prop="cus_con_mdn" label="手机号码" width="150" sortable>
+            <el-table-column prop="cus_con_mdn" label="手机号码" width="160" >
             </el-table-column>
-            <el-table-column prop="cus_con_tel_num" label="客户联系方式" width="190" sortable>
+            <el-table-column prop="cus_con_tel_num" label="客户联系方式" width="190" >
             </el-table-column>
-            <el-table-column prop="cus_con_wechart" label="客户的微信号" width="190" sortable>
+            <el-table-column prop="cus_con_wechart" label="客户的微信号" width="190" >
             </el-table-column>
     
             <el-table-column prop="communicate_record" label="沟通成果" width='170' sortable>
             </el-table-column>
             <el-table-column prop="sale_event_remark" label="备注" width="150">
+            </el-table-column>    
+            <el-table-column prop="sale_event_id"  label="id" width="100" >
             </el-table-column>
-    
-            <el-table-column label="操作" width="160" fixed="right">
+            <el-table-column label="操作" width="140" fixed="right">
                 <template scope="scope">
                     <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -387,12 +385,11 @@ export default {
             let str = 'full_name=' + self.addCustomerForm.full_name + '&short_name=' + self.addCustomerForm.short_name + '&contact_post=' + self.addCustomerForm.contact_post + '&contact_name=' + self.addCustomerForm.contact_name + '&contact_mdn=' + self.addCustomerForm.contact_mdn + '&contact_tel_num=' + self.addCustomerForm.contact_tel_num + '&sale_customer_remark=' + self.addCustomerForm.sale_customer_remark;
             this.$axios.post('/works/insert_customer/', str).then(function (response) {
                 if (response.data.code == 0) {
-                    // self.work_list.push(self.form);
+                    this.get_customers();
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
                     });
-
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -401,8 +398,7 @@ export default {
                 }
             });
             // this.addCustomerForm = Object.assign({},addCustomerForm);
-            this.addCustomerVisible = false;
-            this.get_customers();
+            this.addCustomerVisible = false;            
         },
 
         addWork: function () {

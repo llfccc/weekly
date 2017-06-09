@@ -58,8 +58,7 @@ export default {
                                 if (premission.toString().indexOf(position[i]) > -1) {
                                     localStorage.setItem(position[i], true);
                                 }
-                            }
-               
+                            }               
                             if (premission.toString().indexOf("技术主管组") > -1) {
                                 self.$router.push('/analysisWeekly');
 
@@ -76,8 +75,8 @@ export default {
                             } else {
                                 self.$router.push('/readme');
                             }
-                        } else {
-                            console.log('密码或者用户名错误');
+                        } else {           
+                            this.$message.error('密码或者用户名错误');
                             return false;
                         }
                     })

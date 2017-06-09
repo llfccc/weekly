@@ -60,7 +60,7 @@
       </table>
   
     </div>
-    <br>
+    </br>
     </br>
   
     <el-card class="box-card" v-show="summary">
@@ -123,9 +123,10 @@ export default {
     filter_user_list() {
       var self = this;
       let department_id = localStorage.getItem('department_id');
+      let ms_username= localStorage.getItem('ms_username');
       var filter_user_list = new Array();
       for (var i in self.user_list) {
-        if (self.user_list[i].department == department_id) {
+        if (self.user_list[i].department == department_id & self.user_list[i].chinese_name != ms_username) {
           filter_user_list.push(self.user_list[i])
         }
       }

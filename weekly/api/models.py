@@ -70,7 +70,9 @@ class DevEvent(models.Model):
         ("view_devevent", u"技术员工：查看本人的事件"),
         ("insert_devevent", "技术员工：新增工作事件"),
         ("export_excel", u"技术员工：导出本人的事件为excel"),
-        ("analysis_devevent", "技术主管：分析周报事件"),      
+        ("analysis_devevent", "技术主管：分析周报事件"),    
+        ("markDel_devevent", u"技术员工:标记删除自己的工作事件"),
+  
 
         )
         verbose_name_plural = '周报事件' 
@@ -142,6 +144,7 @@ class SaleCustomer(models.Model):
     class Meta:  
         permissions = (
             ("view_SaleCustomer", u"销售员工:查看销售客户"),
+            ("insert_salecustomer", u"销售员工:增加销售客户"),
         )
         verbose_name_plural = '客户信息'  
 
@@ -211,7 +214,8 @@ class SaleEvent(models.Model):
         permissions = (            
             ("view_SaleEvent", u"销售员工:查看销售拜访事件"),
             ("insert_saleevent", u"销售员工:新增销售拜访事件"),
+            ("markDel__saleevent", u"销售员工:标记删除销售拜访事件"),
             ("analysis_sale_event", u"销售主管:分析销售拜访事件"),
-            ("display_sale_event", u"销售主管:查询销售拜访事件"),        
+            ("display_sale_event", u"销售主管:查询销售拜访事件"),    
         )
         verbose_name_plural = '销售事件'

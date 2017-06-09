@@ -104,7 +104,7 @@ def filter_sale_event_sql(filter_date='',natural_week='',user_id='',customer_id=
         left join api_salecustomer as customer on sale.sale_customer_id = customer.id \
         left join api_salephase as phase on sale.sale_phase_id = phase.id \
         left join accounts_user  on accounts_user.id = sale.sale_event_owner_id \
-        where {1} ".format(select_param,where_condition)
+        where {1} order by sale.visit_date,sale.sale_customer_id,phase.id ".format(select_param,where_condition)
 
     return plain_sql
 
@@ -123,7 +123,8 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
                 where_condition = "and sale_target_owner_id =  {0} ".format(user_ids[0])
             else:
                 where_condition = "and sale_target_owner_id in  {0} ".format(user_ids)
-    target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget\
+    target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget as target \
+        left join api_salephase as phase on target.phase_name_id = phase.id \
         where natural_week='{0}' {1}  ".format(natural_week,where_condition)
 
     #统计销售员一周拜访次数
