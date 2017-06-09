@@ -183,8 +183,11 @@ DATE_FORMAT = 'Y-m-d'
 SUIT_CONFIG = {  # suit页面配置
     'ADMIN_NAME': '周报管理系统后台',  #登录界面提示
     'LIST_PER_PAGE': 20,
-    'MENU': ({'label': u'用户管理', 'app': 'web_sso', 'models': ('web_sso.MyUser', 'auth.Group', 'web_sso.User_ex')},  #每一个字典表示左侧菜单的一栏
-             # {'label': u'SQL管理', 'app': 'web_sso', 'models': ('web_sso.Sql', 'web_sso.PreSql', 'web_sso.Direction')},  # 可以是多个字典
-             ),
+    'MENU': (  
+            'sites',  
+            {'app': 'accounts', 'label': u'帐户'},  
+            {'app': 'api', 'label': u'基础数据'},  
+            {'app': 'auth', 'label': u'认证管理'},  
+        ),  
     # label表示name，app表示上边的install的app，models表示用了哪些models
 }

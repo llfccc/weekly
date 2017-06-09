@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
-from accounts.admin import admin_site
+
 # from rest_framework_swagger.views import get_swagger_view
 # schema_view = get_swagger_view(title='Pastebin API')
 
@@ -36,7 +36,6 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', home),
-    # url(r'^admin/', admin_site.urls),    #修改这一行
     url(r'admin/',admin.site.urls),
     url(r'works/', include('api.urls')),
     url(r'analysis/', include('analysis.urls')),

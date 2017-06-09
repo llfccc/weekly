@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="admin">
         <iframe ref="iframe" src="http://192.168.19.12/admin" width="100%" height="700px"></iframe>
         <!--<iframe ref="iframe" src="http://www.baidu.com" width="100%" height="100%"></iframe>-->
 
@@ -97,17 +97,9 @@ export default {
 
 
 </script>
-<style>
-/*.content{
-    background: none repeat scroll 0 0 #fff;
-    position: absolute;
-    left: 140px;
-    right: 0;
-    top: 70px;
-    bottom:0;
-    width: auto;
-    padding:0px;
-    box-sizing: border-box;
-    overflow-y: scroll;
+<style scoped>
+/*.admin{
+position:absolute;
+/*margin-left:40px;
 }*/
 </style>
