@@ -9,8 +9,10 @@ docker exec -it week bash
 bash /home/working/weekly/deploy/init.sh
 
 #备份还原pg sql数据
-pg_dump   -U postgres test > C:\test.bak
-psql  -U postgres -d test < /home/working/test.bak
+cd "c:\Program Files\PostgreSQL\9.6\bin\"
+pg_dump   -U postgres test > f:\docker\weekly\test.bak
+
+psql test -f /home/working/weekly/test.bak
 
 #备份还原django数据
 备份一个APP的数据
