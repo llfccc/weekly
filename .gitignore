@@ -11,11 +11,9 @@ temp/
 .idea
 .Python
 ui/dist/
-ui/build/
 ui/node_modules/
 ui/screenshots
 env/
-build/
 develop-eggs/
 dist/
 downloads/

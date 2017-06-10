@@ -62,7 +62,6 @@ mkdir /etc/uwsgi
 #安装nginx
 yum install -y nginx  
 systemctl enable nginx
-
 #配置nginx
 mkdir  /etc/nginx/vhost.d
 \cp -rf /home/working/weekly/deploy/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -72,14 +71,14 @@ systemctl start nginx
 
 #配置cupervisord
 yum install -y  supervisor
-mkdir /var/log/supervisor/
+mkdir /var/log/supervisor
 echo_supervisord_conf > /etc/supervisord.conf
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.d /etc/
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.conf /etc/
 #supervisord -c /etc/supervisord.conf
 
 systemctl enable supervisord
-killall -9 supervisord
+# killall -9 supervisord
 systemctl start supervisord 
 supervisorctl reload
 

@@ -1,5 +1,5 @@
 # 新建容器
-docker run  -v F:/Docker:/home/working/ -p 0.0.0.0:80:80 -p 5431:5432 -p 8081:8080 -p 8001:8000    --privileged   --name weekly -d -it  centos /usr/sbin/init 
+docker run  -v F:/Docker:/home/working/ -p 0.0.0.0:80:80 -p 5431:5432 -p 8081:8080 -p 8001:8000 --privileged   --name weekly -d -it  centos /usr/sbin/init 
 
 #进入容器
 docker exec -it weekly bash
