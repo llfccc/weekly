@@ -33,11 +33,8 @@ class DisplaySaleEvent(View):
         employee_name= getParams.get('employee_name', '')
         # project_name = getParams.get('project_name', '')
         department_name = request.user.department.department_name
-        if filter_date:
-            filter_date='-'.join(get_first_day(filter_date))
-        user_id=chinesename_to_userid(employee_name)
 
-        # print(filter_date)
+        user_id=chinesename_to_userid(employee_name)
         # 创建查询条件        
         plain_sql=filter_sale_event_sql(natural_week=natural_week,user_id=user_id,department_name='')
         #统计分析

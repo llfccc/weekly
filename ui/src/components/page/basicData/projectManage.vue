@@ -1,6 +1,6 @@
 <template>
     <div class="admin">
-        <iframe ref="iframe" src="http://192.168.19.12/admin" width="100%" height="700px"></iframe>
+        <iframe ref="iframe" src="../../admin" width="100%" height="700px"></iframe>
         <!--<iframe ref="iframe" src="http://www.baidu.com" width="100%" height="100%"></iframe>-->
 
         <!--<div class="filters row">
