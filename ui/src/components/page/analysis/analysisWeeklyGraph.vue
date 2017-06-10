@@ -166,8 +166,7 @@ export default {
         );
     },
     drawDepartPie(id) {
-      this.charts = echarts.init(document.getElementById(id))
-      this.charts.setOption({
+      this.DepartmentCharts.setOption({
         title: {
           text: '部门耗时类型分布',
           subtext: '',
@@ -202,8 +201,7 @@ export default {
     },
     drawPersonPie(id) {
       var self = this;
-      this.charts = echarts.init(document.getElementById(id))
-      this.charts.setOption({
+      this.PersonCharts.setOption({
         title: {
           text: '"' + self.filters.employee_name + '"' + '--耗时分布',
           subtext: '',
@@ -238,8 +236,7 @@ export default {
     },
     drawProject(id) {
       var self = this;
-      this.charts = echarts.init(document.getElementById(id))
-      this.charts.setOption({
+      this.ProjectCharts.setOption({
         title: {
           text: '"' + self.filters.project_name + '"' + '项目--耗时分布'
         },
@@ -281,8 +278,7 @@ export default {
       })
     },
     drawLoad(id) {
-      this.charts = echarts.init(document.getElementById(id))
-      this.charts.setOption({
+      this.LoadCharts.setOption({
         title: {
           text: '部门人员负载图'
         },
@@ -325,8 +321,7 @@ export default {
     },
     drawPosition(id) {
       var self = this;
-      this.charts = echarts.init(document.getElementById(id))
-      this.charts.setOption(
+      this.PositionCharts.setOption(
         {
           title: {
             text: '"' + self.filters.project_name + '"' + '项目--各岗位耗时瀑布图',
@@ -387,48 +382,7 @@ export default {
               data: this.echartsPosition.y_data
             }
           ]
-        }
-
-        // {
-        //         title: {
-        //           text: '项目各岗位耗时瀑布图'
-        //         },
-        //         color: ['#3398DB'],
-        //         tooltip: {
-        //           trigger: 'axis',
-        //           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        //           }
-        //         },
-        //         grid: {
-        //           left: '3%',
-        //           right: '4%',
-        //           bottom: '3%',
-        //           containLabel: true
-        //         },
-        //         xAxis: [
-        //           {
-        //             type: 'category',
-        //             data: this.echartsPosition.x_data,
-        //             axisTick: {
-        //               alignWithLabel: true
-        //             }
-        //           }
-        //         ],
-        //         yAxis: [
-        //           {
-        //             type: 'value'
-        //           }
-        //         ],
-        //         series: [
-        //           {
-        //             name: '平均每周工作时间（H）',
-        //             type: 'bar',
-        //             barWidth: '60%',
-        //             data: this.echartsPosition.y_data
-        //           }
-        //         ]
-        //       }
+        }        
       )
     },
     filterDateChange(val) {
@@ -447,8 +401,6 @@ export default {
       this.$axios.get('/analysis/analysis_department/', {
         params: {
           filter_date: self.filters.filterDate,
-          // employee_name: self.filters.employee_name,
-          // project_name: self.filters.project_name,
           department_name: self.filters.department_name,
         }
       })
@@ -493,7 +445,6 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.echartsPerson.opinionData = responseContent.type_count
           self.echartsPerson.opinion = responseContent.type_list
-
           self.drawPersonPie('personal');
         }
         );
@@ -512,7 +463,6 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.echartsProject.x_data = responseContent.x_data
           self.echartsProject.y_data = responseContent.y_data
-
           self.drawProject('project')
         }
         );
@@ -522,9 +472,6 @@ export default {
       this.$axios.get('/analysis/analysis_load/', {
         params: {
           filter_date: self.filters.filterDate,
-          // employee_name: self.filters.employee_name,
-          // project_name: self.filters.project_name,
-          department_name: '技术服务中心',
         }
       })
         .then(function (response) {
@@ -539,6 +486,11 @@ export default {
   },
   //调用 
   mounted() {
+      this.PositionCharts = echarts.init(document.getElementById('position'))
+      this.DepartmentCharts = echarts.init(document.getElementById('department'))
+      this.PersonCharts = echarts.init(document.getElementById('personal'))
+      this.ProjectCharts = echarts.init(document.getElementById('project'))
+      this.LoadCharts = echarts.init(document.getElementById('load'))
     this.$nextTick(function () {
       this.get_users();
       this.get_projects();

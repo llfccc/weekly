@@ -29,7 +29,7 @@ class DisplaySaleEvent(View):
 
     def get(self, request):
         getParams = request.GET        
-        filter_date = getParams.get('filter_date', '')
+        natural_week = getParams.get('natural_week', '')
         employee_name= getParams.get('employee_name', '')
         # project_name = getParams.get('project_name', '')
         department_name = request.user.department.department_name
@@ -39,7 +39,7 @@ class DisplaySaleEvent(View):
 
         # print(filter_date)
         # 创建查询条件        
-        plain_sql=filter_sale_event_sql(filter_date=filter_date,user_id=user_id,department_name='')
+        plain_sql=filter_sale_event_sql(natural_week=natural_week,user_id=user_id,department_name='')
         #统计分析
         # group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
@@ -64,16 +64,11 @@ class AnalysisSalePerformace(View):
 
     def get(self, request):
         getParams = request.GET        
-        filter_date = getParams.get('filter_date', '')
+        natural_week = getParams.get('natural_week', '')
         department_name = request.user.department.department_name
 
-        if filter_date:
-            natural_week = filter_date[:7]
-            filter_date='-'.join(get_first_day(filter_date))
-        else:
-            natural_week =get_day_of_week()
         print(natural_week)
-        filter_sql=filter_sale_event_sql(filter_date=filter_date,department_name=department_name)
+        filter_sql=filter_sale_event_sql(natural_week=natural_week,department_name=department_name)
         # 联合目标和实际记录
         pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)        
         data = fetch_data(pivot_sql)
