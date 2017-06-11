@@ -1,3 +1,4 @@
+celery
 django-celery
 django==1.10.7
 xlsxwriter==0.9.6

@@ -88,6 +88,7 @@ supervisorctl reload
 yum install -y nodejs
 npm install cnpm -g --registry=https://registry.npm.taobao.org
 
+yum install -y  rabbitmq-server
 # yum install -y httpd  
 #清理yum
 yum clean all
