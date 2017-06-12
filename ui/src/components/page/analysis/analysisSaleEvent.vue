@@ -76,8 +76,7 @@
     </div>
     </br>
     </br>
-    </br>
-  
+    
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
       </el-col>
@@ -218,7 +217,7 @@ export default {
       var self = this;
       this.$axios.get('/analysis/analysis_week_summary/', {
         params: {
-          filter_date: self.filters.naturalWeek,
+          natural_week: self.filters.naturalWeek,
           employee_name: self.filters.employee_name,
         }
       })

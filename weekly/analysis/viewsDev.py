@@ -251,14 +251,15 @@ class AnalysisWeeklySummary(LoginRequiredMixin,View):
     def get(self, request):
         getParams = request.GET        
         employee_name= getParams.get('employee_name', '').strip()
-        filter_date = getParams.get('filter_date', '')
+        natural_week = getParams.get('natural_week', '')
+        
         # department_name =u'销售部'
         #验证日期是否符合 2017-01的格式
-        __match=re.compile('^\d{4}-\d{2}').match(filter_date)
+        __match=re.compile('^\d{4}-\d{2}').match(natural_week)
         if __match:
-            filter_date=__match.group()
+            natural_week=__match.group()
         else:
-            filter_date='2017-21'
+            natural_week='2017-21'
 
         user_id=chinesename_to_userid(employee_name)
         data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
