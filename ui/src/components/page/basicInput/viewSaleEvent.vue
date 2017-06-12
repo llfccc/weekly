@@ -10,10 +10,10 @@
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
-  
+
           <!--<el-col :span="6">
                 <span class="demonstration">员工：</span>
-      
+
                 <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
                   <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
                   </el-option>
@@ -22,14 +22,14 @@
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
           </el-col>
-  
+
         </el-form>
       </el-col>
       </br>
       </br>
       </br>
       </br>
-  
+
       <!--<el-table :data="sale_event_list" stripe style="width: 100%">
           <el-table-column prop="visit_date" label="日期" width="180">
           </el-table-column>
@@ -56,7 +56,7 @@
             <th>阶段 </th>
             <th>沟通记录 </th>
             <th>备注 </th>
-  
+
           </tr>
         </thead>
         <tbody>
@@ -74,18 +74,18 @@
     </div>
     </br>
     </br>
-  
+
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
       </el-col>
       <el-col :span="8">
-  
+
       </el-col>
       <el-col :span="8">
-  
+
       </el-col>
     </el-col>
-  
+
     <el-card class="box-card" v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
@@ -119,10 +119,10 @@
               </el-card>
             </el-col>
           </el-col>
-  
+
         </div>
       </template>
-  
+
     </el-card>
   </div>
 </template>
@@ -214,8 +214,8 @@ export default {
       var employee_name = localStorage.getItem("ms_username")
       this.$axios.get('/works/get_weekly_summary/', {
         params: {
-          filter_date: self.filters.naturalWeek,
-          employee_name: employee_name,
+          natural_week: self.filters.naturalWeek,
+//          employee_name: employee_name,
         }
       })
         .then(function (response) {
@@ -226,7 +226,7 @@ export default {
     },
 
   },
-  //调用 
+  //调用
   mounted() {
     this.$nextTick(function () {
       this.get_users()

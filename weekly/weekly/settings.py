@@ -42,9 +42,6 @@ INSTALLED_APPS = [
     'accounts',
     #'rest_framework_swagger',
     'djcelery',
-    # 'xadmin',
-    # 'crispy_forms',
-    # 'reversion',
 ]
 
 MIDDLEWARE = [
@@ -88,25 +85,44 @@ WSGI_APPLICATION = 'weekly.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-DATABASES = {
+if os.environ.get("SystemInfo")=='Windows':
 
-    'default': {
+    DATABASES = {
+        'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'test',  # 数据库名字
+            'NAME': 'test',  # 数据库名字
 
-        'USER': 'postgres',  # 登录用户名
+            'USER': 'postgres',  # 登录用户名
 
-        'PASSWORD': 'lanzhong',
+            'PASSWORD': 'lanzhong',
 
-        'HOST': '127.0.0.1',  # 数据库IP地址
+            'HOST': '127.0.0.1',  # 数据库IP地址
 
-        'PORT': '5432',
+            'PORT': '5431',
 
+        }
     }
+else:
 
-}
+    DATABASES = {
+        'default': {
+
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+            'NAME': 'test',  # 数据库名字
+
+            'USER': 'postgres',  # 登录用户名
+
+            'PASSWORD': 'lanzhong',
+
+            'HOST': '127.0.0.1',  # 数据库IP地址
+
+            'PORT': '5432',
+
+        }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 

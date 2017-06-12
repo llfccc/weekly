@@ -113,16 +113,17 @@ class InsertDevWork(LoginRequiredMixin,View):
         content = {"id": 0}    
         result = {}            
         for t in insert_field:
-            result[t] = data.get(t,None).strip()        
+            field_value=data.get(t,None)
+            if field_value:
+                result[t] = field_value.strip()
+
         if result['fin_percentage'].isdigit():
             if not (int(result['fin_percentage'])>0 and int(result['fin_percentage'])<=100):
                 return my_response(code=1, msg=u"数字范围取值错误", content=content)
         else:
             return my_response(code=1, msg=u"百分比需要填写数字", content=content)
-        if user_id!=0:
-            result['dev_event_owner_id'] = user_id
-        else:
-            return my_response(code=1, msg=u"未登录", content=content)
+        result['dev_event_owner_id'] = user_id
+
         try:
             insert_process = DevEvent(**result)
             insert_process.save()
@@ -180,19 +181,21 @@ class InsertCustomer(LoginRequiredMixin,View):
                        "sale_customer_remark"]
         result = {}
         for t in insert_field:
-            result[t] = data.get(t,None).strip()
+            field_value=data.get(t,None)
+            if field_value:
+                result[t] = field_value.strip()
 
         customer_exist=SaleCustomer.objects.filter(full_name=result.get('full_name')).all()
         if customer_exist:
             return my_response(code=1, msg=u"客户已存在")             
         result['sale_customer_owner_id'] = user_id        
-        print(result)
+
         if result:
             insert_process = SaleCustomer(**result)
             try:
                 insert_process.save()
                 content = {"id": insert_process.id}
-                print(content)
+
                 response = my_response(code=0, msg=u'恭喜你，新增成功', content=content)
             except:
                 response = my_response(code=1, msg=u'插入失败', content=content)
@@ -305,7 +308,7 @@ class InsertSummary(LoginRequiredMixin,View):
             return  my_response(code=1, msg=u"自然周填写格式错误", content='')
         result['summary_owner_id'] = user_id
         
-        print(result)
+
         if result:
             content = {"id": 0}
             insert_process = WeekSummary(**result)
@@ -327,18 +330,20 @@ class GetEventExcel(LoginRequiredMixin,View):
         getParams = request.GET
         project_id = getParams.get('project_id', '')
         filter_date = getParams.get('filter_date', '')
-
-        plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id=project_id,user_id=user_id)
+        natural_week = getParams.get('natural_week', '')
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,natural_week=natural_week,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
         
         #限定返回给前端的字段
-        result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
+        result_field = ["dev_event_id", "event_date", "project_name", "event_type_name", "description", "fin_percentage","dev_event_remark"]
         result_list=[]
         for row in query_result:
             row_dict={}
             #由id转换成对应具体的人名
-            row_dict['down_reporter_name']=userid_to_chinesename(row['down_reporter_ids'])
-            row_dict['up_reporter_name']=userid_to_chinesename(row['up_reporter_id'])
+            row_dict['down_reporter_name']=userid_to_chinesename(row.get('down_reporter_ids'))
+            row_dict['up_reporter_name']=userid_to_chinesename(row.get('up_reporter_id'))
+            row_dict['duration_time']=((datetime.datetime.combine(datetime.date.today(), row.get('end_time')) - datetime.datetime.combine(datetime.date.today(), row.get('start_time'), )).total_seconds() / 60)
+
             for key in result_field:
                 row_dict[key]=row.get(key,'')
             result_list.append(row_dict)
@@ -374,11 +379,13 @@ class InsertSaleEvent(LoginRequiredMixin,View):
                 "active_type_id", "sale_customer_id"]
         result = {}
         for t in insert_field:
+            field_value=data.get(t,None)
+            if field_value:
+                result[t] = field_value.strip()
 
-            result[t] = data.get(t,None).strip()
         result['sale_event_owner_id'] = user_id
         content = {"id": 0}
-        print(result)
+
         if result:
             insert_process = SaleEvent(**result) 
             try:

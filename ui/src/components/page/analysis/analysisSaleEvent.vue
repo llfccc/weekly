@@ -10,10 +10,10 @@
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
-  
+
           <el-col :span="6">
             <span class="demonstration">员工：</span>
-  
+
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
               <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
               </el-option>
@@ -22,7 +22,7 @@
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
           </el-col>
-  
+
         </el-form>
       </el-col>
       </br>
@@ -40,7 +40,7 @@
             <th>阶段 </th>
             <th>沟通记录 </th>
             <th>备注 </th>
-  
+
           </tr>
         </thead>
         <tbody>
@@ -72,22 +72,22 @@
         <el-table-column prop="sale_event_remark" label="备注">
         </el-table-column>
       </el-table>-->
-  
+
     </div>
     </br>
     </br>
-    
+
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
       </el-col>
       <el-col :span="8">
-  
+
       </el-col>
       <el-col :span="8">
-  
+
       </el-col>
     </el-col>
-  
+
     <el-card class="box-card" v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
@@ -121,10 +121,10 @@
               </el-card>
             </el-col>
           </el-col>
-  
+
         </div>
       </template>
-  
+
     </el-card>
   </div>
 </template>
@@ -134,7 +134,7 @@ export default {
   name: '',
   data() {
     return {
-      sale_event_list: [],
+      sale_event_list: '',
       filters: {
         filter_date: '',
         employee_name: '',
@@ -224,13 +224,13 @@ export default {
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.summary = responseContent[0]
-      
+
         }
         );
     },
 
   },
-  //调用 
+  //调用
   mounted() {
     this.$nextTick(function () {
       this.get_users()

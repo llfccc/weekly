@@ -1,10 +1,9 @@
 <template>
   <div>
     <!--<h1 class="title" style="align:center;">周报分析</h1>-->
-  
+
     <div>
       <el-form :inline="true" :model="filters">
-  
         <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
             <span class="demonstration">时间：</span>
@@ -32,7 +31,6 @@
         </el-col>
         <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
           <el-button type="primary" @click="filter">筛选</el-button>
-  
         </el-col>
       </el-form>
     </div>
@@ -53,7 +51,7 @@
       <el-col :span="8">
         <div id="project" style="width: 400px;height: 300px;"> </div>
       </el-col>
-  
+
       <el-col :span="24">
         <div id="position" style="width: 1200px;height: 450px;"> </div>
       </el-col>
@@ -382,7 +380,7 @@ export default {
               data: this.echartsPosition.y_data
             }
           ]
-        }        
+        }
       )
     },
     filterDateChange(val) {
@@ -484,7 +482,7 @@ export default {
         );
     },
   },
-  //调用 
+  //调用
   mounted() {
       this.PositionCharts = echarts.init(document.getElementById('position'))
       this.DepartmentCharts = echarts.init(document.getElementById('department'))

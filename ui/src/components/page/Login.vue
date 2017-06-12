@@ -51,31 +51,34 @@ export default {
                             var login_data = JSON.stringify(res.data.content);
                             var premission = res.data.content.group_list
                             localStorage.setItem('login_data', login_data);
-                            localStorage.setItem('ms_username',res.data.content.chinese_name);       
-                            localStorage.setItem('department_id',res.data.content.department_id);         
-                            var position = new Array("技术主管组", "销售主管组", "技术员工组", "销售员工组")
-                            for (var i in position) {                               
-                                if (premission.toString().indexOf(position[i]) > -1) {
-                                    localStorage.setItem(position[i], true);
-                                }
-                            }               
+                            localStorage.setItem('ms_username',res.data.content.chinese_name);
+                            localStorage.setItem('department_id',res.data.content.department_id);
+//                            var position = new Array("技术主管组", "销售主管组", "技术员工组", "销售员工组")
+//                            for (var i in position) {
+//                                if (premission.toString().indexOf(position[i]) > -1) {
+//                                    localStorage.setItem(position[i], true);
+//                                }
+//                            }
                             if (premission.toString().indexOf("技术主管组") > -1) {
+                                localStorage.setItem("技术主管组", true);
                                 self.$router.push('/analysisWeekly');
-
                             }
                             else if (premission.toString().indexOf("销售主管组") > -1) {
+                                  localStorage.setItem("销售主管组", true);
                                 self.$router.push('/analysisSaleEvent');
                             }
                             else if (premission.toString().indexOf("技术员工组") > -1) {
+                                localStorage.setItem("技术员工组", true);
                                 self.$router.push('/insertDevWork');
                             }
                             else if (premission.toString().indexOf("销售员工组") > -1) {
+                                  localStorage.setItem("销售员工组", true);
                                 self.$router.push('/insertSaleEvent');
 
                             } else {
                                 self.$router.push('/readme');
                             }
-                        } else {           
+                        } else {
                             this.$message.error('密码或者用户名错误');
                             return false;
                         }

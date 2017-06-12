@@ -34,7 +34,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    
+
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
             <el-form ref="insertForm" :model="insertForm" label-width="90px">
                 <el-form-item label="周数:">
@@ -43,7 +43,7 @@
                         <el-date-picker v-model="insertForm.filter_date" type="week" format="yyyy-WW 周" @change="insertDateChange" placeholder="选择周">
                         </el-date-picker>
                     </div>
-    
+
                 </el-form-item>
                 <el-form-item label="总结：">
                     <el-input type="textarea" class="form-control" id="summary" placeholder="总结" v-model="insertForm.summary">
@@ -60,7 +60,7 @@
                         总结
                     </el-input>
                 </el-form-item>
-    
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -70,7 +70,7 @@
                 <p>**每个内容最多500字符 </p>
             </div>
         </el-dialog>
-    
+
         <!--<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
             <el-form ref="insertForm" :model="insertForm" label-width="90px">
                 <el-form-item label="周数:">
@@ -79,7 +79,7 @@
                         <el-date-picker v-model="insertForm.filter_date" type="week" format="yyyy-WW 周" @change="insertDateChange" placeholder="选择周">
                         </el-date-picker>
                     </div>
-    
+
                 </el-form-item>
                 <el-form-item label="总结：">
                     <el-input type="textarea" class="form-control" id="summary" placeholder="总结" v-model="insertForm.summary">
@@ -176,6 +176,11 @@ export default {
             });
             //this.$refs['addForm'].resetFields();
             this.addFormVisible = false;
+            this.get_summary()
+            var clean_field = ['filter_date', 'natural_week','summary','plan','self_evaluation']
+            for (var i = 0; i < clean_field.length; i++) {
+                self.insertForm[clean_field[i]] = '';
+            }
 
         },
         // handleEdit: function (index, row) {

@@ -173,11 +173,17 @@ def userid_to_chinesename(source_ids):
     根据user id来查找中文名
     '''
     id_list= source_ids.split(',')
-    chinese_name_list=[]            
+    chinese_name_list=[]
     for i in id_list:
-        chinese_name_queryset=User.objects.filter(id=i)
-        if chinese_name_queryset:
-            chinese_name=chinese_name_queryset.first().chinese_name
-            chinese_name_list.append(chinese_name)                
+
+        try:
+            id = int(i.strip())
+        except:
+            id=-1
+        if isinstance(id, int):
+            chinese_name_queryset=User.objects.filter(id=id)
+            if chinese_name_queryset:
+                chinese_name=chinese_name_queryset.first().chinese_name
+                chinese_name_list.append(chinese_name)
     result=u'，'.join(chinese_name_list)
     return result

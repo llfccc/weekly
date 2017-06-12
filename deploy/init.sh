@@ -41,9 +41,13 @@ systemctl start postgresql
 
 #手动修改pg认证方式 ，否则难以用密码连接上
 #vim -w /var/lib/pgsql/data/pg_hba.conf
-#  修改如下内容，信任指定服务器连接
+#  修改如下内容，信任指定服务器连接,加入自己的ip即可访问
 #     # IPv4 local connections:
 #     host    all            all      127.0.0.1/32      trust
+#host    all             all             172.17.0.1/32         trust
+#使局域网其他ip也可以访问
+#vim /var/lib/pgsql/data/postgresql.conf
+#listen_addresses = '*'
 
 #重启pg
 systemctl restart postgresql

@@ -13,6 +13,8 @@ pg_dump   -U postgres test > f:\docker\weekly\test.bak
 
 psql test -f /home/working/weekly/test.bak
 
+
+
 #备份还原django数据
 备份一个APP的数据
 python manage.py dumpdata accounts --format=json > accounts.json

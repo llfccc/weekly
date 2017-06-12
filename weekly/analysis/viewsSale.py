@@ -99,6 +99,5 @@ class DisplaySaleTarget(View):
         result_field = ["phase_name","natural_week", "target", "phase_count","sale_target_remark"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)
-   
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
