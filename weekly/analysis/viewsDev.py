@@ -262,7 +262,7 @@ class AnalysisWeeklySummary(LoginRequiredMixin,View):
             natural_week='2017-21'
 
         user_id=chinesename_to_userid(employee_name)
-        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=filter_date).all()
+        data = WeekSummary.objects.filter(summary_owner_id=user_id).filter(natural_week=natural_week).all()
         result_field = ["id", "natural_week","summary", "self_evaluation", "plan"]
         data_dict = queryset_to_dict(data, result_field)
         content = dict_to_json(data_dict)

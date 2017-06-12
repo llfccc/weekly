@@ -40,7 +40,7 @@ systemctl start postgresql
 # exit
 
 #手动修改pg认证方式 ，否则难以用密码连接上
-#nano -w /var/lib/pgsql/data/pg_hba.conf
+#vim -w /var/lib/pgsql/data/pg_hba.conf
 #  修改如下内容，信任指定服务器连接
 #     # IPv4 local connections:
 #     host    all            all      127.0.0.1/32      trust

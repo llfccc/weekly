@@ -48,9 +48,9 @@
                 <template slot="title">
                     <i class="el-icon-setting"></i>基础数据</template>
                 <el-menu-item index="projectManage">数据管理</el-menu-item>
-                <!--<el-menu-item index="projectManage">项目管理</el-menu-item>
-                <el-menu-item index="saleTarget">销售目标管理</el-menu-item>
-                <el-menu-item index="saleCustmoer">客户管理</el-menu-item>-->
+                <!--<el-menu-item index="projectManage">项目管理</el-menu-item>-->
+                <el-menu-item index="saleTarget">制作中</el-menu-item>
+                <!--<el-menu-item index="saleCustmoer">客户管理</el-menu-item>-->
                 <!--<el-menu-item index="basecharts">基础图表</el-menu-item>-->
                 <!--<el-menu-item index="mixcharts">混合图表</el-menu-item>-->
             </el-submenu>

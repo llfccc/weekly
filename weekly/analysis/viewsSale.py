@@ -12,10 +12,10 @@ from django.http import HttpResponse, FileResponse, Http404
 from django.core.cache import cache
 from api.models import DevEvent, DevProject, DevEventType
 from api.models import   SaleCustomer, SalePhase, SaleTarget, SaleEvent, SaleActiveType
-from api.models import WeekSummary
+from api.models import WeekSummary,SaleTarget
 from accounts.models import User,Department
 from utils.tools import my_response, queryset_to_dict, dict_to_json
-from utils.tools import fetch_data,get_first_day,day_of_week,get_day_of_week
+from utils.tools import fetch_data,get_user_id,get_first_day,get_day_of_week,day_of_week
 from sqljoint.query import filter_dev_event_sql,filter_sale_event_sql,pivot_target_actual_sql
 from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 from django.contrib.auth.decorators import login_required, permission_required
@@ -70,7 +70,7 @@ class AnalysisSalePerformace(LoginRequiredMixin,View):
 
         filter_sql=filter_sale_event_sql(natural_week=natural_week,department_name=department_name)
         # 联合目标和实际记录
-        pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)        
+        pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)
         data = fetch_data(pivot_sql)
 
         content = dict_to_json(data)
@@ -78,3 +78,27 @@ class AnalysisSalePerformace(LoginRequiredMixin,View):
         return response
 
 
+
+class DisplaySaleTarget(View):
+    '''
+    显示所有销售目标
+    '''
+
+    def get(self, request):
+        getParams = request.GET        
+        natural_week = getParams.get('natural_week', '')
+        department_name = request.user.department.department_name
+        __match=re.compile('^\d{4}-\d{2}').match(natural_week)
+        if __match:
+            natural_week=__match.group()
+        else:
+            natural_week= get_day_of_week()
+        user_id=get_user_id(request)
+        print(natural_week)
+        data = SaleTarget.objects.filter(natural_week=natural_week).all()
+        result_field = ["phase_name","natural_week", "target", "phase_count","sale_target_remark"]
+        data_dict = queryset_to_dict(data, result_field)
+        content = dict_to_json(data_dict)
+   
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
