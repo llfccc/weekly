@@ -198,7 +198,7 @@ class AnanlysisLoad(LoginRequiredMixin,View):
 #         return response
 
 
-class AnalysisDevEvent(View):
+class AnalysisDevEvent(LoginRequiredMixin,View):
     '''
     查询技术员工每日工作事件
     '''

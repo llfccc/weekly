@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class DisplaySaleEvent(View):
+class DisplaySaleEvent(LoginRequiredMixin,View):
     '''
     主管查询销售周报汇总
     '''
@@ -54,7 +54,7 @@ class DisplaySaleEvent(View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class AnalysisSalePerformace(View):
+class AnalysisSalePerformace(LoginRequiredMixin,View):
     '''
     主管查询销售职员目标与实际情况
     '''
@@ -63,12 +63,16 @@ class AnalysisSalePerformace(View):
         getParams = request.GET        
         natural_week = getParams.get('natural_week', '')
         department_name = request.user.department.department_name
+        try:
+            natural_week=natural_week[:7]
+        except:
+            natural_week='2017-1'
 
-        print(natural_week)
         filter_sql=filter_sale_event_sql(natural_week=natural_week,department_name=department_name)
         # 联合目标和实际记录
         pivot_sql=pivot_target_actual_sql(natural_week=natural_week,filter_sql=filter_sql,department_name=department_name)        
         data = fetch_data(pivot_sql)
+        print(data)
         content = dict_to_json(data)
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response

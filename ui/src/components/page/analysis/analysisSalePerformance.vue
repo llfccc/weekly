@@ -205,15 +205,13 @@ export default {
       console.log(self.filters.naturalWeek)
       this.$axios.get('/analysis/analysis_sale_performance/', {
         params: {
-          filter_date: self.filters.naturalWeek,
-          employee_name: self.filters.employee_name,
+          natural_week: self.filters.naturalWeek,
+          // employee_name: self.filters.employee_name,
         }
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.sale_performance_list = responseContent
-          console.log(responseContent)
-
         }
         );
     },

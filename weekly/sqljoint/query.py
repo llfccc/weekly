@@ -94,7 +94,6 @@ def filter_sale_event_sql(filter_date='',natural_week='',user_id='',customer_id=
     if customer_id:
         where_condition += "and customer.id = '{0}' ".format(customer_id)
 
-
     if employee_name:
         owner_id=chinesename_to_userid(employee_name)
         where_condition += "and sale_event_owner_id = '{0}' ".format(owner_id)
@@ -123,7 +122,7 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
                 where_condition = "and sale_target_owner_id =  {0} ".format(user_ids[0])
             else:
                 where_condition = "and sale_target_owner_id in  {0} ".format(user_ids)
-    target_sql=u"select sale_target_owner_id,phase_name as target_phase_name,target from api_saletarget as target \
+    target_sql=u"select sale_target_owner_id,phase.phase_name as target_phase_name,target from api_saletarget as target \
         left join api_salephase as phase on target.phase_name_id = phase.id \
         where natural_week='{0}' {1}  ".format(natural_week,where_condition)
 
@@ -131,13 +130,12 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
     group_sql = u'select child.user_id,child.chinese_name,child.phase_name,count(child.phase_name) as phase_count \
         from ({0}) as child group by child.phase_name,child.chinese_name,child.user_id '.format(filter_sql)
 
-    print group_sql
+    
     union_sql=u'''select  a_user.chinese_name,phase_name,phase_count,target_phase_name,target \
-                    from ({1}) as target left join ({0}) as group_count on \
+                    from ({0}) as target left join ({1}) as group_count on \
                     target.sale_target_owner_id=group_count.user_id and target.target_phase_name=group_count.phase_name
-                    left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(group_sql,target_sql)
-    pivot_sql=u'''select chinese_name,   
- 
+                    left join accounts_user as a_user on  target.sale_target_owner_id=a_user.id'''.format(target_sql,group_sql)
+    pivot_sql=u'''select chinese_name, 
             sum(case when phase_name = 'B' then phase_count else 0 end) as "B",  
             sum(case when phase_name = 'C' then phase_count else 0 end) as "C",
             sum(case when phase_name = 'D' then phase_count else 0 end) as "D",
@@ -151,7 +149,8 @@ def pivot_target_actual_sql(natural_week='',filter_sql='',department_name=''):
             sum(case when target_phase_name = 'F' then target else 0 end) as "target_F",
             sum(case when target_phase_name = 'G' then target else 0 end) as "target_G"       
             from  ({0}) as group_sql group by chinese_name order by chinese_name desc;  '''.format(union_sql)
-    return pivot_sql
+
+    return  pivot_sql
 
 def chinesename_to_userid(employee_name=''):
     user_queryset=User.objects.filter(chinese_name=employee_name)
