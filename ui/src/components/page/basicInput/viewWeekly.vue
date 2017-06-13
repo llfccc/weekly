@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div>
 
     <!--<h1 class="title" style="align:center;">查看员工周报</h1>-->
@@ -10,7 +10,7 @@
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
-  
+
           <!--<el-col :span="6">
             <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
               <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
@@ -18,14 +18,14 @@
             </el-select>
           </el-col>-->
           <el-col :span="8">
-            <el-button type="primary" v-on:click="filter">筛选</el-button>
-          </el-col>  
+            <el-button type="primary" v-on:click="filter">查询</el-button>
+          </el-col>
         </el-form>
       </el-col>
       </br>
       </br>
       </br>
-      
+
       <table border="1" class="table table-responsive table-bordered" width="100%" v-show="weekly_dict">
         <thead>
           <tr>
@@ -47,22 +47,22 @@
             <td  width="9%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.event_date}}</td>
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.which_day}}</td>
             <td width="8%" >{{item.project_name}}</td>
-            <td width="10%">{{item.event_type_name}}</td>  
+            <td width="10%">{{item.event_type_name}}</td>
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.total_time}}</td>
-            <td width="10%">{{item.description}}</td>  
+            <td width="10%">{{item.description}}</td>
             <td width="10%">{{item.duration_time}}</td>
             <td width="10%">{{item.up_reporter_name}}</td>
             <td width="10%">{{item.down_reporter_name}}</td>
             <td width="5%">{{item.fin_percentage}}</td>
             <td width="10%">{{item.dev_event_remark}}</td>
           </tr>
-        </tbody>  
+        </tbody>
       </table>
-  
+
     </div>
 
     </br>
-  
+
     <el-card class="box-card" v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
@@ -96,10 +96,10 @@
               </el-card>
             </el-col>
           </el-col>
-  
+
         </div>
       </template>
-  
+
     </el-card>
   </div>
 </template>
@@ -207,7 +207,7 @@ export default {
     },
 
   },
-  //调用 
+  //调用
   mounted() {
     this.$nextTick(function () {
       this.get_users()

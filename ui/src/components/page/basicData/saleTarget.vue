@@ -1,7 +1,7 @@
 <template>
   <div>
         未完成
-      {{name}}
+
          <el-table :data="sale_target" stripe style="width: 100%">
           <el-table-column prop="natural_week" label="自然周" width="180">
           </el-table-column>

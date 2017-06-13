@@ -20,7 +20,7 @@
                 </el-select>
               </el-col>-->
           <el-col :span="8">
-            <el-button type="primary" v-on:click="filter">筛选</el-button>
+            <el-button type="primary" v-on:click="filter">查询</el-button>
           </el-col>
 
         </el-form>

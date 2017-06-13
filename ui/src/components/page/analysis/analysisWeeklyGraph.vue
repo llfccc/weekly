@@ -37,25 +37,29 @@
     <br>
     </br>
     <el-row :gutter="24">
-      <el-col :span="12">
-        <div id="load" style="width: 1200px;height: 300px;"> </div>
+      <el-col :span="16">
+        <div id="load" style="width: 100%;height: 400px;"> </div>
+      </el-col>
+              <el-col :span="8">
+        <div id="department" style="width: 400px;height: 400px;"> </div>
       </el-col>
     </el-row>
     <el-row :gutter="24">
-      <el-col :span="8">
-        <div id="department" style="width: 400px;height: 300px;"> </div>
-      </el-col>
-      <el-col :span="8">
-        <div id="personal" style="width: 400px;height: 300px;"> </div>
-      </el-col>
-      <el-col :span="8">
-        <div id="project" style="width: 400px;height: 300px;"> </div>
+             <el-col :span="16">
+        <div id="position" style="width: 100%;height: 400px"> </div>
       </el-col>
 
-      <el-col :span="24">
-        <div id="position" style="width: 1200px;height: 450px;"> </div>
+      <el-col :span="8">
+        <div id="project" style="width: 100%;height: 400px"> </div>
       </el-col>
+
     </el-row>
+          <el-row :gutter="24">
+            <el-col :span="8">
+        <div id="personal" style="width: 100%;height: 400px"> </div>
+      </el-col>
+          </el-row>
+
   </div>
 </template>
 <script>

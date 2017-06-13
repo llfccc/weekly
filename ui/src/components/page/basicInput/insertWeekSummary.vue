@@ -8,7 +8,7 @@
             </el-date-picker>
         </el-col>
         <el-col :span="4">
-            <el-button type="primary" v-on:click="filter">筛选</el-button>
+            <el-button type="primary" v-on:click="filter">查询</el-button>
         </el-col>
         <el-button type="success" @click="handleAdd">新增</el-button>
 

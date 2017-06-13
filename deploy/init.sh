@@ -86,8 +86,6 @@ systemctl enable supervisord
 systemctl start supervisord 
 supervisorctl reload
 
-
-
 #4.安装nodejs 和cnpm
 yum install -y nodejs
 npm install cnpm -g --registry=https://registry.npm.taobao.org
