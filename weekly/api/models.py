@@ -168,7 +168,8 @@ class SalePhase(models.Model):
         permissions = (
             ("view_SalePhase", u"销售员工:查看销售阶段"),
         )
-        verbose_name_plural = '销售阶段'  
+        verbose_name_plural = '销售阶段'
+
 
 class SaleTarget(models.Model):
     natural_week = models.CharField(max_length=64, verbose_name='自然周,如 2017-10 ')
@@ -178,7 +179,6 @@ class SaleTarget(models.Model):
     sale_target_remark = models.CharField(max_length=64, null=True,
                                           blank=True, verbose_name='销售目标备注')
     create_time = models.DateTimeField(auto_now_add=True)
-
     # creator =  models.ForeignKey(User, verbose_name='创建人')
     sale_target_owner = models.ForeignKey(User,verbose_name='目标所属人')
 
@@ -187,7 +187,7 @@ class SaleTarget(models.Model):
 
     class Meta:  
         verbose_name_plural = '销售目标'  
-
+        unique_together = ('natural_week', 'phase_name','sale_target_owner')
 
 class SaleEvent(models.Model):
     cus_con_post = models.CharField(max_length=500, verbose_name='客户职位')

@@ -5,7 +5,7 @@ import json
 import logging
 import sys
 import string, random
-
+import types
 from hashlib import md5
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
@@ -55,6 +55,7 @@ def queryset_to_dict(queryset, query_field):
         job_dict = {}
         for field in query_field:
             job_dict[field] = query.get(field, '')
+
         output_list.append(job_dict)
     return output_list
 
