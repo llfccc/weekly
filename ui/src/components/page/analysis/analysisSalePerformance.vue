@@ -4,7 +4,7 @@
     <!--<h1 class="title" style="align:center;">销售业绩分析</h1>-->
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-  
+
         <el-form :inline="true" :model="filters">
           <el-col :span="8">
             <!--<el-button type="primary" v-on:click="lastWeek">上一周（未完成）</el-button>-->
@@ -13,15 +13,15 @@
             </el-date-picker>
             <!--<el-button type="primary" v-on:click="nextWeek">下一周（未完成）</el-button>-->
           </el-col>
-  
+
           <el-col :span="6">
             <el-button type="primary" v-on:click="filter">筛选</el-button>
-  
+
           </el-col>
         </el-form>
       </el-col>
       </br>
-  
+
       </br>
       </br>
       </br>
@@ -33,7 +33,7 @@
                 <th colspan="1" rowspan="2" class="el-table_1_column_1 is-leaf">
                   <div class="cell">姓名</div>
                 </th>
-  
+
                 <th colspan="2" rowspan="1" class="el-table_1_column_3 is-leaf">
                   <div class="cell">B</div>
                 </th>
@@ -66,7 +66,7 @@
                 <th> 实际</th>
                 <th> 目标</th>
                 <th> 实际</th>
-                <th> 目标</th>  
+                <th> 目标</th>
               </tr>
             </thead>
           </table>
@@ -76,7 +76,7 @@
 
             <tbody>
               <tr v-for="item in sale_performance_list">
-                <td> {{item.chinese_name}}</td>  
+                <td> {{item.chinese_name}}</td>
                 <td> {{item.B}}</td>
                 <td> {{item.target_B}}</td>
                 <td> {{item.C}}</td>
@@ -94,9 +94,9 @@
               </tr>
             </tbody>
           </table>
-  
+
         </div>
-  
+
         <div class="el-table__column-resize-proxy" style="display: none;"></div>
         <div class="resize-triggers">
           <div class="expand-trigger">
@@ -105,7 +105,7 @@
           <div class="contract-trigger"></div>
         </div>
       </div>
-  
+
       <!--<table border="2" class="am-table am-table-striped am-table-hover am-table-compact am-table-centered  am-text-nowrap">
               <tr>
                 <th rowspan="2">姓名 </th>
@@ -130,7 +130,7 @@
                 <th> 目标</th>
                 <th> 实际</th>
                 <th> 目标</th>
-       
+
               </tr>
               <tr v-for="item in sale_performance_list">
                 <td> {{item.chinese_name}}</td>
@@ -151,29 +151,25 @@
               </tr>
             </table>
             <table id="table"></table>-->
-  
+
     </div>
     <br>
     </br>
-  
+
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-col :span="8">
-  
       </el-col>
       <el-col :span="8">
-  
       </el-col>
       <el-col :span="8">
-  
       </el-col>
     </el-col>
-  
+
   </div>
 </template>
 <script>
 import echarts from 'echarts'
 export default {
-  name: '',
   data() {
     return {
       sale_performance_list: '',
@@ -232,7 +228,7 @@ export default {
     // },
 
   },
-  //调用 
+  //调用
   mounted() {
     this.$nextTick(function () {
       // this.get_weekly()
@@ -254,6 +250,6 @@ th{
 }
 td {
   text-align: center;
-  
+
 }
 </style>
