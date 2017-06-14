@@ -105,7 +105,6 @@ if os.environ.get("SystemInfo")=='Windows':
         }
     }
 else:
-
     DATABASES = {
         'default': {
 
@@ -117,7 +116,7 @@ else:
 
             'PASSWORD': 'lanzhong',
 
-            'HOST': '127.0.0.1',  # 数据库IP地址
+            'HOST': 'localhost',  # 数据库IP地址
 
             'PORT': '5432',
 

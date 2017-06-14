@@ -124,7 +124,7 @@
                 </el-table-column>
                 <el-table-column prop="dev_event_remark" label="备注" width="150">
                 </el-table-column>
-                <el-table-column prop="dev_event_id"  label="id" width="150" sortable>
+                <el-table-column prop="dev_event_id"  label="id" v-show="false" width="150" sortable>
                 </el-table-column>
                 <el-table-column label="操作" width="110" fixed="right">
                     <template scope="scope">
@@ -450,5 +450,8 @@ export default {
 
 .filter {
     margin-top: 40px
+}
+.hidden {
+  display: none;
 }
 </style>

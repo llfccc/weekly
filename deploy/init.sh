@@ -52,7 +52,7 @@ systemctl start postgresql
 #重启pg
 systemctl restart postgresql
 #配置uwsgi
-mkdir /var/log/uwsgi
+
 mkdir /etc/uwsgi
 \cp -rf /home/working/weekly/deploy/uwsgi/uwsgi.ini /etc/uwsgi/
 
@@ -75,15 +75,15 @@ systemctl start nginx
 
 #配置cupervisord
 yum install -y  supervisor
-mkdir /var/log/supervisor
 echo_supervisord_conf > /etc/supervisord.conf
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.d /etc/
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.conf /etc/
 #supervisord -c /etc/supervisord.conf
 
 systemctl enable supervisord
+#启用服务就是在当前“runlevel”的配置文件目录/etc/systemd/system/multi-user.target.wants/里，建立/usr/lib/systemd/system里面对应服务配置文件的软链接；禁用服务就是删除此软链接，添加服务就是添加软连接
 # killall -9 supervisord
-systemctl start supervisord 
+#systemctl start supervisord
 supervisorctl reload
 
 #4.安装nodejs 和cnpm
