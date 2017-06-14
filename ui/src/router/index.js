@@ -51,9 +51,14 @@ export default new Router({
             component: resolve => require(['../components/page/VueTable.vue'], resolve) // vue-datasource组件
         },
         {
-            path: '/analysisWeeklyGraph',
-            component: resolve => require(['../components/page/analysis/analysisWeeklyGraph.vue'], resolve) // vue-datasource组件
+            path: '/analysisDevDepart',
+            component: resolve => require(['../components/page/analysis/analysisDevDepart.vue'], resolve) // vue-datasource组件
         },
+        {
+            path: '/analysisDevProject',
+            component: resolve => require(['../components/page/analysis/analysisDevProject.vue'], resolve) // vue-datasource组件
+        },
+
         {
             path: '/analysisWeekly',
             component: resolve => require(['../components/page/analysis/analysisWeekly.vue'], resolve) // vue-datasource组件

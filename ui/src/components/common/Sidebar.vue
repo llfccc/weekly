@@ -17,7 +17,8 @@
                 <template slot="title">
                     <i class="el-icon-star-on"></i>周报分析</template>
                 <el-menu-item index="analysisWeekly">员工周报</el-menu-item>
-                <el-menu-item index="analysisWeeklyGraph">周报分析</el-menu-item>
+                <el-menu-item index="analysisDevDepart">部门分析</el-menu-item>
+                <el-menu-item index="analysisDevProject">项目分析</el-menu-item>
 
             </el-submenu>
             <!--<el-submenu index="4">

@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AnanlysisEmployee(LoginRequiredMixin,View):
+class AnanlysisEmployeeDevtype(LoginRequiredMixin,View):
     '''
     查询特定职员工作类型占比
     '''
@@ -98,6 +98,35 @@ class AnanlysisProject(LoginRequiredMixin,View):
 
         #转换数据为echarts能接受的格式
         x_data=[i['chinese_name'] for i in row]
+        y_data=[i['date_diff'] for i in row] 
+        content = dict_to_json({'x_data':x_data,'y_data':y_data})    
+        print(row)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
+
+
+class AnanlysisProjectTimeTaken(LoginRequiredMixin,View):
+    '''
+    统计每个项目占用的总时间
+    '''
+
+    def get(self, request):
+        getParams = request.GET        
+        filter_date = getParams.get('filter_date', '')
+        #project_name = getParams.get('project_name', '')
+
+        department_name = request.user.department.department_name
+
+        # 创建查询条件       
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,department_name=department_name)
+        #统计分析select dev_event_project_id, count((end_time-start_time)) as time_diff from api_devevent group by dev_event_project_id
+        group_sql = u'select project_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2)   as date_diff from ({0})  as child group by project_name order by date_diff desc '.format(plain_sql)
+
+        row = fetch_data(group_sql)
+
+        #转换数据为echarts能接受的格式
+        x_data=[i['project_name'] for i in row]
         y_data=[i['date_diff'] for i in row] 
         content = dict_to_json({'x_data':x_data,'y_data':y_data})    
         response = my_response(code=0, msg=u"查询成功", content=content)

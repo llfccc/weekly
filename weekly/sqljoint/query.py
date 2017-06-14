@@ -24,7 +24,7 @@ def filter_dev_event_sql(filter_date='',natural_week='',project_name='',project_
     select_param="*,dev.id as dev_event_id" 
     
     start_date, end_date=default_date(filter_date)
-    print()
+
     if natural_week:
         start_date, end_date=get_first_day(natural_week)
     where_condition = u"dev.event_date>='{0}' and dev.event_date<='{1}' ".format(start_date, end_date)

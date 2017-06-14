@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--<h1 class="title" style="align:center;">周报分析</h1>-->
-
+  
     <div>
       <el-form :inline="true" :model="filters">
         <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
@@ -30,36 +30,91 @@
           </el-form-item>
         </el-col>
         <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
-          <el-button type="primary" @click="filter">筛选</el-button>
+          <el-button type="primary" @click="filter">分析</el-button>
         </el-col>
       </el-form>
     </div>
     <br>
     </br>
     <el-row :gutter="24">
+  
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">部门情况</span>
+          </div>
+          <el-col :span="24">
+            <div id="department" style="height: 400px;"> </div>
+          </el-col>
+        </el-card>
+      </el-col>
       <el-col :span="16">
-        <div id="load" style="width: 100%;height: 400px;"> </div>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">部门情况</span>
+            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+          </div>
+          <el-col :span="24">
+            <div id="load" style="width: 100%;height: 400px;"> </div>
+          </el-col>
+        </el-card>
       </el-col>
-              <el-col :span="8">
-        <div id="department" style="width: 400px;height: 400px;"> </div>
+    </el-row>
+  
+    <el-row :gutter="24">
+      <el-col :span="8">  
+      </el-col>  
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+          </div>
+          <el-col :span="24">
+            <div id="personal" style="height: 350px;"> </div>
+          </el-col>       
+        </el-card>
       </el-col>
+
+         <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+          </div>
+          <el-col :span="24">
+            <div id="personal" style="height: 350px;"> </div>
+          </el-col>       
+        </el-card>
+      </el-col>
+
+         <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+          </div>
+          <el-col :span="24">
+            <div id="personal" style="height: 350px;"> </div>
+          </el-col>       
+        </el-card>
+      </el-col>
+    </el-row>
+    
+  
+    <el-row :gutter="24">
     </el-row>
     <el-row :gutter="24">
-             <el-col :span="16">
+      <el-col :span="16">
         <div id="position" style="width: 100%;height: 400px"> </div>
-      </el-col>
-
+      </el-col>  
       <el-col :span="8">
         <div id="project" style="width: 100%;height: 400px"> </div>
-      </el-col>
-
+      </el-col>  
     </el-row>
-          <el-row :gutter="24">
-            <el-col :span="8">
-        <div id="personal" style="width: 100%;height: 400px"> </div>
-      </el-col>
-          </el-row>
-
+    <el-row :gutter="24">
+    </el-row>
+  
   </div>
 </template>
 <script>
@@ -201,11 +256,11 @@ export default {
         ]
       })
     },
-    drawPersonPie(id) {
+    drawPersonPie(id, employee_name) {
       var self = this;
       this.PersonCharts.setOption({
         title: {
-          text: '"' + self.filters.employee_name + '"' + '--耗时分布',
+          text: '"' + employee_name + '"' + '--耗时类型分布',
           subtext: '',
           x: 'center'
         },
@@ -280,6 +335,7 @@ export default {
       })
     },
     drawLoad(id) {
+      var self = this;
       this.LoadCharts.setOption({
         title: {
           text: '部门人员负载图'
@@ -320,6 +376,23 @@ export default {
           }
         ]
       })
+      this.LoadCharts.on('click', function (params) {
+        const employee_name = params.name;
+        self.$axios.get('/analysis/analysis_employee_devtype/', {
+          params: {
+            filter_date: self.filters.filterDate,
+            employee_name: employee_name,
+          }
+        })
+          .then(function (response) {
+            var responseContent = JSON.parse(response.data.content);
+            self.echartsPerson.opinionData = responseContent.type_count
+            self.echartsPerson.opinion = responseContent.type_list
+            console.log(response.data)
+            self.drawPersonPie('personal', employee_name);
+          }
+          );
+      });
     },
     drawPosition(id) {
       var self = this;
@@ -393,7 +466,6 @@ export default {
     },
     filter: function (params) {
       this.analysis_department();
-      this.analysis_employee();
       this.analysis_project();
       this.analysis_load();
       this.analysis_position();
@@ -420,8 +492,6 @@ export default {
         params: {
           filter_date: self.filters.filterDate,
           project_name: self.filters.project_name,
-          // project_name: self.filters.project_name,
-          // department_name: self.filters.department_name,
         }
       })
         .then(function (response) {
@@ -439,8 +509,6 @@ export default {
         params: {
           filter_date: self.filters.filterDate,
           employee_name: self.filters.employee_name,
-          // project_name: self.filters.project_name,
-          // department_name: self.filters.department_name,
         }
       })
         .then(function (response) {
@@ -456,9 +524,8 @@ export default {
       this.$axios.get('/analysis/analysis_project/', {
         params: {
           filter_date: self.filters.filterDate,
-          // employee_name: self.filters.employee_name,
           project_name: self.filters.project_name,
-          // department_name: '技术服务中心',
+
         }
       })
         .then(function (response) {
@@ -480,7 +547,7 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.echartsLoad.x_data = responseContent.x_data
           self.echartsLoad.y_data = responseContent.y_data
-          console.log(responseContent.x_data)
+          //console.log(responseContent.x_data)
           self.drawLoad('load');
         }
         );
@@ -488,12 +555,14 @@ export default {
   },
   //调用
   mounted() {
-      this.PositionCharts = echarts.init(document.getElementById('position'))
-      this.DepartmentCharts = echarts.init(document.getElementById('department'))
-      this.PersonCharts = echarts.init(document.getElementById('personal'))
-      this.ProjectCharts = echarts.init(document.getElementById('project'))
-      this.LoadCharts = echarts.init(document.getElementById('load'))
+    this.LoadCharts = echarts.init(document.getElementById('load'))
+    this.PersonCharts = echarts.init(document.getElementById('personal'))
+    this.ProjectCharts = echarts.init(document.getElementById('project'))
+    this.PositionCharts = echarts.init(document.getElementById('position'))
+    this.DepartmentCharts = echarts.init(document.getElementById('department'))
+
     this.$nextTick(function () {
+            this.filter();
       this.get_users();
       this.get_projects();
     })

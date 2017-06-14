@@ -2,8 +2,9 @@
 set -e
 #1.升级yum 
 yum -y update 
-yum  -y upgrade 
-
+yum  -y upgrade
+#设置失去为上海
+timedatectl set-timezone Asia/Shanghai
 #2.安装基础开发包及安装python-dev
 yum install -y  epel-release  
 yum install -y  wget git psmisc gcc make vim nano
@@ -78,12 +79,10 @@ yum install -y  supervisor
 echo_supervisord_conf > /etc/supervisord.conf
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.d /etc/
 \cp -rf /home/working/weekly/deploy/supervisord/supervisord.conf /etc/
-#supervisord -c /etc/supervisord.conf
+supervisord -c /etc/supervisord.conf
 
 systemctl enable supervisord
 #启用服务就是在当前“runlevel”的配置文件目录/etc/systemd/system/multi-user.target.wants/里，建立/usr/lib/systemd/system里面对应服务配置文件的软链接；禁用服务就是删除此软链接，添加服务就是添加软连接
-# killall -9 supervisord
-#systemctl start supervisord
 supervisorctl reload
 
 #4.安装nodejs 和cnpm
@@ -91,6 +90,6 @@ yum install -y nodejs
 npm install cnpm -g --registry=https://registry.npm.taobao.org
 
 yum install -y  rabbitmq-server
-# yum install -y httpd  
+# yum install -y httpd
 #清理yum
 yum clean all

@@ -86,22 +86,23 @@ WSGI_APPLICATION = 'weekly.wsgi.application'
 #     }
 # }
 if os.environ.get("SystemInfo")=='Windows':
-
     DATABASES = {
         'default': {
-
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
             'NAME': 'test',  # 数据库名字
-
             'USER': 'postgres',  # 登录用户名
-
             'PASSWORD': 'lanzhong',
-
             'HOST': '127.0.0.1',  # 数据库IP地址
-
             'PORT': '5431',
-
+        }
+    }
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6380",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
 else:
@@ -120,6 +121,15 @@ else:
 
             'PORT': '5432',
 
+        }
+    }
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
 # Password validation
@@ -159,15 +169,7 @@ TIME_ZONE = 'Asia/Shanghai'
 STATIC_URL = '/adminStatic/'
 STATIC_ROOT = '/home/working/weekly/static/'
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
+
 # 自定义user，Substituting a custom User model
 AUTH_USER_MODEL = 'accounts.User'
 
