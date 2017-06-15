@@ -37,18 +37,57 @@ class AnanlysisEmployeeEveryday(LoginRequiredMixin,View):
         # 创建查询条件        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,employee_name=employee_name,project_id='',project_name='',department_name='',user_id='')
         #统计分析
-        group_sql = u'select event_date,event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_date,chinese_name,event_type_name order by event_date,chinese_name '.format(plain_sql)
+        group_sql = u'select event_date,event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_date,event_type_name order by event_date,event_type_name '.format(plain_sql)
 
         row = fetch_data(group_sql)
-        print(row)
         #转换数据为echarts能接受的格式
-        type_list=[i['event_date'] for i in row]
-        type_count=[{'event_type_name':i['event_type_name'],'value':i['date_diff']} for i in row]
 
-        content = dict_to_json({'type_list':type_list,'type_count':type_count})
-        #content = dict_to_json(row)
+        event_date_set={i['event_date'].strftime("%Y-%m-%d") for i in row}   #取不重复的日期
+        event_type_name_set={i['event_type_name'] for i in row}   #取不重复的类型名称
+
+        result={}
+        for event_date in event_date_set:
+            result[event_date]={}
+            for type_name in event_type_name_set:
+                result[event_date][type_name]=0
+                for value in row:  
+                    if value.get('event_date').strftime("%Y-%m-%d")==event_date and value.get('event_type_name')==type_name:
+                        result[event_date][type_name]=value.get('date_diff',0)
+
+        date_list=[]
+        time_count_list={}
+        for event_date in event_date_set:
+            date_list.append(event_date)
+            for type_name in event_type_name_set:
+                if  time_count_list.get(type_name):
+                    time_count_list[type_name].append(result[event_date].get(type_name))                   
+                else:
+                    time_count_list[type_name]=[result[event_date].get(type_name)]             
+ 
+        content = dict_to_json({'date_list':date_list,'time_count_list':time_count_list})
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
+        #下面方法有缺陷，但是较简单，可改造
+        # result={}
+        # for value in row:
+        #     event_date=value.get('event_date').strftime("%Y-%m-%d")
+        #     if event_date not in result.keys():
+        #         result[event_date]={}
+        #         result[event_date]['event_type_name']=[]
+        #         result[event_date]['date_diff']=[]
+        #         result[event_date]['event_type_name'].append(value['event_type_name'])
+        #         result[event_date]['date_diff'].append(value['date_diff'])
+        #     else:
+        #         if value['event_type_name'] not in result[event_date]['event_type_name']:
+        #             result[event_date]['event_type_name'].append(value['event_type_name'] )
+        #         result[event_date]['date_diff'].append(value['date_diff'])
+        # print(result)
+        # data_list=[]
+
+        # for event_date in event_date_set:
+        #     date_list=
+        #     for type_name in event_type_name_set:
+
 
 
 class AnanlysisEmployeeDevtype(LoginRequiredMixin,View):

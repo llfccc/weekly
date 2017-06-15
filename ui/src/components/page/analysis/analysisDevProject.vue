@@ -11,7 +11,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
+        <!--<el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
             <span class="demonstration">项目：</span>
             <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
@@ -28,9 +28,9 @@
               </el-option>
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col>-->
         <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
-          <el-button type="primary" @click="filter">筛选</el-button>
+          <el-button type="primary" @click="filter">分析</el-button>
         </el-col>
       </el-form>
     </div>
@@ -319,7 +319,7 @@ export default {
       })
       this.ProjectTimeTakenCharts.on('click', function (params) {
           const project_name = params.name;
-          console.log(params)
+ 
           self.analysis_project_employee(params,project_name);
           self.analysis_position(params,project_name);
       });
@@ -327,10 +327,10 @@ export default {
 
     drawProject(id, project_name) {
       var self = this;
-      console.log(this.echartsProject)
+ 
       this.ProjectCharts.setOption({
         title: {
-          text: '"' +  project_name + '"' + '项目--各人员耗时'
+          text: '"' +  project_name + '"' + '项目--具体人员耗时'
         },
         color: ['#3398DB'],
         tooltip: {

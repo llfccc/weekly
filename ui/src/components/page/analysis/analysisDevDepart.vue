@@ -3,53 +3,42 @@
     <!--<h1 class="title" style="align:center;">周报分析</h1>-->
   
     <div>
-          <el-row :gutter="24">  
-      <el-form :inline="true" :model="filters">
-        <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
-          <el-form-item>
-            <span class="demonstration">时间：</span>
-            <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
-            </el-date-picker>
-          </el-form-item>
-                  <!--<el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
-          <el-form-item>
-            <span class="demonstration">项目：</span>
-            <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
-              <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.project_name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
-          <el-form-item>
-            <span class="demonstration">员工：</span>
-            <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-              <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>-->
-        </el-col>
-                <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
-          <el-button type="primary" @click="filter">分析</el-button>
-        </el-col>
-      </el-form>
-            </el-row>
-
-
+      <el-row :gutter="24">
+        <el-form :inline="true" :model="filters">
+          <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
+            <el-form-item>
+              <span class="demonstration">时间：</span>
+              <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
+              </el-date-picker>
+            </el-form-item>
+            <!--<el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
+            <el-form-item>
+              <span class="demonstration">项目：</span>
+              <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
+                <el-option v-for="item in project_list" :key="item.id" :label="item.project_name" :value="item.project_name">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
+            <el-form-item>
+              <span class="demonstration">员工：</span>
+              <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+                <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>-->
+          </el-col>
+          <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
+            <el-button type="primary" @click="filter">分析</el-button>
+          </el-col>
+        </el-form>
+      </el-row>
+  
     </div>
     </br>
-    <el-row :gutter="24">  
-      <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">部门情况</span>
-          </div>
-          <el-col :span="24">
-            <div id="department" style="height: 400px;"> </div>
-          </el-col>
-        </el-card>
-      </el-col>
+    <el-row :gutter="24">
       <el-col :span="16">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -57,72 +46,84 @@
             <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
           </div>
           <el-col :span="24">
-            <div id="load" style="width: 100%;height: 400px;"> </div>
+            <div id="load" style="width: 100%;height: 350px;"> </div>
           </el-col>
         </el-card>
       </el-col>
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">部门情况</span>
+          </div>
+          <el-col :span="24">
+            <div id="department" style="height: 350px;"> </div>
+          </el-col>
+        </el-card>
+      </el-col>
+  
     </el-row>
   
-    <el-row :gutter="24">
-      <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">个人情况</span>
-          </div>
-          <el-col :span="24">
-            <div id="personal" style="height: 350px;"> </div>
-          </el-col>
-        </el-card>
-      </el-col>
-<!--  
-      <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">个人情况</span>
-            <el-button style="float: right;" type="primary">操作按钮</el-button>
-          </div>
-          <el-col :span="24">
-            <div id="personal" style="height: 350px;"> </div>
-          </el-col>
-        </el-card>
-      </el-col>-->
+    <!--  
+        <el-col :span="8">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span style="line-height: 10px;">个人情况</span>
+              <el-button style="float: right;" type="primary">操作按钮</el-button>
+            </div>
+            <el-col :span="24">
+              <div id="personal" style="height: 350px;"> </div>
+            </el-col>
+          </el-card>
+        </el-col>-->
   
-      <!--<el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">个人情况</span>
-            <el-button style="float: right;" type="primary">操作按钮</el-button>
-          </div>
-          <el-col :span="24">
-            <div id="personal" style="height: 350px;"> </div>
-          </el-col>  
-        </el-card>
-      </el-col>-->
-        <el-col :span="16">
+    <!--<el-col :span="8">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span style="line-height: 10px;">个人情况</span>
+              <el-button style="float: right;" type="primary">操作按钮</el-button>
+            </div>
+            <el-col :span="24">
+              <div id="personal" style="height: 350px;"> </div>
+            </el-col>  
+          </el-card>
+        </el-col>-->
+    <el-row :gutter="24">
+  
+      <el-col :span="16">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span style="line-height: 10px;">个人情况</span>
             <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
           </div>
           <el-col :span="24">
-    <div id="everyday" style="height: 350px;"> </div>
-          </el-col>  
+            <div id="everyday" style="height: 350px;"> </div>
+          </el-col>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+          </div>
+          <el-col :span="24">
+            <div id="personal" style="height: 350px;"> </div>
+          </el-col>
         </el-card>
       </el-col>
     </el-row>
     <!--  
-      <el-row :gutter="24">
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="16">
-          <div id="position" style="width: 100%;height: 400px"> </div>
-        </el-col>  
-        <el-col :span="8">
-          <div id="project" style="width: 100%;height: 400px"> </div>
-        </el-col>  
-      </el-row>
-      <el-row :gutter="24">
-      </el-row>-->
+        <el-row :gutter="24">
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="16">
+            <div id="position" style="width: 100%;height: 400px"> </div>
+          </el-col>  
+          <el-col :span="8">
+            <div id="project" style="width: 100%;height: 400px"> </div>
+          </el-col>  
+        </el-row>
+        <el-row :gutter="24">
+        </el-row>-->
   
   </div>
 </template>
@@ -169,6 +170,11 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }]
+      },
+      echartsEmployeeEveryday: {
+        charts: '',
+        date_list: [],
+        time_count_list: []
       },
       echartsPerson: {
         charts: '',
@@ -323,6 +329,7 @@ export default {
           {
             type: 'category',
             data: this.echartsProject.x_data,
+                  barWidth: 80,
             axisTick: {
               alignWithLabel: true
             }
@@ -337,7 +344,7 @@ export default {
           {
             name: '项目耗时',
             type: 'bar',
-            barWidth: '60%',
+            barWidth: 100,
             data: this.echartsProject.y_data
           }
         ]
@@ -393,99 +400,61 @@ export default {
     },
     drawEveryday(id, employee_name) {
       var self = this;
-      this.EverydayCharts.setOption(
-        {
-          title: {
-            text: '"' + employee_name + '"' + '--各岗位耗时瀑布图',
-            // subtext: 'From ExcelHome',
-            // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-          },
-          legend: {
-            data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-          },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              name: '直接访问',
-              type: 'bar',
-              stack: '总量',
-              label: {
-                normal: {
-                  show: true,
-                  position: 'insideRight'
-                }
-              },
-              data: [320, 302, 301, 334, 390, 330, 320]
-            },
-            {
-              name: '邮件营销',
-              type: 'bar',
-              stack: '总量',
-              label: {
-                normal: {
-                  show: true,
-                  position: 'insideRight'
-                }
-              },
-              data: [120, 132, 101, 134, 90, 230, 210]
-            },
-            {
-              name: '联盟广告',
-              type: 'bar',
-              stack: '总量',
-              label: {
-                normal: {
-                  show: true,
-                  position: 'insideRight'
-                }
-              },
-              data: [220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-              name: '视频广告',
-              type: 'bar',
-              stack: '总量',
-              label: {
-                normal: {
-                  show: true,
-                  position: 'insideRight'
-                }
-              },
-              data: [150, 212, 201, 154, 190, 330, 410]
-            },
-            {
-              name: '搜索引擎',
-              type: 'bar',
-              stack: '总量',
-              label: {
-                normal: {
-                  show: true,
-                  position: 'insideRight'
-                }
-              },
-              data: [820, 832, 901, 934, 1290, 1330, 1320]
+      var option = {
+        title: {
+          text: '"' + employee_name + '"' + '--每日工作累积图',
+          // subtext: 'From ExcelHome',
+          // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        legend: {
+          data: []
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: self.echartsEmployeeEveryday.date_list
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+        ]
+      }
+      var time_count_list = self.echartsEmployeeEveryday.time_count_list;
+      var legend = [];
+      for (var value in time_count_list) {
+        legend.push(value)
+        var d = {
+          name: value,
+          type: 'bar',
+          stack: '总量',
+          barWidth: 80,
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
             }
-          ]
-      });
+          },
+          data: time_count_list[value]
+        }
+        option.series.push(d);
+      }
+      option.legend.data = legend
+      this.EverydayCharts.clear();
+      //initChart3Option();
+      this.EverydayCharts.setOption(option);
     },
     filterDateChange(val) {
       var self = this;
@@ -517,6 +486,8 @@ export default {
     },
     analysis_employee_everyday: function (params, employee_name) {
       var self = this;
+      self.echartsEmployeeEveryday.date_list = []
+      self.echartsEmployeeEveryday.time_count_list = []
       self.$axios.get('/analysis/analysis_employee_everyday/', {
         params: {
           filter_date: self.filters.filterDate,
@@ -524,10 +495,10 @@ export default {
         }
       })
         .then(function (response) {
-          console.log(response.data.content)
           var responseContent = JSON.parse(response.data.content);
-          self.echartsPerson.opinionData = responseContent.type_count
-          self.echartsPerson.opinion = responseContent.type_list
+          self.echartsEmployeeEveryday.date_list = responseContent.date_list
+          self.echartsEmployeeEveryday.time_count_list = responseContent.time_count_list
+
           self.drawEveryday('everyday', employee_name);
         }
         );
@@ -592,7 +563,7 @@ export default {
           var responseContent = JSON.parse(response.data.content);
           self.echartsLoad.x_data = responseContent.x_data
           self.echartsLoad.y_data = responseContent.y_data
-          //console.log(responseContent.x_data)
+
           self.drawLoad('load');
         }
         );
@@ -602,9 +573,8 @@ export default {
   mounted() {
     this.LoadCharts = echarts.init(document.getElementById('load'))
     this.PersonCharts = echarts.init(document.getElementById('personal'))
-    this.EverydayCharts = echarts.init(document.getElementById('everyday'))
     this.DepartmentCharts = echarts.init(document.getElementById('department'))
-
+    this.EverydayCharts = echarts.init(document.getElementById('everyday'))
     this.$nextTick(function () {
       this.filter();
       this.get_users();
