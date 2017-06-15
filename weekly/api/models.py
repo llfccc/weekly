@@ -49,6 +49,7 @@ class DevEvent(models.Model):
     event_date=models.DateField(verbose_name='事件日期')
     start_time = models.TimeField(verbose_name='事件开始时间')
     end_time = models.TimeField(verbose_name='事件结束时间')
+    duration_time= models.FloatField(verbose_name='工作时长(秒)')
     fin_percentage = models.IntegerField(default=0, verbose_name='完成百分比')
     up_reporter_id = models.CharField(max_length=64, verbose_name='上游汇报人')
     down_reporter_ids = models.CharField(max_length=64, verbose_name='下游交接人')

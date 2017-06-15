@@ -21,6 +21,35 @@ from sqljoint.query import  chinesename_to_userid,userid_to_chinesename
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+class AnanlysisEmployeeEveryday(LoginRequiredMixin,View):
+    '''
+    查询特定职员每日工作情况
+    '''
+    def get(self, request):
+        getParams = request.GET        
+        filter_date = getParams.get('filter_date', '')
+        employee_name= getParams.get('employee_name', '')
+
+        if not employee_name:
+            employee_name=u'空姓名'
+        #error
+        department_name = request.user.department.department_name
+        # 创建查询条件        
+        plain_sql=filter_dev_event_sql(filter_date=filter_date,employee_name=employee_name,project_id='',project_name='',department_name='',user_id='')
+        #统计分析
+        group_sql = u'select event_date,event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_date,chinese_name,event_type_name order by event_date,chinese_name '.format(plain_sql)
+
+        row = fetch_data(group_sql)
+        print(row)
+        #转换数据为echarts能接受的格式
+        type_list=[i['event_date'] for i in row]
+        type_count=[{'event_type_name':i['event_type_name'],'value':i['date_diff']} for i in row]
+
+        content = dict_to_json({'type_list':type_list,'type_count':type_count})
+        #content = dict_to_json(row)
+        response = my_response(code=0, msg=u"查询成功", content=content)
+        return response
+
 
 class AnanlysisEmployeeDevtype(LoginRequiredMixin,View):
     '''
@@ -39,7 +68,7 @@ class AnanlysisEmployeeDevtype(LoginRequiredMixin,View):
         # 创建查询条件        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,employee_name=employee_name,project_id='',project_name='',department_name='',user_id='')
         #统计分析
-        group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+        group_sql = u'select event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
         row = fetch_data(group_sql)
         #转换数据为echarts能接受的格式
@@ -65,7 +94,7 @@ class AnanlysisDepartment(LoginRequiredMixin,View):
         # 创建查询条件        
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
         #统计分析
-        group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+        group_sql = u'select event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
         row = fetch_data(group_sql)
         #转换数据为echarts能接受的格式
         type_list=[i['event_type_name'] for i in row]
@@ -75,9 +104,9 @@ class AnanlysisDepartment(LoginRequiredMixin,View):
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
-class AnanlysisProject(LoginRequiredMixin,View):
+class AnanlysisProjectEmployee(LoginRequiredMixin,View):
     '''
-    查询某项目工作耗时占比
+    查询某项目各人员耗时占比
     '''
 
     def get(self, request):
@@ -93,7 +122,6 @@ class AnanlysisProject(LoginRequiredMixin,View):
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_name=project_name,project_id='',department_name=department_name)
         #统计分析select dev_event_project_id, count((end_time-start_time)) as time_diff from api_devevent group by dev_event_project_id
         group_sql = u'select chinese_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2)   as date_diff from ({0})  as child group by chinese_name order by date_diff desc '.format(plain_sql)
-
         row = fetch_data(group_sql)
 
         #转换数据为echarts能接受的格式
@@ -145,13 +173,12 @@ class AnanlysisLoad(LoginRequiredMixin,View):
   
         # 创建查询条件       
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
-        group_sql = u'select chinese_name, ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600/5)::numeric,3)   as date_diff  from ({0}) as child group by chinese_name order by date_diff desc'.format(plain_sql)
+        group_sql = u'select chinese_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff  from ({0}) as child group by chinese_name order by date_diff desc'.format(plain_sql)
         row = fetch_data(group_sql)    
 
         #转换数据为echarts能接受的格式
         x_data=[i['chinese_name'] for i in row]
         y_data=[i['date_diff'] for i in row]
-
         content = dict_to_json({'x_data':x_data,'y_data':y_data})
     
         response = my_response(code=0, msg=u"查询成功", content=content)
@@ -179,7 +206,7 @@ class AnanlysisLoad(LoginRequiredMixin,View):
 #             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          
 #         #统计分析
-#         group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+#         group_sql = u'select event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
 #         data = fetch_data(plain_sql)
 #         #先变换数据
@@ -246,7 +273,7 @@ class AnalysisDevEvent(LoginRequiredMixin,View):
             return  my_response(code=1, msg=u"缺少雇员姓名条件")
          
         #统计分析
-        group_sql = u'select event_type_name,ROUND(sum(extract(EPOCH from child.end_time - child.start_time)/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
+        group_sql = u'select event_type_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff from ({0}) as child  group by event_type_name '.format(plain_sql)
 
         data = fetch_data(plain_sql)
         #先变换数据
@@ -258,10 +285,9 @@ class AnalysisDevEvent(LoginRequiredMixin,View):
             '''          
             event_date=value.get('event_date').strftime("%Y-%m-%d")
             event_date_list.append(event_date)  
-            duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
             data_list=['project_name','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
-            field_data['duration_time']=int(duration_time)
+            field_data['duration_time']=round(value.get('duration_time')/3600,1)
             field_data['event_date']=event_date
             field_data['which_day']=day_of_week(field_data['event_date']) 
             field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))

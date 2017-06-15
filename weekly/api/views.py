@@ -56,12 +56,11 @@ class GetDevEvent(LoginRequiredMixin,View):
             '''          
             event_date=value.get('event_date').strftime("%Y-%m-%d")
             event_date_list.append(event_date)  
-            duration_time=((datetime.datetime.combine(datetime.date.today(), value['end_time']) - datetime.datetime.combine(datetime.date.today(), value['start_time'],)).total_seconds()/60)
-            data_list=["dev_event_id",'project_name',"start_time","end_time",'event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
+            data_list=["dev_event_id",'project_name',"start_time","end_time",'duration_time','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
-            field_data['duration_time']=int(duration_time)
+            field_data['duration_time']= round(field_data.get('duration_time')/3600,1)   #把秒数转成取一位小数的小时数
             field_data['event_date']=event_date
-            field_data['which_day']=day_of_week(field_data['event_date']) 
+            field_data['which_day']=day_of_week(field_data.get('event_date')) 
             field_data['up_reporter_name']=userid_to_chinesename(value.get('up_reporter_id'))
             field_data['down_reporter_name']=userid_to_chinesename(value.get('down_reporter_ids'))
             alternation_list.append(field_data)
@@ -123,6 +122,8 @@ class InsertDevWork(LoginRequiredMixin,View):
         else:
             return my_response(code=1, msg=u"百分比需要填写数字", content=content)
         result['dev_event_owner_id'] = user_id
+        
+        result['duration_time']= (datetime.datetime.strptime(result['end_time'], "%H:%M:%S")-datetime.datetime.strptime(result['start_time'], "%H:%M:%S")).total_seconds()
 
         try:
             insert_process = DevEvent(**result)
@@ -342,7 +343,7 @@ class GetEventExcel(LoginRequiredMixin,View):
             #由id转换成对应具体的人名
             row_dict['down_reporter_name']=userid_to_chinesename(row.get('down_reporter_ids'))
             row_dict['up_reporter_name']=userid_to_chinesename(row.get('up_reporter_id'))
-            row_dict['duration_time']=((datetime.datetime.combine(datetime.date.today(), row.get('end_time')) - datetime.datetime.combine(datetime.date.today(), row.get('start_time'), )).total_seconds() / 60)
+            row_dict['duration_time']=round(row.get('duration_time')/3600,1)
 
             for key in result_field:
                 row_dict[key]=row.get(key,'')

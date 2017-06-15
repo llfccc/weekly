@@ -3,6 +3,7 @@
     <!--<h1 class="title" style="align:center;">周报分析</h1>-->
   
     <div>
+          <el-row :gutter="24">  
       <el-form :inline="true" :model="filters">
         <el-col :span="7" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
@@ -10,8 +11,7 @@
             <el-date-picker v-model="filters.filter_date" type="daterange" align="right" placeholder="选择日期范围" @change='filterDateChange' :picker-options="pickerOptions2">
             </el-date-picker>
           </el-form-item>
-        </el-col>
-        <el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
+                  <!--<el-col :span="6" class="toolbar" style="padding-bottom: 0px;">
           <el-form-item>
             <span class="demonstration">项目：</span>
             <el-select v-model="filters.project_name" clearable filterable placeholder="项目名">
@@ -28,16 +28,18 @@
               </el-option>
             </el-select>
           </el-form-item>
+        </el-col>-->
         </el-col>
-        <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
+                <el-col :span="3" class="toolbar" style="padding-bottom: 0px;">
           <el-button type="primary" @click="filter">分析</el-button>
         </el-col>
       </el-form>
+            </el-row>
+
+
     </div>
-    <br>
     </br>
-    <el-row :gutter="24">
-  
+    <el-row :gutter="24">  
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -62,58 +64,65 @@
     </el-row>
   
     <el-row :gutter="24">
-      <el-col :span="8">  
-      </el-col>  
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span style="line-height: 10px;">个人情况</span>
-            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
           </div>
           <el-col :span="24">
             <div id="personal" style="height: 350px;"> </div>
-          </el-col>       
+          </el-col>
         </el-card>
       </el-col>
-
-         <el-col :span="8">
+<!--  
+      <el-col :span="8">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span style="line-height: 10px;">个人情况</span>
-            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+            <el-button style="float: right;" type="primary">操作按钮</el-button>
           </div>
           <el-col :span="24">
             <div id="personal" style="height: 350px;"> </div>
-          </el-col>       
+          </el-col>
         </el-card>
-      </el-col>
-
-         <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">个人情况</span>
-            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
-          </div>
-          <el-col :span="24">
-            <div id="personal" style="height: 350px;"> </div>
-          </el-col>       
-        </el-card>
-      </el-col>
-    </el-row>
-    
+      </el-col>-->
   
-    <el-row :gutter="24">
+      <!--<el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+            <el-button style="float: right;" type="primary">操作按钮</el-button>
+          </div>
+          <el-col :span="24">
+            <div id="personal" style="height: 350px;"> </div>
+          </el-col>  
+        </el-card>
+      </el-col>-->
+        <el-col :span="16">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">个人情况</span>
+            <!--<el-button style="float: right;" type="primary">操作按钮</el-button>-->
+          </div>
+          <el-col :span="24">
+    <div id="everyday" style="height: 350px;"> </div>
+          </el-col>  
+        </el-card>
+      </el-col>
     </el-row>
-    <el-row :gutter="24">
-      <el-col :span="16">
-        <div id="position" style="width: 100%;height: 400px"> </div>
-      </el-col>  
-      <el-col :span="8">
-        <div id="project" style="width: 100%;height: 400px"> </div>
-      </el-col>  
-    </el-row>
-    <el-row :gutter="24">
-    </el-row>
+    <!--  
+      <el-row :gutter="24">
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :span="16">
+          <div id="position" style="width: 100%;height: 400px"> </div>
+        </el-col>  
+        <el-col :span="8">
+          <div id="project" style="width: 100%;height: 400px"> </div>
+        </el-col>  
+      </el-row>
+      <el-row :gutter="24">
+      </el-row>-->
   
   </div>
 </template>
@@ -378,28 +387,16 @@ export default {
       })
       this.LoadCharts.on('click', function (params) {
         const employee_name = params.name;
-        self.$axios.get('/analysis/analysis_employee_devtype/', {
-          params: {
-            filter_date: self.filters.filterDate,
-            employee_name: employee_name,
-          }
-        })
-          .then(function (response) {
-            var responseContent = JSON.parse(response.data.content);
-            self.echartsPerson.opinionData = responseContent.type_count
-            self.echartsPerson.opinion = responseContent.type_list
-            console.log(response.data)
-            self.drawPersonPie('personal', employee_name);
-          }
-          );
+        self.analysis_employee_devtype(params, employee_name)
+        self.analysis_employee_everyday(params, employee_name)
       });
     },
-    drawPosition(id) {
+    drawEveryday(id, employee_name) {
       var self = this;
-      this.PositionCharts.setOption(
+      this.EverydayCharts.setOption(
         {
           title: {
-            text: '"' + self.filters.project_name + '"' + '项目--各岗位耗时瀑布图',
+            text: '"' + employee_name + '"' + '--各岗位耗时瀑布图',
             // subtext: 'From ExcelHome',
             // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
           },
@@ -407,11 +404,10 @@ export default {
             trigger: 'axis',
             axisPointer: {            // 坐标轴指示器，坐标轴触发有效
               type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            },
-            formatter: function (params) {
-              var tar = params[1];
-              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
             }
+          },
+          legend: {
+            data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
           },
           grid: {
             left: '3%',
@@ -421,44 +417,75 @@ export default {
           },
           xAxis: {
             type: 'category',
-            splitLine: { show: false },
-            data: this.echartsPosition.x_data
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+
           },
           yAxis: {
             type: 'value'
           },
           series: [
             {
-              name: '辅助',
-              type: 'bar',
-              stack: '总量',
-              itemStyle: {
-                normal: {
-                  barBorderColor: 'rgba(0,0,0,0)',
-                  color: 'rgba(0,0,0,0)'
-                },
-                emphasis: {
-                  barBorderColor: 'rgba(0,0,0,0)',
-                  color: 'rgba(0,0,0,0)'
-                }
-              },
-              data: this.echartsPosition.y_change_data
-            },
-            {
-              name: '耗时（H）',
+              name: '直接访问',
               type: 'bar',
               stack: '总量',
               label: {
                 normal: {
                   show: true,
-                  position: 'inside'
+                  position: 'insideRight'
                 }
               },
-              data: this.echartsPosition.y_data
+              data: [320, 302, 301, 334, 390, 330, 320]
+            },
+            {
+              name: '邮件营销',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'insideRight'
+                }
+              },
+              data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+              name: '联盟广告',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'insideRight'
+                }
+              },
+              data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name: '视频广告',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'insideRight'
+                }
+              },
+              data: [150, 212, 201, 154, 190, 330, 410]
+            },
+            {
+              name: '搜索引擎',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'insideRight'
+                }
+              },
+              data: [820, 832, 901, 934, 1290, 1330, 1320]
             }
           ]
-        }
-      )
+      });
     },
     filterDateChange(val) {
       var self = this;
@@ -466,16 +493,18 @@ export default {
     },
     filter: function (params) {
       this.analysis_department();
-      this.analysis_project();
+      // this.analysis_project();
       this.analysis_load();
-      this.analysis_position();
     },
     analysis_department: function (params) {
+      /*
+      分析整个部门的工作类型分布
+      */
       var self = this;
       this.$axios.get('/analysis/analysis_department/', {
         params: {
           filter_date: self.filters.filterDate,
-          department_name: self.filters.department_name,
+          // department_name: self.filters.department_name,
         }
       })
         .then(function (response) {
@@ -486,56 +515,72 @@ export default {
         }
         );
     },
-    analysis_position: function (params) {
+    analysis_employee_everyday: function (params, employee_name) {
       var self = this;
-      this.$axios.get('/analysis/analysis_position/', {
+      self.$axios.get('/analysis/analysis_employee_everyday/', {
         params: {
           filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name,
+          employee_name: employee_name,
         }
       })
         .then(function (response) {
+          console.log(response.data.content)
           var responseContent = JSON.parse(response.data.content);
-          self.echartsPosition.x_data = responseContent.x_data
-          self.echartsPosition.y_data = responseContent.y_data
-          self.echartsPosition.y_change_data = responseContent.y_change_data
-          self.drawPosition('position');
+          self.echartsPerson.opinionData = responseContent.type_count
+          self.echartsPerson.opinion = responseContent.type_list
+          self.drawEveryday('everyday', employee_name);
         }
         );
     },
-    analysis_employee: function (params) {
+    analysis_employee_devtype: function (params, employee_name) {
       var self = this;
-      this.$axios.get('/analysis/analysis_employee/', {
+      self.$axios.get('/analysis/analysis_employee_devtype/', {
         params: {
           filter_date: self.filters.filterDate,
-          employee_name: self.filters.employee_name,
+          employee_name: employee_name,
         }
       })
         .then(function (response) {
           var responseContent = JSON.parse(response.data.content);
           self.echartsPerson.opinionData = responseContent.type_count
           self.echartsPerson.opinion = responseContent.type_list
-          self.drawPersonPie('personal');
+          self.drawPersonPie('personal', employee_name);
         }
         );
     },
-    analysis_project: function (params) {
-      var self = this;
-      this.$axios.get('/analysis/analysis_project/', {
-        params: {
-          filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name,
+    // analysis_employee: function (params) {
+    //   var self = this;
+    //   this.$axios.get('/analysis/analysis_employee/', {
+    //     params: {
+    //       filter_date: self.filters.filterDate,
+    //       employee_name: self.filters.employee_name,
+    //     }
+    //   })
+    //     .then(function (response) {
+    //       var responseContent = JSON.parse(response.data.content);
+    //       self.echartsPerson.opinionData = responseContent.type_count
+    //       self.echartsPerson.opinion = responseContent.type_list
+    //       self.drawPersonPie('personal');
+    //     }
+    //     );
+    // },
+    // analysis_project: function (params) {
+    //   var self = this;
+    //   this.$axios.get('/analysis/analysis_project/', {
+    //     params: {
+    //       filter_date: self.filters.filterDate,
+    //       project_name: self.filters.project_name,
 
-        }
-      })
-        .then(function (response) {
-          var responseContent = JSON.parse(response.data.content);
-          self.echartsProject.x_data = responseContent.x_data
-          self.echartsProject.y_data = responseContent.y_data
-          self.drawProject('project')
-        }
-        );
-    },
+    //     }
+    //   })
+    //     .then(function (response) {
+    //       var responseContent = JSON.parse(response.data.content);
+    //       self.echartsProject.x_data = responseContent.x_data
+    //       self.echartsProject.y_data = responseContent.y_data
+    //       self.drawProject('project')
+    //     }
+    //     );
+    // },
     analysis_load: function (params) {
       var self = this;
       this.$axios.get('/analysis/analysis_load/', {
@@ -557,12 +602,11 @@ export default {
   mounted() {
     this.LoadCharts = echarts.init(document.getElementById('load'))
     this.PersonCharts = echarts.init(document.getElementById('personal'))
-    this.ProjectCharts = echarts.init(document.getElementById('project'))
-    this.PositionCharts = echarts.init(document.getElementById('position'))
+    this.EverydayCharts = echarts.init(document.getElementById('everyday'))
     this.DepartmentCharts = echarts.init(document.getElementById('department'))
 
     this.$nextTick(function () {
-            this.filter();
+      this.filter();
       this.get_users();
       this.get_projects();
     })

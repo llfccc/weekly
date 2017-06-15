@@ -43,7 +43,7 @@
       <el-col :span="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">项目情况</span>
+            <span style="line-height: 10px;">项目总耗时</span>
           </div>
           <el-col :span="24">
             <div id="projectTiemTaken" style="width: 100%;height: 400px"> </div>
@@ -54,10 +54,21 @@
   
   
     <el-row :gutter="24">  
+            <el-col :span="8">
+               <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="line-height: 10px;">岗位耗时</span>
+         </div>
+          <el-col :span="24">
+        <div id="position" style="width: 100%;height: 400px"> </div>
+          </el-col>
+        </el-card>
+      </el-col>
+
       <el-col :span="16">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span style="line-height: 10px;">总体情况</span>
+            <span style="line-height: 10px;">人员耗时</span>
          </div>
           <el-col :span="24">
             <div id="project" style="width: 100%;height: 400px;"> </div>
@@ -70,9 +81,7 @@
     <el-row :gutter="24">
     </el-row>
     <el-row :gutter="24">
-      <!--<el-col :span="8">
-        <div id="position" style="width: 100%;height: 400px"> </div>
-      </el-col>-->
+
   
       <el-col :span="8">
         <div id="project" style="width: 100%;height: 400px"> </div>
@@ -309,29 +318,19 @@ export default {
         ]
       })
       this.ProjectTimeTakenCharts.on('click', function (params) {
-        const project_name = params.name;
-          self.$axios.get('/analysis/analysis_project/', {
-          params: {
-            filter_date: self.filters.filterDate,
-            project_name: project_name,
-          }
-        })
-          .then(function (response) {
-            var responseContent = JSON.parse(response.data.content);
-            self.echartsProject.x_data = responseContent.x_data
-            self.echartsProject.y_data = responseContent.y_data
-            self.drawProject('project', project_name);
-          }
-          );
+          const project_name = params.name;
+          console.log(params)
+          self.analysis_project_employee(params,project_name);
+          self.analysis_position(params,project_name);
       });
     },
 
-    drawProject(id) {
+    drawProject(id, project_name) {
       var self = this;
       console.log(this.echartsProject)
       this.ProjectCharts.setOption({
         title: {
-          text: '"' + self.filters.project_name + '"' + '项目--耗时分布'
+          text: '"' +  project_name + '"' + '项目--各人员耗时'
         },
         color: ['#3398DB'],
         tooltip: {
@@ -370,165 +369,86 @@ export default {
         ]
       })
     },
-    // drawLoad(id) {
-    //   var self = this;
-    //   this.LoadCharts.setOption({
-    //     title: {
-    //       text: '部门人员负载图'
-    //     },
-    //     color: ['#3398DB'],
-    //     tooltip: {
-    //       trigger: 'axis',
-    //       axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-    //         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-    //       }
-    //     },
-    //     grid: {
-    //       left: '3%',
-    //       right: '4%',
-    //       bottom: '3%',
-    //       containLabel: true
-    //     },
-    //     xAxis: [
-    //       {
-    //         type: 'category',
-    //         data: this.echartsLoad.x_data,
-    //         axisTick: {
-    //           alignWithLabel: true
-    //         }
-    //       }
-    //     ],
-    //     yAxis: [
-    //       {
-    //         type: 'value'
-    //       }
-    //     ],
-    //     series: [
-    //       {
-    //         name: '平均每周工作时间（H）',
-    //         type: 'bar',
-    //         barWidth: '60%',
-    //         data: this.echartsLoad.y_data
-    //       }
-    //     ]
-    //   })
-    //   this.LoadCharts.on('click', function (params) {
-    //     const employee_name = params.name;
-    //     self.$axios.get('/analysis/analysis_employee_devtype/', {
-    //       params: {
-    //         filter_date: self.filters.filterDate,
-    //         employee_name: employee_name,
-    //       }
-    //     })
-    //       .then(function (response) {
-    //         var responseContent = JSON.parse(response.data.content);
-    //         self.echartsPerson.opinionData = responseContent.type_count
-    //         self.echartsPerson.opinion = responseContent.type_list
-    //         self.drawPersonPie('personal', employee_name);
-    //       }
-    //       );
-    //   });
-    // },
-    // drawPosition(id) {
-    //   var self = this;
-    //   this.PositionCharts.setOption(
-    //     {
-    //       title: {
-    //         text: '"' + self.filters.project_name + '"' + '项目--各岗位耗时瀑布图',
-    //         // subtext: 'From ExcelHome',
-    //         // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
-    //       },
-    //       tooltip: {
-    //         trigger: 'axis',
-    //         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-    //           type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-    //         },
-    //         formatter: function (params) {
-    //           var tar = params[1];
-    //           return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-    //         }
-    //       },
-    //       grid: {
-    //         left: '3%',
-    //         right: '4%',
-    //         bottom: '3%',
-    //         containLabel: true
-    //       },
-    //       xAxis: {
-    //         type: 'category',
-    //         splitLine: { show: false },
-    //         data: this.echartsPosition.x_data
-    //       },
-    //       yAxis: {
-    //         type: 'value'
-    //       },
-    //       series: [
-    //         {
-    //           name: '辅助',
-    //           type: 'bar',
-    //           stack: '总量',
-    //           itemStyle: {
-    //             normal: {
-    //               barBorderColor: 'rgba(0,0,0,0)',
-    //               color: 'rgba(0,0,0,0)'
-    //             },
-    //             emphasis: {
-    //               barBorderColor: 'rgba(0,0,0,0)',
-    //               color: 'rgba(0,0,0,0)'
-    //             }
-    //           },
-    //           data: this.echartsPosition.y_change_data
-    //         },
-    //         {
-    //           name: '耗时（H）',
-    //           type: 'bar',
-    //           stack: '总量',
-    //           label: {
-    //             normal: {
-    //               show: true,
-    //               position: 'inside'
-    //             }
-    //           },
-    //           data: this.echartsPosition.y_data
-    //         }
-    //       ]
-    //     }
-    //   )
-    // },
+   
+    drawPosition(id,project_name) {
+      var self = this;
+      this.PositionCharts.setOption(
+        {
+          title: {
+            text: '"' + project_name + '"' + '项目--各岗位耗时',
+            // subtext: 'From ExcelHome',
+            // sublink: 'http://e.weibo.com/1341556070/AjQH99che'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: function (params) {
+              var tar = params[1];
+              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            splitLine: { show: false },
+            data: this.echartsPosition.x_data
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: '辅助',
+              type: 'bar',
+              stack: '总量',
+              itemStyle: {
+                normal: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                },
+                emphasis: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                }
+              },
+              data: this.echartsPosition.y_change_data
+            },
+            {
+              name: '耗时（H）',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'inside'
+                }
+              },
+              data: this.echartsPosition.y_data
+            }
+          ]
+        }
+      )
+    },
     filterDateChange(val) {
       var self = this;
       self.filters.filterDate = val;
     },
     filter: function (params) {
-      // this.analysis_department();
       this.analysis_project_timeTaken();
-      this.analysis_project();
-      // this.analysis_load();
-      // this.analysis_position();
     },
-    analysis_department: function (params) {
-      var self = this;
-      this.$axios.get('/analysis/analysis_project/', {
-        params: {
-          filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name,
-
-        }
-      })
-        .then(function (response) {
-          var responseContent = JSON.parse(response.data.content);
-          self.echartsProject.x_data = responseContent.x_data
-          self.echartsProject.y_data = responseContent.y_data
-          self.drawProject('project')
-        }
-        );
-    },
-    analysis_position: function (params) {
+    analysis_position: function (params,project_name) {
       var self = this;
       this.$axios.get('/analysis/analysis_position/', {
         params: {
           filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name,
+          project_name: project_name,
         }
       })
         .then(function (response) {
@@ -536,7 +456,7 @@ export default {
           self.echartsPosition.x_data = responseContent.x_data
           self.echartsPosition.y_data = responseContent.y_data
           self.echartsPosition.y_change_data = responseContent.y_change_data
-          self.drawPosition('position');
+          self.drawPosition('position',project_name);
         }
         );
     },
@@ -573,40 +493,24 @@ export default {
         }
         );
     },
-     analysis_project: function (params) {
+     analysis_project_employee: function (params,project_name) {
+       /*
+       分析每个项目中具体人员的耗时
+       */
       var self = this;
-      this.$axios.get('/analysis/analysis_project/', {
-        params: {
-          filter_date: self.filters.filterDate,
-          project_name: self.filters.project_name,
-
-        }
-      })
-        .then(function (response) {
-          var responseContent = JSON.parse(response.data.content);
-          self.echartsProject.x_data = responseContent.x_data
-          self.echartsProject.y_data = responseContent.y_data
-          self.drawProject('project')
-        }
-        );
-    },
-
-    analysis_load: function (params) {
-      var self = this;
-
-      this.$axios.get('/analysis/analysis_load/', {
-        params: {
-          filter_date: self.filters.filterDate,
-        }
-      })
-        .then(function (response) {
-          var responseContent = JSON.parse(response.data.content);
-          self.echartsLoad.x_data = responseContent.x_data
-          self.echartsLoad.y_data = responseContent.y_data
-          //console.log(responseContent.x_data)
-          self.drawLoad('load');
-        }
-        );
+     self.$axios.get('/analysis/analysis_project_employee/', {
+          params: {
+            filter_date: self.filters.filterDate,
+            project_name: project_name,
+          }
+        })
+          .then(function (response) {
+            var responseContent = JSON.parse(response.data.content);
+            self.echartsProject.x_data = responseContent.x_data
+            self.echartsProject.y_data = responseContent.y_data
+            self.drawProject('project', project_name);
+          }
+          );
     },
   },
   //调用
@@ -616,7 +520,7 @@ export default {
 
     // this.PositionCharts = echarts.init(document.getElementById('position'))
     // this.DepartmentCharts = echarts.init(document.getElementById('department'))
-
+    this.PositionCharts = echarts.init(document.getElementById('position'))
     this.ProjectCharts = echarts.init(document.getElementById('project'))
 
     this.$nextTick(function () {
