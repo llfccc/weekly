@@ -385,7 +385,7 @@ export default {
         ],
         series: [
           {
-            name: '平均每周工作时间（H）',
+            name: '平均每天工作时间（H）',
             type: 'bar',
             barWidth: '60%',
             data: this.echartsLoad.y_data

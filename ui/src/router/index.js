@@ -23,24 +23,24 @@ export default new Router({
 
         {
             path: '/insertDevWork',
-            component: resolve => require(['../components/page/basicInput/insertDevWork.vue'], resolve)
+            component: resolve => require(['../components/page/insertData/insertDevWork.vue'], resolve)
         },
         {
             path: '/insertSaleEvent',
-            component: resolve => require(['../components/page/basicInput/insertSaleEvent.vue'], resolve)
+            component: resolve => require(['../components/page/insertData/insertSaleEvent.vue'], resolve)
         },
         {
             path: '/insertWeekSummary',
-            component: resolve => require(['../components/page/basicInput/insertWeekSummary.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/insertData/insertWeekSummary.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/viewWeekly',
-            component: resolve => require(['../components/page/basicInput/viewWeekly.vue'], resolve)
+            component: resolve => require(['../components/page/insertData/viewWeekly.vue'], resolve)
         },
 
         {
             path: '/viewSaleEvent',
-            component: resolve => require(['../components/page/basicInput/viewSaleEvent.vue'], resolve)
+            component: resolve => require(['../components/page/insertData/viewSaleEvent.vue'], resolve)
         },
         {
             path: '/downloadExcel',
@@ -52,37 +52,37 @@ export default new Router({
         },
         {
             path: '/analysisDevDepart',
-            component: resolve => require(['../components/page/analysis/analysisDevDepart.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/analysisData/analysisDevDepart.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/analysisDevProject',
-            component: resolve => require(['../components/page/analysis/analysisDevProject.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/analysisData/analysisDevProject.vue'], resolve) // vue-datasource组件
         },
 
         {
             path: '/analysisWeekly',
-            component: resolve => require(['../components/page/analysis/analysisWeekly.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/analysisData/analysisWeekly.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/projectManage',
-            component: resolve => require(['../components/page/basicData/projectManage.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/manageData/projectManage.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/analysisSaleEvent',
-            component: resolve => require(['../components/page/analysis/analysisSaleEvent.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/analysisData/analysisSaleEvent.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/analysisSalePerformance',
-            component: resolve => require(['../components/page/analysis/analysisSalePerformance.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/analysisData/analysisSalePerformance.vue'], resolve) // vue-datasource组件
         },
 
         {
             path: '/saleTarget',
-            component: resolve => require(['../components/page/basicData/saleTarget.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/manageData/saleTarget.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/saleCustmoer',
-            component: resolve => require(['../components/page/basicData/saleCustmoer.vue'], resolve) // vue-datasource组件
+            component: resolve => require(['../components/page/manageData/saleCustmoer.vue'], resolve) // vue-datasource组件
         },
         {
             path: '/baseform',

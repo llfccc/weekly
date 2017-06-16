@@ -122,8 +122,8 @@ class InsertDevWork(LoginRequiredMixin,View):
         else:
             return my_response(code=1, msg=u"百分比需要填写数字", content=content)
         result['dev_event_owner_id'] = user_id
-        
         result['duration_time']= (datetime.datetime.strptime(result['end_time'], "%H:%M:%S")-datetime.datetime.strptime(result['start_time'], "%H:%M:%S")).total_seconds()
+        print(result['end_time'],result['start_time'],result['duration_time'])
 
         try:
             insert_process = DevEvent(**result)

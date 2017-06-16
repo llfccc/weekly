@@ -42,13 +42,13 @@ class AnanlysisEmployeeEveryday(LoginRequiredMixin,View):
         row = fetch_data(group_sql)
         #转换数据为echarts能接受的格式
 
-        event_date_set={i['event_date'].strftime("%Y-%m-%d") for i in row}   #取不重复的日期
-        event_type_name_set={i['event_type_name'] for i in row}   #取不重复的类型名称
-
+        event_date_list=list({i['event_date'].strftime("%Y-%m-%d") for i in row})   #取不重复的日期        
+        event_type_name_list=list({i['event_type_name'] for i in row})   #取不重复的类型名称
+        event_date_list.sort()
         result={}
-        for event_date in event_date_set:
+        for event_date in event_date_list:
             result[event_date]={}
-            for type_name in event_type_name_set:
+            for type_name in event_type_name_list:
                 result[event_date][type_name]=0
                 for value in row:  
                     if value.get('event_date').strftime("%Y-%m-%d")==event_date and value.get('event_type_name')==type_name:
@@ -56,9 +56,9 @@ class AnanlysisEmployeeEveryday(LoginRequiredMixin,View):
 
         date_list=[]
         time_count_list={}
-        for event_date in event_date_set:
+        for event_date in event_date_list:
             date_list.append(event_date)
-            for type_name in event_type_name_set:
+            for type_name in event_type_name_list:
                 if  time_count_list.get(type_name):
                     time_count_list[type_name].append(result[event_date].get(type_name))                   
                 else:
@@ -84,9 +84,9 @@ class AnanlysisEmployeeEveryday(LoginRequiredMixin,View):
         # print(result)
         # data_list=[]
 
-        # for event_date in event_date_set:
+        # for event_date in event_date_list:
         #     date_list=
-        #     for type_name in event_type_name_set:
+        #     for type_name in event_type_name_list:
 
 
 
@@ -167,7 +167,7 @@ class AnanlysisProjectEmployee(LoginRequiredMixin,View):
         x_data=[i['chinese_name'] for i in row]
         y_data=[i['date_diff'] for i in row] 
         content = dict_to_json({'x_data':x_data,'y_data':y_data})    
-        print(row)
+
         response = my_response(code=0, msg=u"查询成功", content=content)
         return response
 
@@ -202,7 +202,7 @@ class AnanlysisProjectTimeTaken(LoginRequiredMixin,View):
 
 class AnanlysisLoad(LoginRequiredMixin,View):
     '''
-    查询整个部门职员工作类型占比
+    查询整个部门员工平均每日工作时间
     '''
 
     def get(self, request):
@@ -212,16 +212,18 @@ class AnanlysisLoad(LoginRequiredMixin,View):
   
         # 创建查询条件       
         plain_sql=filter_dev_event_sql(filter_date=filter_date,project_id='',project_name='',department_name=department_name,employee_name='',user_id='')
-        group_sql = u'select chinese_name,ROUND(sum(duration_time/3600)::numeric,2) as date_diff  from ({0}) as child group by chinese_name order by date_diff desc'.format(plain_sql)
+        group_sql = u'select t1.chinese_name,(sum(t1.sum_time)/count(t1.event_date)) as avg_time from \
+            (select t.chinese_name,sum(t.duration_time/3600) as sum_time,t.event_date from ({0}) as t  group by chinese_name,event_date) as  t1 \
+            group by t1.chinese_name  order by avg_time desc'.format(plain_sql)
         row = fetch_data(group_sql)    
-
+        print(row)
         #转换数据为echarts能接受的格式
         x_data=[i['chinese_name'] for i in row]
-        y_data=[i['date_diff'] for i in row]
+        y_data=[round(i['avg_time'],2) for i in row]
         content = dict_to_json({'x_data':x_data,'y_data':y_data})
     
         response = my_response(code=0, msg=u"查询成功", content=content)
-        return response
+        return response 
 
 
 # class AnalysisDevEvent2(LoginRequiredMixin,View):
