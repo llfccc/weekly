@@ -455,6 +455,13 @@ export default {
       this.EverydayCharts.clear();
       //initChart3Option();
       this.EverydayCharts.setOption(option);
+      this.EverydayCharts.on('click', function (params) {
+        console.log(params.name);
+        console.log(employee_name)
+        // const employee_name = params.name;
+        // self.analysis_employee_devtype(params, employee_name)
+        // self.analysis_employee_everyday(params, employee_name)
+      });
     },
     filterDateChange(val) {
       var self = this;

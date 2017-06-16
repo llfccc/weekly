@@ -206,6 +206,10 @@ export default {
               }
               k = i;
             }
+                        //取整
+            for (var i in list){
+              list[i]['total_time']=Math.round(list[i]['total_time'])
+            }
             return list;
           }
           self.weekly_dict = combineCell(responseContent)
