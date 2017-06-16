@@ -142,7 +142,6 @@ export default {
         filter: function (params) {
             this.summary_list = [];
             this.get_summary();
-
         },
         get_summary: function (params) {
             var self = this;

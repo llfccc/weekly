@@ -1,6 +1,6 @@
 <template>
   <div>
-
+  
     <!--<h1 class="title" style="align:center;">查看员工周报</h1>-->
     <div>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
@@ -10,13 +10,13 @@
             <el-date-picker v-model="filters.filter_date" type="week" format="yyyy-WW 周" @change="dateChange1" placeholder="选择周">
             </el-date-picker>
           </el-col>
-
+  
           <!--<el-col :span="6">
-            <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
-              <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
-              </el-option>
-            </el-select>
-          </el-col>-->
+              <el-select v-model="filters.employee_name" clearable filterable placeholder="员工名">
+                <el-option v-for="item in filter_user_list" :key="item.id" :label="item.chinese_name" :value="item.chinese_name">
+                </el-option>
+              </el-select>
+            </el-col>-->
           <el-col :span="8">
             <el-button type="primary" v-on:click="filter">查询</el-button>
           </el-col>
@@ -25,7 +25,7 @@
       </br>
       </br>
       </br>
-
+  
       <table border="1" class="table table-responsive table-bordered" width="100%" v-show="weekly_dict">
         <thead>
           <tr>
@@ -44,9 +44,9 @@
         </thead>
         <tbody>
           <tr v-for="item in weekly_dict">
-            <td  width="9%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.event_date}}</td>
+            <td width="9%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.event_date}}</td>
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.which_day}}</td>
-            <td width="8%" >{{item.project_name}}</td>
+            <td width="8%">{{item.project_name}}</td>
             <td width="10%">{{item.event_type_name}}</td>
             <td width="8%" :rowspan="item.span" :class="{hidden: item.dis}">{{item.total_time}}</td>
             <td width="10%">{{item.description}}</td>
@@ -58,11 +58,11 @@
           </tr>
         </tbody>
       </table>
-
+  
     </div>
-
+  
     </br>
-
+  
     <el-card class="box-card" v-show="summary">
       <template v-if='summary'>
         <div slot="header" class="clearfix">
@@ -96,10 +96,10 @@
               </el-card>
             </el-col>
           </el-col>
-
+  
         </div>
       </template>
-
+  
     </el-card>
   </div>
 </template>
@@ -119,7 +119,7 @@ export default {
       user_list: '',
     }
   },
-    computed: {
+  computed: {
     filter_user_list() {
       var self = this;
       let department_id = localStorage.getItem('department_id');
@@ -143,19 +143,19 @@ export default {
       this.summary = [];
       this.get_weekly();
       this.get_summary();
-      this.get_users();
+      // this.get_users();
     },
-    get_users: function (params) {
-      var self = this;
-      this.$axios.get('/accounts/get_username/')
-        .then(function (response) {
-          self.user_list = eval(response.data.content);
-        }
-        );
-    },
+    // get_users: function (params) {
+    //   var self = this;
+    //   this.$axios.get('/accounts/get_username/')
+    //     .then(function (response) {
+    //       self.user_list = eval(response.data.content);
+    //     }
+    //     );
+    // },
     get_weekly: function (params) {
       var self = this;
-      var employee_name=localStorage.getItem("ms_username")
+      var employee_name = localStorage.getItem("ms_username")
       this.$axios.get('/works/get_dev_events/', {
         params: {
           natural_week: self.filters.naturalWeek,
@@ -191,7 +191,7 @@ export default {
     },
     get_summary: function (params) {
       var self = this;
-      var employee_name=localStorage.getItem("ms_username")
+      var employee_name = localStorage.getItem("ms_username")
       this.$axios.get('/works/get_weekly_summary/', {
         params: {
           natural_week: self.filters.naturalWeek,
@@ -211,8 +211,8 @@ export default {
   mounted() {
     this.$nextTick(function () {
       this.get_users()
-      // this.get_weekly()
-      // this.get_summary()
+      this.get_weekly();
+      this.get_summary();
     })
   }
 }
@@ -238,7 +238,6 @@ th {
 
 td {
   text-align: center;
-
 }
 
 .table {
@@ -246,33 +245,33 @@ td {
   margin-bottom: 20px;
 }
 
-.table > thead > tr > th,
-.table > tbody > tr > th,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > td,
-.table > tfoot > tr > td {
+.table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
   padding: 8px;
   line-height: 1.428571429;
 
   border-top: 1px solid #dddddd;
 }
 
-.table > thead > tr > th {
+.table>thead>tr>th {
   vertical-align: bottom;
   border-bottom: 2px solid #dddddd;
 }
 
-.table > caption + thead > tr:first-child > th,
-.table > colgroup + thead > tr:first-child > th,
-.table > thead:first-child > tr:first-child > th,
-.table > caption + thead > tr:first-child > td,
-.table > colgroup + thead > tr:first-child > td,
-.table > thead:first-child > tr:first-child > td {
+.table>caption+thead>tr:first-child>th,
+.table>colgroup+thead>tr:first-child>th,
+.table>thead:first-child>tr:first-child>th,
+.table>caption+thead>tr:first-child>td,
+.table>colgroup+thead>tr:first-child>td,
+.table>thead:first-child>tr:first-child>td {
   border-top: 0;
 }
 
-.table > tbody + tbody {
+.table>tbody+tbody {
   border-top: 2px solid #dddddd;
 }
 
@@ -280,12 +279,12 @@ td {
   background-color: #ffffff;
 }
 
-.table-condensed > thead > tr > th,
-.table-condensed > tbody > tr > th,
-.table-condensed > tfoot > tr > th,
-.table-condensed > thead > tr > td,
-.table-condensed > tbody > tr > td,
-.table-condensed > tfoot > tr > td {
+.table-condensed>thead>tr>th,
+.table-condensed>tbody>tr>th,
+.table-condensed>tfoot>tr>th,
+.table-condensed>thead>tr>td,
+.table-condensed>tbody>tr>td,
+.table-condensed>tfoot>tr>td {
   padding: 5px;
 }
 
@@ -293,30 +292,28 @@ td {
   border: 1px solid #dddddd;
 }
 
-.table-bordered > thead > tr > th,
-.table-bordered > tbody > tr > th,
-.table-bordered > tfoot > tr > th,
-.table-bordered > thead > tr > td,
-.table-bordered > tbody > tr > td,
-.table-bordered > tfoot > tr > td {
+.table-bordered>thead>tr>th,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td {
   border: 1px solid #dddddd;
 }
 
-.table-bordered > thead > tr > th,
-.table-bordered > thead > tr > td {
+.table-bordered>thead>tr>th,
+.table-bordered>thead>tr>td {
   border-bottom-width: 2px;
 }
 
-.table-striped > tbody > tr:nth-child(odd) > td,
-.table-striped > tbody > tr:nth-child(odd) > th {
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
   background-color: #f9f9f9;
 }
 
-.table-hover > tbody > tr:hover > td,
-.table-hover > tbody > tr:hover > th {
+.table-hover>tbody>tr:hover>td,
+.table-hover>tbody>tr:hover>th {
   background-color: #f5f5f5;
 }
-
-
 </style>
 

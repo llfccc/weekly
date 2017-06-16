@@ -125,7 +125,7 @@ def get_user_id(request):
     try:
         user_id=user_object.get("user_id")
     except:
-        user_id=0
+        user_id=-1
     return user_id
 
 

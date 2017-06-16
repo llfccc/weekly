@@ -45,9 +45,6 @@ class GetDevEvent(LoginRequiredMixin,View):
         plain_sql=filter_dev_event_sql(filter_date=filter_date,natural_week=natural_week,project_id=project_id,user_id=user_id)
         query_result = fetch_data(plain_sql)
 
-        #限定返回给前端的字段
-        # result_field = [, "event_date", "project_name", "event_type_name", "description", "start_time","end_time","fin_percentage","dev_event_remark"]
-
         alternation_list=[]
         event_date_list=[]   #保存所有不重复的日期
         for key,value in enumerate(query_result): 
@@ -55,7 +52,8 @@ class GetDevEvent(LoginRequiredMixin,View):
             获取所有日期字段保存为list，并将需要的字段放入alternation_list备用
             '''          
             event_date=value.get('event_date').strftime("%Y-%m-%d")
-            event_date_list.append(event_date)  
+            event_date_list.append(event_date) 
+            #限定返回给前端的字段 
             data_list=["dev_event_id",'project_name',"start_time","end_time",'duration_time','event_type_name','description','up_reporter_id','down_reporter_ids','fin_percentage','dev_event_remark']
             field_data={key:value.get(key) for key in data_list}
             field_data['duration_time']= round(field_data.get('duration_time')/3600,1)   #把秒数转成取一位小数的小时数
